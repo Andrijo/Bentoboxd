@@ -31,18 +31,18 @@ function extractYear(description) {
 // Genre config
 // ─────────────────────────────────────────────
 const GENRE_CONFIG = {
-  Terror: { color: "#ff4444", glow: "rgba(255,68,68,0.4)" },
-  Acción: { color: "#ff8c00", glow: "rgba(255,140,0,0.4)" },
+  Terror: { color: "#ff004c", glow: "rgba(255,0,76,0.9)" },
+  Acción: { color: "#9b59b6", glow: "rgba(155,89,182,0.8)" },
   "Ciencia Ficción": {
-    color: "#00e5ff",
-    glow: "rgba(0,229,255,0.4)",
+    color: "#00bfff",
+    glow: "rgba(0,191,255,0.8)",
   },
-  Drama: { color: "#c084fc", glow: "rgba(192,132,252,0.4)" },
-  Comedia: { color: "#facc15", glow: "rgba(250,204,21,0.4)" },
-  Thriller: { color: "#fb7185", glow: "rgba(251,113,133,0.4)" },
-  Romance: { color: "#f472b6", glow: "rgba(244,114,182,0.4)" },
-  Animación: { color: "#4ade80", glow: "rgba(74,222,128,0.4)" },
-  Documental: { color: "#94a3b8", glow: "rgba(148,163,184,0.4)" },
+  Drama: { color: "#2ecc71", glow: "rgba(46,204,113,0.8)" },
+  Comedia: { color: "#3fe5ff", glow: "rgba(250,204,21,0.4)" },
+  Thriller: { color: "#ffd700", glow: "rgba(253,204,138,0.4)" },
+  Romance: { color: "#c0c0c0", glow: "rgba(192,192,192,0.4)" },
+  Animación: { color: "#cd7f32", glow: "rgba(205,127,50,0.4)" },
+  Documental: { color: "#555555", glow: "rgba(85,85,85,0.4)" },
   Otro: { color: "#64748b", glow: "rgba(100,116,139,0.4)" },
 }
 
@@ -567,7 +567,7 @@ function GenrePanel({ genres, loadingGenres, genreError }) {
               color: "#F0EDE5",
               lineHeight: 1,
             }}>
-            GÉNEROS CONSUMIDOS
+            TOP GÉNEROS
           </div>
           {hasData && (
             <div
@@ -596,8 +596,8 @@ function GenrePanel({ genres, loadingGenres, genreError }) {
               border: "1px solid rgba(255,255,255,0.07)",
             }}>
             {[
-              { key: "donut", label: "◉ PASTEL" },
-              { key: "radar", label: "⬡ RADAR" },
+              { key: "donut", label: "◉ Pastel" },
+              { key: "radar", label: "⬡ Radar" },
             ].map(({ key, label }) => (
               <button
                 key={key}
@@ -768,7 +768,7 @@ function DirectorsPanel({ directors, loading }) {
                 fontFamily: "'Space Mono', monospace",
                 textTransform: "uppercase",
               }}>
-              ◈ Analizando directores...
+              Analizando directores...
             </div>
           </div>
         )}
@@ -777,9 +777,17 @@ function DirectorsPanel({ directors, loading }) {
           <div
             style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
             {topDirectors.map(([name, count], i) => {
-              // Asignar un color distintivo según la posición (Oro, Plata, Bronce estilo Neón)
+              // Asignar un color distintivo según la posición (Oro, Plata, Bronce, etc)
               const rankColor =
-                i === 0 ? "#00e5ff" : i === 1 ? "#c084fc" : "#facc15"
+                i === 0
+                  ? "#ff004c"
+                  : i === 1
+                    ? "#9b49b6"
+                    : i === 2
+                      ? "#00bfff"
+                      : i === 3
+                        ? "#2ecc71"
+                        : "#3fe5ff"
 
               return (
                 <div
@@ -791,7 +799,7 @@ function DirectorsPanel({ directors, loading }) {
                     background: "rgba(0,0,0,0.3)",
                     padding: "12px 20px",
                     borderRadius: "4px",
-                    borderLeft: `2px solid ${rankColor}`,
+                    border: `1.5px solid ${rankColor}`,
                   }}>
                   <span
                     style={{
@@ -815,10 +823,10 @@ function DirectorsPanel({ directors, loading }) {
                   <span
                     style={{
                       fontSize: "0.6rem",
-                      color: rankColor,
+                      color: "#FFF",
                       fontFamily: "'Space Mono', monospace",
                       letterSpacing: "1px",
-                      background: `${rankColor}15`,
+                      background: rankColor,
                       padding: "4px 8px",
                       borderRadius: "2px",
                     }}>
@@ -893,7 +901,7 @@ function ActorsPanel({ actors, loading }) {
           alignItems: "center",
           gap: "10px",
         }}>
-        TOP CAST
+        TOP ACTORES
       </div>
 
       <div style={{ minHeight: "100px" }}>
@@ -914,7 +922,7 @@ function ActorsPanel({ actors, loading }) {
                 animation: "pulse 1.2s ease infinite",
                 textTransform: "uppercase",
               }}>
-              ◈ Escaneando créditos...
+              Escaneando créditos...
             </div>
           </div>
         )}
@@ -936,9 +944,9 @@ function ActorsPanel({ actors, loading }) {
                     display: "flex",
                     alignItems: "center",
                     background: "rgba(0,0,0,0.4)",
-                    border: "1px solid rgba(255,255,255,0.05)",
-                    borderBottom: `2px solid ${rankColor}`,
-                    padding: "16px",
+                    border: `1.4px solid ${rankColor}`,
+                    padding: "16px 0",
+                    margin: "10px 5px",
                     borderRadius: "4px",
                     transition: "transform 0.2s, background 0.2s",
                     cursor: "default",
@@ -963,6 +971,7 @@ function ActorsPanel({ actors, loading }) {
                       justifyContent: "center",
                       borderRadius: "50%",
                       marginRight: "16px",
+                      marginLeft: "16px",
                       fontFamily: "'Bebas Neue', sans-serif",
                       fontSize: "1.2rem",
                       color: rankColor,
@@ -991,11 +1000,12 @@ function ActorsPanel({ actors, loading }) {
                         display: "flex",
                         alignItems: "center",
                         gap: "8px",
+                        paddingRight: "16px",
                       }}>
                       <div
                         style={{
                           height: "4px",
-                          background: `${rankColor}40`,
+                          background: `${rankColor}20`,
                           flex: 1,
                           borderRadius: "2px",
                           overflow: "hidden",
@@ -1780,7 +1790,7 @@ export default function App() {
             WebkitBackgroundClip: "text",
             WebkitTextFillColor: "transparent",
           }}>
-          RECENT FILMS
+          BENTOBOXD
         </h1>
 
         {/* Botones de acción (solo visibles si hay películas cargadas) */}
