@@ -1919,6 +1919,9 @@ function CountriesPanel({ countries, loading }) {
     IE: "Irlanda",
     NZ: "Nueva Zelanda",
     PL: "Polonia",
+    IR: "Irán",
+    NL: "Países Bajos",
+    BE: "Bélgica",
   }
 
   // Tomamos el Top 6 de códigos de país
@@ -2802,7 +2805,7 @@ export default function App() {
         return updated
       })
 
-      const rssUrl = `/rss-proxy/${user}/rss/`
+      const rssUrl = `/api/rss-proxy?user=${user}`
       const res = await fetch(rssUrl)
       if (!res.ok)
         throw new Error(
