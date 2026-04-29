@@ -1,8 +1,13 @@
+html {
+  overscroll-behavior: none;
+}
+
 :root {
-  background-color: #181818;
+  background: linear-gradient(to bottom, #111315, #181818);
 }
 
 body {
-  max-width: 87vw;
+  max-width: 80vw;
   margin: 0 auto;
+  background: linear-gradient(to bottom, #111315, #181818);
 }
