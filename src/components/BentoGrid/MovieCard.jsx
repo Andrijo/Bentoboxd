@@ -52,9 +52,7 @@ export default function MovieCard({ movie, size, index }) {
           }}
         />
       ) : (
-        <div className="rd-no-poster">
-          🎬
-        </div>
+        <div className="rd-no-poster">🎬</div>
       )}
 
       <div
@@ -79,8 +77,12 @@ export default function MovieCard({ movie, size, index }) {
           zIndex: 3,
           padding: size === 3 ? "16px 14px" : "10px 10px",
           paddingBottom: hovered
-            ? size === 3 ? "16px" : "10px"
-            : size === 3 ? "14px" : "8px",
+            ? size === 3
+              ? "16px"
+              : "10px"
+            : size === 3
+              ? "14px"
+              : "8px",
           transition: "padding-bottom 0.3s ease",
         }}>
         <div
@@ -127,13 +129,11 @@ export default function MovieCard({ movie, size, index }) {
               textTransform: "uppercase",
             }}>
             Ver en Letterboxd →
-    </a>
+          </div>
         )}
       </div>
 
-      <div className="rd-index-badge">
-        {String(index + 1).padStart(2, "0")}
-      </div>
-    </div>
+      <div className="rd-index-badge">{String(index + 1).padStart(2, "0")}</div>
+    </a>
   )
 }
