@@ -144,7 +144,7 @@ export default function QuizModal({ movies, onClose }) {
 
                   return (
                     <button
-                      key={i}
+                      key={opt}
                       disabled={selected !== null}
                       onClick={() => handleAnswer(opt)}
                       type="button"

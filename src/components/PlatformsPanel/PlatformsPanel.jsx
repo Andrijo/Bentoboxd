@@ -91,8 +91,8 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
                   MOSTRANDO ARCHIVOS EN: {selectedPlatform.toUpperCase()}
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                  {filteredMovies.map((m, i) => (
-                    <div key={i} style={{
+                  {filteredMovies.map((m) => (
+                    <div key={m.title} style={{
                       fontSize: "0.75rem", color: "#F0EDE5",
                       display: "flex", justifyContent: "space-between",
                     }}>
