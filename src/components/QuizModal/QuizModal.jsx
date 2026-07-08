@@ -1,7 +1,7 @@
 import { useState } from "react"
 
 function generateQuestions(movies) {
-  const shuffled = [...movies].sort(() => 0.5 - Math.random())
+  const shuffled = movies.toSorted(() => 0.5 - Math.random())
   const selectedMovies = shuffled.slice(0, 5)
 
   const possibleRatings = [
