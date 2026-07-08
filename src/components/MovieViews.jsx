@@ -120,14 +120,18 @@ export default function MovieViews({ movies, movieViewMode, username, onViewMode
       {movieViewMode === "timeline" && (
         <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
           {movies.map((movie, i) => (
-            <div
+            <a
+              href={movie.link}
+              target="_blank"
+              rel="noopener noreferrer"
               key={i}
               className="rd-timeline-row"
               style={{
+                textDecoration: "none",
+                color: "inherit",
                 animation: "fadeSlideIn 0.4s ease both",
                 animationDelay: `${i * 40}ms`,
               }}
-              onClick={() => window.open(movie.link, "_blank")}
               onMouseEnter={(e) =>
                 (e.currentTarget.style.background = "rgba(0,229,255,0.05)")
               }
@@ -215,7 +219,7 @@ export default function MovieViews({ movies, movieViewMode, username, onViewMode
                 }}>
                 ↗
               </div>
-            </div>
+            </a>
           ))}
         </div>
       )}

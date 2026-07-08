@@ -11,7 +11,10 @@ export default function MovieCard({ movie, size, index }) {
   const [hovered, setHovered] = useState(false)
 
   return (
-    <div
+    <a
+      href={movie.link}
+      target="_blank"
+      rel="noopener noreferrer"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
       style={{
@@ -19,7 +22,8 @@ export default function MovieCard({ movie, size, index }) {
         position: "relative",
         overflow: "hidden",
         borderRadius: "4px",
-        cursor: "pointer",
+        display: "block",
+        textDecoration: "none",
         border: hovered
           ? "1px solid rgba(0,229,255,0.5)"
           : "1px solid rgba(255,255,255,0.06)",
@@ -30,8 +34,7 @@ export default function MovieCard({ movie, size, index }) {
         animation: `fadeSlideIn 0.5s ease both`,
         animationDelay: `${index * 60}ms`,
         background: "#0a0a0a",
-      }}
-      onClick={() => window.open(movie.link, "_blank")}>
+      }}>
       {movie.poster ? (
         <img
           src={movie.poster}
@@ -49,9 +52,7 @@ export default function MovieCard({ movie, size, index }) {
           }}
         />
       ) : (
-        <div className="rd-no-poster">
-          🎬
-        </div>
+        <div className="rd-no-poster">🎬</div>
       )}
 
       <div
@@ -76,8 +77,12 @@ export default function MovieCard({ movie, size, index }) {
           zIndex: 3,
           padding: size === 3 ? "16px 14px" : "10px 10px",
           paddingBottom: hovered
-            ? size === 3 ? "16px" : "10px"
-            : size === 3 ? "14px" : "8px",
+            ? size === 3
+              ? "16px"
+              : "10px"
+            : size === 3
+              ? "14px"
+              : "8px",
           transition: "padding-bottom 0.3s ease",
         }}>
         <div
@@ -128,9 +133,7 @@ export default function MovieCard({ movie, size, index }) {
         )}
       </div>
 
-      <div className="rd-index-badge">
-        {String(index + 1).padStart(2, "0")}
-      </div>
-    </div>
+      <div className="rd-index-badge">{String(index + 1).padStart(2, "0")}</div>
+    </a>
   )
 }

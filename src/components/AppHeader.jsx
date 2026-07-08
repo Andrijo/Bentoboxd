@@ -27,12 +27,23 @@ export default function AppHeader({ movies, onReset, onShowQuiz, onShowGame }) {
       />
 
       <h1
-        onClick={onReset}
         className="rd-header-title"
         style={{
           fontSize: "clamp(2.5rem, 6vw, 5rem)",
         }}>
-        BENTOBOXD
+        <button
+          onClick={onReset}
+          type="button"
+          style={{
+            background: "none",
+            border: "none",
+            padding: 0,
+            font: "inherit",
+            color: "inherit",
+            cursor: "pointer",
+          }}>
+          BENTOBOXD
+        </button>
       </h1>
 
       {movies.length > 0 && (
