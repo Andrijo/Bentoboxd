@@ -4,15 +4,17 @@
 
 **Dashboard analítico visual para Letterboxd**
 
-![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)
-![Vite](https://img.shields.io/badge/Vite-7-646CFF?logo=vite)
-![License](https://img.shields.io/badge/license-MIT-green)
+![React](https://img.shields.io/badge/React-000000?style=for-the-badge&logo=react&logoColor=white)
+![Vite](https://img.shields.io/badge/Vite-000000?style=for-the-badge&logo=vite&logoColor=white)
+![License](https://img.shields.io/badge/License-MIT-000000?style=for-the-badge&logo=opensourceinitiative&logoColor=white)
 
 </div>
 
 ## Descripción
 
 Bentoboxd es una aplicación web que convierte el feed de Letterboxd de cualquier usuario en un panel de visualización interactivo con estética cyberpunk/HUD. Ingresa un usuario y obtén métricas, gráficos y vistas alternativas de su actividad cinematográfica reciente.
+
+Nace como un experimento personal para explorar visualización de datos, integración de APIs y animaciones CSS, todo envuelto en una interfaz oscura con temática de interfaz de máquina. Sin frameworks de UI, sin TypeScript, sin dependencias pesadas — solo React, Vite y CSS.
 
 ## Características
 
