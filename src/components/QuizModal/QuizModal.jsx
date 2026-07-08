@@ -20,21 +20,31 @@ function generateQuestions(movies) {
       correct = movie.year
       options = [correct]
 
+      const yearSet = new Set(options)
+
       while (options.length < 4) {
         const fakeYear = (
           parseInt(correct) + (Math.floor(Math.random() * 11) - 5)
         ).toString()
-        if (!options.includes(fakeYear)) options.push(fakeYear)
+        if (!yearSet.has(fakeYear)) {
+          options.push(fakeYear)
+          yearSet.add(fakeYear)
+        }
       }
     } else {
       qText = `¿Qué calificación le diste a "${movie.title}"?`
       correct = movie.rating ? `${movie.rating}` : "Sin calificar"
       options = [correct]
 
+      const ratingSet = new Set(options)
+
       while (options.length < 4) {
         const fakeRating =
           possibleRatings[Math.floor(Math.random() * possibleRatings.length)]
-        if (!options.includes(fakeRating)) options.push(fakeRating)
+        if (!ratingSet.has(fakeRating)) {
+          options.push(fakeRating)
+          ratingSet.add(fakeRating)
+        }
       }
     }
 
