@@ -19,7 +19,7 @@ const GENRE_CONFIG = {
 const GENRE_KEYS = Object.keys(GENRE_CONFIG)
 
 // Clave de API de TMDB (The Movie Database)
-const TMDB_API_KEY = "74ec8c652ebdde0b5dda418dc0a79d91"
+const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY
 
 // Mapeo de IDs de géneros de TMDB a nombres legibles
 const TMDB_GENRES = {

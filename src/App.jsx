@@ -44,10 +44,8 @@ const GENRE_CONFIG = {
 
 const GENRE_KEYS = Object.keys(GENRE_CONFIG)
 
-// ─────────────────────────────────────────────
 // TMDB API Metadata fetcher (Sincronización Total + Streaming)
-// ─────────────────────────────────────────────
-const TMDB_API_KEY = "74ec8c652ebdde0b5dda418dc0a79d91"
+const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY
 
 const TMDB_GENRES = {
   27: "Terror",
