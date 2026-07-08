@@ -1,16 +1,16 @@
 import { useState } from "react"
 import { GENRE_KEYS, GENRE_CONFIG } from "../../constants/genres.js"
 
+const polarToCartesian = (cx, cy, r, angleDeg) => {
+  const rad = ((angleDeg - 90) * Math.PI) / 180
+  return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) }
+}
+
 export default function DonutChart({ genres }) {
   const cx = 180, cy = 180, outerR = 130, innerR = 72
   const total = Object.values(genres).reduce((a, b) => a + b, 0) || 1
   const activeGenres = GENRE_KEYS.filter((k) => (genres[k] || 0) > 0)
   const [hovered, setHovered] = useState(null)
-
-  const polarToCartesian = (cx, cy, r, angleDeg) => {
-    const rad = ((angleDeg - 90) * Math.PI) / 180
-    return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) }
-  }
 
   const { slices } = activeGenres.reduce(
     (acc, k) => {

@@ -41,7 +41,7 @@ export default function GaugesChart({ genres }) {
               <circle cx="50" cy="50" r={r} fill="none" stroke={cfg.color} strokeWidth="6"
                 strokeLinecap="round" strokeDasharray={circ} strokeDashoffset={dashOffset}
                 transform="rotate(-90 50 50)" filter={`url(#glow-${k})`}
-                style={{ transition: "stroke-dashoffset 1.5s cubic-bezier(0.1, 0.8, 0.2, 1)" }}
+                style={{ transition: "stroke-dashoffset 0.5s cubic-bezier(0.1, 0.8, 0.2, 1)" }}
               />
 
               <text x="50" y="58" textAnchor="middle" fontSize="26"
