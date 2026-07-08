@@ -50,7 +50,7 @@ export default function DirectorsPanel({ directors, loading }) {
                     : "1px solid transparent",
                   color: viewMode === key ? "#c084fc" : "rgba(255,255,255,0.3)",
                   padding: "5px 12px", borderRadius: "2px", cursor: "pointer",
-                  fontSize: "0.5rem", fontFamily: "'Space Mono', monospace",
+                  fontSize: "0.75rem", fontFamily: "'Space Mono', monospace",
                   letterSpacing: "1.5px", transition: "all 0.2s",
                 }}>
                 {label}
@@ -64,7 +64,7 @@ export default function DirectorsPanel({ directors, loading }) {
         {loading && (
           <div style={{ display: "flex", justifyContent: "center", padding: "40px 0" }}>
             <div style={{
-              fontSize: "0.55rem", letterSpacing: "4px", color: "rgba(0,229,255,0.5)",
+              fontSize: "0.75rem", letterSpacing: "4px", color: "rgba(0,229,255,0.5)",
               animation: "pulse 1.2s ease infinite", fontFamily: "'Space Mono', monospace",
               textTransform: "uppercase",
             }}>
@@ -83,7 +83,7 @@ export default function DirectorsPanel({ directors, loading }) {
 
         {!loading && !hasData && (
           <div style={{
-            textAlign: "center", fontSize: "0.55rem",
+            textAlign: "center", fontSize: "0.75rem",
             color: "rgba(255,255,255,0.2)", marginTop: "20px",
             fontFamily: "'Space Mono', monospace",
           }}>

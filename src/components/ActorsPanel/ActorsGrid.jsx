@@ -22,12 +22,10 @@ export default function ActorsGrid({ actors }) {
             borderRadius: "4px", animation: "fadeSlideIn 0.3s ease both",
             animationDelay: `${i * 50}ms`,
           }}>
-            <div style={{
-              width: "32px", height: "32px", background: `${color}15`,
-              border: `1px solid ${color}40`, display: "flex",
-              alignItems: "center", justifyContent: "center", borderRadius: "50%",
-              marginRight: "12px", fontFamily: "'Bebas Neue', sans-serif",
-              fontSize: "1rem", color: color,
+            <div className="rd-rank-circle" style={{
+              background: `${color}15`,
+              border: `1px solid ${color}40`,
+              color: color,
             }}>
               {i + 1}
             </div>
@@ -39,7 +37,7 @@ export default function ActorsGrid({ actors }) {
               }}>
                 {name}
               </div>
-              <div style={{ fontSize: "0.55rem", color: "rgba(255,255,255,0.4)" }}>
+              <div style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.4)" }}>
                 {count} CRÉDITOS DETECTADOS
               </div>
             </div>

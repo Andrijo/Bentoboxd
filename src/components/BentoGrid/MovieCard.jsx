@@ -49,18 +49,7 @@ export default function MovieCard({ movie, size, index }) {
           }}
         />
       ) : (
-        <div
-          style={{
-            position: "absolute",
-            inset: 0,
-            background:
-              "linear-gradient(to top, #0a0a0a 0%, rgba(10,10,10,0.85) 25%, rgba(10,10,10,0.3) 55%, transparent 100%)",
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "center",
-            color: "rgba(255,255,255,0.15)",
-            fontSize: "2rem",
-          }}>
+        <div className="rd-no-poster">
           🎬
         </div>
       )}
@@ -114,7 +103,7 @@ export default function MovieCard({ movie, size, index }) {
           {movie.year && (
             <span
               style={{
-                fontSize: "0.6rem",
+                fontSize: "0.75rem",
                 color: "rgba(255,255,255,0.4)",
                 fontFamily: "'Space Mono', monospace",
               }}>
@@ -128,7 +117,7 @@ export default function MovieCard({ movie, size, index }) {
           <div
             style={{
               marginTop: "5px",
-              fontSize: "0.55rem",
+              fontSize: "0.75rem",
               color: "rgba(0,229,255,0.6)",
               fontFamily: "'Space Mono', monospace",
               letterSpacing: "1px",
@@ -139,25 +128,7 @@ export default function MovieCard({ movie, size, index }) {
         )}
       </div>
 
-      <div
-        style={{
-          position: "absolute",
-          top: "8px",
-          right: "8px",
-          zIndex: 10,
-          width: "25px",
-          height: "25px",
-          borderRadius: "50%",
-          background: "rgba(0,0,0,0.7)",
-          border: "1px solid rgba(0,229,255,0.3)",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          fontSize: "0.5rem",
-          color: "rgba(0,229,255,0.7)",
-          fontFamily: "'Space Mono', monospace",
-          backdropFilter: "blur(4px)",
-        }}>
+      <div className="rd-index-badge">
         {String(index + 1).padStart(2, "0")}
       </div>
     </div>

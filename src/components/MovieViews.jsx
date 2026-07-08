@@ -60,7 +60,7 @@ export default function MovieViews({ movies, movieViewMode, username, pattern, o
                 padding: "5px 12px",
                 borderRadius: "2px",
                 cursor: "pointer",
-                fontSize: "0.5rem",
+                fontSize: "0.75rem",
                 fontFamily: "'Space Mono', monospace",
                 letterSpacing: "1.5px",
                 transition: "all 0.2s",
@@ -96,18 +96,10 @@ export default function MovieViews({ movies, movieViewMode, username, pattern, o
           {movies.map((movie, i) => (
             <div
               key={i}
+              className="rd-timeline-row"
               style={{
-                display: "flex",
-                gap: "20px",
-                background: "rgba(255,255,255,0.02)",
-                border: "1px solid rgba(255,255,255,0.05)",
-                padding: "12px",
-                borderRadius: "4px",
-                alignItems: "center",
                 animation: "fadeSlideIn 0.4s ease both",
                 animationDelay: `${i * 40}ms`,
-                cursor: "pointer",
-                transition: "background 0.2s",
               }}
               onClick={() => window.open(movie.link, "_blank")}
               onMouseEnter={(e) =>
@@ -177,7 +169,7 @@ export default function MovieViews({ movies, movieViewMode, username, pattern, o
                   {movie.year && (
                     <span
                       style={{
-                        fontSize: "0.65rem",
+                        fontSize: "0.75rem",
                         color: "rgba(255,255,255,0.4)",
                         fontFamily: "'Space Mono', monospace",
                       }}>
@@ -203,30 +195,8 @@ export default function MovieViews({ movies, movieViewMode, username, pattern, o
       )}
 
       {movieViewMode === "terminal" && (
-        <div
-          style={{
-            background: "#050505",
-            border: "1px solid rgba(0,229,255,0.2)",
-            padding: "24px",
-            borderRadius: "4px",
-            fontFamily: "'Space Mono', monospace",
-            boxShadow: "inset 0 0 20px rgba(0,0,0,0.8)",
-            position: "relative",
-            overflow: "hidden",
-          }}>
-          <div
-            style={{
-              position: "absolute",
-              top: 0,
-              left: 0,
-              right: 0,
-              bottom: 0,
-              background:
-                "linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06))",
-              backgroundSize: "100% 4px, 3px 100%",
-              pointerEvents: "none",
-            }}
-          />
+        <div className="rd-terminal-box">
+          <div className="rd-terminal-overlay" />
 
           <div
             style={{
@@ -251,7 +221,7 @@ export default function MovieViews({ movies, movieViewMode, username, pattern, o
                   justifyContent: "space-between",
                   padding: "6px 0",
                   borderBottom: "1px dashed rgba(0,229,255,0.15)",
-                  fontSize: "0.7rem",
+                  fontSize: "0.75rem",
                   color: "#00e5ff",
                   animation: "fadeSlideIn 0.1s ease both",
                   animationDelay: `${i * 20}ms`,

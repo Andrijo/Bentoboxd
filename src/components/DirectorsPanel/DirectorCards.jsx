@@ -27,7 +27,7 @@ export default function DirectorCards({ directors }) {
             {name}
           </span>
           <span style={{
-            fontSize: "0.6rem", color: rankColors[i] || rankColors[0],
+            fontSize: "0.75rem", color: rankColors[i] || rankColors[0],
             fontFamily: "'Space Mono', monospace", letterSpacing: "1px",
             background: `${rankColors[i] || rankColors[0]}15`,
             padding: "4px 8px", borderRadius: "2px",

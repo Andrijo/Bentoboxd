@@ -19,7 +19,7 @@ export default function BarChart({ genres }) {
         return (
           <div key={k} style={{ display: "flex", alignItems: "center", gap: "14px" }}>
             <div style={{
-              width: "90px", fontSize: "0.65rem", fontFamily: "'Space Mono', monospace",
+              width: "90px", fontSize: "0.75rem", fontFamily: "'Space Mono', monospace",
               color: "rgba(255,255,255,0.7)", textAlign: "right",
               letterSpacing: "0.5px", whiteSpace: "nowrap",
             }}>

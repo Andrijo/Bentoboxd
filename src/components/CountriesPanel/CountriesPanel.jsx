@@ -47,7 +47,7 @@ export default function CountriesPanel({ countries, loading }) {
                   border: viewMode === key ? `1px solid ${themeColor}50` : "1px solid transparent",
                   color: viewMode === key ? themeColor : "rgba(255,255,255,0.3)",
                   padding: "5px 12px", borderRadius: "2px", cursor: "pointer",
-                  fontSize: "0.5rem", fontFamily: "'Space Mono', monospace",
+                  fontSize: "0.75rem", fontFamily: "'Space Mono', monospace",
                   letterSpacing: "1.5px", transition: "all 0.2s",
                 }}>
                 {label}
@@ -60,7 +60,7 @@ export default function CountriesPanel({ countries, loading }) {
         {loading && (
           <div style={{ display: "flex", justifyContent: "center", padding: "20px" }}>
             <div style={{
-              fontSize: "0.55rem", letterSpacing: "4px", color: `${themeColor}80`,
+              fontSize: "0.75rem", letterSpacing: "4px", color: `${themeColor}80`,
               animation: "pulse 1.2s ease infinite", fontFamily: "'Space Mono', monospace",
               textTransform: "uppercase",
             }}>
@@ -76,7 +76,7 @@ export default function CountriesPanel({ countries, loading }) {
         )}
         {!loading && !hasData && (
           <div style={{
-            textAlign: "center", fontSize: "0.55rem",
+            textAlign: "center", fontSize: "0.75rem",
             color: "rgba(255,255,255,0.2)", marginTop: "20px",
             fontFamily: "'Space Mono', monospace",
           }}>

@@ -63,7 +63,7 @@ export default function GenrePanel({ genres, loadingGenres, genreError }) {
                     : "1px solid transparent",
                   color: chartType === key ? "#00e5ff" : "rgba(255,255,255,0.3)",
                   padding: "5px 12px", borderRadius: "2px", cursor: "pointer",
-                  fontSize: "0.5rem", fontFamily: "'Space Mono', monospace",
+                  fontSize: "0.75rem", fontFamily: "'Space Mono', monospace",
                   letterSpacing: "1.5px", transition: "all 0.2s",
                 }}>
                 {label}
@@ -121,7 +121,7 @@ export default function GenrePanel({ genres, loadingGenres, genreError }) {
 
         {!loadingGenres && !genreError && !hasData && (
           <div style={{
-            fontSize: "0.55rem", color: "rgba(255,255,255,0.2)",
+            fontSize: "0.75rem", color: "rgba(255,255,255,0.2)",
             letterSpacing: "2px", fontFamily: "'Space Mono', monospace",
           }}>
             Sin datos de géneros disponibles
