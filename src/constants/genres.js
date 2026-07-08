@@ -1,5 +1,4 @@
-// Configuración de géneros para el análisis y visualización
-const GENRE_CONFIG = {
+export const GENRE_CONFIG = {
   Terror: { color: "#ff004c", glow: "rgba(255,0,76,0.9)" },
   Acción: { color: "#9b59b6", glow: "rgba(155,89,182,0.8)" },
   "Ciencia Ficción": {
@@ -15,14 +14,11 @@ const GENRE_CONFIG = {
   Otro: { color: "#64748b", glow: "rgba(100,116,139,0.4)" },
 }
 
-// Claves de los géneros para iterar y mostrar
-const GENRE_KEYS = Object.keys(GENRE_CONFIG)
+export const GENRE_KEYS = Object.keys(GENRE_CONFIG)
 
-// Clave de API de TMDB (The Movie Database)
-const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY
+export const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY
 
-// Mapeo de IDs de géneros de TMDB a nombres legibles
-const TMDB_GENRES = {
+export const TMDB_GENRES = {
   27: "Terror",
   28: "Acción",
   878: "Ciencia Ficción",
