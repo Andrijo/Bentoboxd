@@ -1,5 +1,7 @@
+import { useRef, useState, useEffect, useMemo } from "react"
 import MovieCard from "./BentoGrid/MovieCard.jsx"
 import StarRating from "./StarRating.jsx"
+import { generateGapFreePattern } from "./BentoGrid/bentoPatterns.js"
 
 const VIEW_OPTIONS = [
   { key: "bento", label: "▦ BENTO" },
@@ -7,7 +9,29 @@ const VIEW_OPTIONS = [
   { key: "terminal", label: ">_ TERMINAL" },
 ]
 
-export default function MovieViews({ movies, movieViewMode, username, pattern, onViewModeChange }) {
+export default function MovieViews({ movies, movieViewMode, username, onViewModeChange }) {
+  const gridRef = useRef(null)
+  const [columns, setColumns] = useState(5)
+
+  useEffect(() => {
+    const el = gridRef.current
+    if (!el) return
+    const measure = () => {
+      const width = el.getBoundingClientRect().width
+      if (width > 0) {
+        setColumns(Math.max(2, Math.floor(width / 210)))
+      }
+    }
+    measure()
+    const ro = new ResizeObserver(measure)
+    ro.observe(el)
+    return () => ro.disconnect()
+  }, [movies.length])
+
+  const dynamicPattern = useMemo(
+    () => generateGapFreePattern(columns, movies.length),
+    [columns, movies.length],
+  )
   return (
     <div style={{ padding: "32px 40px 32px" }}>
       <div
@@ -73,9 +97,10 @@ export default function MovieViews({ movies, movieViewMode, username, pattern, o
 
       {movieViewMode === "bento" && (
         <div
+          ref={gridRef}
           style={{
             display: "grid",
-            gridTemplateColumns: "repeat(auto-fill, minmax(200px, 1fr))",
+            gridTemplateColumns: `repeat(${columns}, 1fr)`,
             gridAutoRows: "180px",
             gap: "8px",
             gridAutoFlow: "dense",
@@ -84,7 +109,7 @@ export default function MovieViews({ movies, movieViewMode, username, pattern, o
             <MovieCard
               key={i}
               movie={movie}
-              size={pattern[i] || 1}
+              size={dynamicPattern[i] || 1}
               index={i}
             />
           ))}

@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo, useReducer } from "react"
+import { useState, useCallback, useReducer } from "react"
 import HighLowGame from "./HighLowGame.jsx"
 import QuizModal from "./components/QuizModal/QuizModal.jsx"
 import AppHeader from "./components/AppHeader.jsx"
@@ -8,8 +8,6 @@ import DataPanels from "./components/DataPanels.jsx"
 import EmptyLanding from "./components/EmptyLanding.jsx"
 import { fetchMetadataFromTMDB } from "./services/tmdb.js"
 import { extractPoster, extractRating } from "./services/letterboxd.js"
-import { BENTO_PATTERNS } from "./components/BentoGrid/bentoPatterns.js"
-
 const initialMetadata = {
   genres: {},
   directors: {},
@@ -192,11 +190,6 @@ export default function App() {
     dispatchMeta({ type: "RESET_METADATA" })
   }, [])
 
-  const pattern = useMemo(
-    () => BENTO_PATTERNS[Math.floor(Math.random() * BENTO_PATTERNS.length)],
-    [],
-  )
-
   const showGenrePanel = movies.length > 0 || meta.loadingGenres
 
   return (
@@ -289,7 +282,6 @@ export default function App() {
           movies={movies}
           movieViewMode={movieViewMode}
           username={username}
-          pattern={pattern}
           onViewModeChange={setMovieViewMode}
         />
       )}

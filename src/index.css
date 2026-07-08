@@ -7,7 +7,7 @@ html {
 }
 
 body {
-  max-width: 70vw;
+  max-width: 1400px;
   margin: 0 auto;
   background: linear-gradient(to bottom, #111315, #181818);
 }
