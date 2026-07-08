@@ -74,22 +74,9 @@ export default function QuizModal({ movies, onClose }) {
   const current = questions[currentQ]
 
   return (
-    <div style={{
-      position: "fixed", inset: 0, zIndex: 100,
-      background: "rgba(10,10,10,0.9)", backdropFilter: "blur(8px)",
-      display: "flex", alignItems: "center", justifyContent: "center",
-      padding: "20px", fontFamily: "'Space Mono', monospace",
-    }}>
-      <div style={{
-        background: "#121212", border: "1px solid rgba(0,229,255,0.3)",
-        boxShadow: "0 0 30px rgba(0,229,255,0.1)", borderRadius: "4px",
-        width: "100%", maxWidth: "500px", overflow: "hidden", position: "relative",
-      }}>
-        <button onClick={onClose} style={{
-          position: "absolute", top: "16px", right: "16px",
-          background: "none", border: "none", color: "rgba(255,255,255,0.5)",
-          fontSize: "1.2rem", cursor: "pointer", zIndex: 10,
-        }}>
+    <div className="rd-modal-overlay">
+      <div className="rd-modal-content">
+        <button onClick={onClose} className="rd-modal-close">
           ✕
         </button>
 
@@ -121,7 +108,7 @@ export default function QuizModal({ movies, onClose }) {
             <div style={{
               padding: "20px", borderBottom: "1px solid rgba(255,255,255,0.05)",
               display: "flex", justifyContent: "space-between",
-              color: "#00e5ff", fontSize: "0.7rem",
+              color: "#00e5ff", fontSize: "0.75rem",
             }}>
               <span>SYSTEM.TRIVIA_MODULE</span>
               <span>PREGUNTA {currentQ + 1} / {questions.length}</span>

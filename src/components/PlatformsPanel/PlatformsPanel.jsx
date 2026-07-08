@@ -28,7 +28,7 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
         {selectedPlatform && (
           <button onClick={() => setSelectedPlatform(null)} style={{
             background: "none", border: `1px solid ${themeColor}`, color: themeColor,
-            fontSize: "0.6rem", padding: "4px 10px", cursor: "pointer", textTransform: "uppercase",
+            fontSize: "0.75rem", padding: "4px 10px", cursor: "pointer", textTransform: "uppercase",
           }}>
             ✕ Desvincular
           </button>
@@ -38,7 +38,7 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
       <div style={{ padding: "24px" }}>
         {loading ? (
           <div style={{
-            textAlign: "center", fontSize: "0.55rem", letterSpacing: "4px",
+            textAlign: "center", fontSize: "0.75rem", letterSpacing: "4px",
             color: themeColor, animation: "pulse 1.2s ease infinite",
           }}>
             ◈ ESCANEANDO FRECUENCIAS...
@@ -62,10 +62,10 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
                   <img src={logos[name]} alt={name}
                     style={{ width: "30px", height: "30px", borderRadius: "4px", border: `1px solid ${themeColor}30` }} />
                   <div style={{ overflow: "hidden" }}>
-                    <div style={{ fontSize: "0.7rem", color: "#DBD5CA", fontWeight: "bold", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
+                    <div style={{ fontSize: "0.75rem", color: "#DBD5CA", fontWeight: "bold", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
                       {name}
                     </div>
-                    <div style={{ fontSize: "0.55rem", color: themeColor }}>{count} ITEMS</div>
+                    <div style={{ fontSize: "0.75rem", color: themeColor }}>{count} ITEMS</div>
                   </div>
                 </div>
               ))}
@@ -77,7 +77,7 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
                 padding: "16px", borderRadius: "4px", animation: "fadeSlideIn 0.3s ease both",
               }}>
                 <div style={{
-                  fontSize: "0.6rem", color: themeColor, letterSpacing: "2px",
+                  fontSize: "0.75rem", color: themeColor, letterSpacing: "2px",
                   marginBottom: "12px", borderBottom: `1px solid ${themeColor}20`, paddingBottom: "8px",
                 }}>
                   MOSTRANDO ARCHIVOS EN: {selectedPlatform.toUpperCase()}

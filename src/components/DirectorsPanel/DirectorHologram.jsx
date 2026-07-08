@@ -41,7 +41,7 @@ export default function DirectorHologram({ directors }) {
               }} />
             </div>
             <div style={{
-              fontSize: "0.55rem", textAlign: "center",
+              fontSize: "0.75rem", textAlign: "center",
               color: "rgba(255,255,255,0.7)", letterSpacing: "1px", height: "30px",
             }}>
               {name.split(" ").map((word, idx) => (

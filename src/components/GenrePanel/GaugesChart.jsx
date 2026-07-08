@@ -58,7 +58,7 @@ export default function GaugesChart({ genres }) {
                 {cfg.icon} {k}
               </div>
               <div style={{
-                fontSize: "0.5rem", color: "rgba(255,255,255,0.3)",
+                fontSize: "0.75rem", color: "rgba(255,255,255,0.3)",
                 fontFamily: "'Space Mono', monospace", marginTop: "2px",
               }}>
                 {Math.round(percent * 100)}% DEL MÁXIMO

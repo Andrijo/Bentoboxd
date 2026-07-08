@@ -137,7 +137,7 @@ export default function DonutChart({ genres }) {
               }}
             />
             <span style={{
-              fontSize: "0.6rem", fontFamily: "'Space Mono', monospace",
+              fontSize: "0.75rem", fontFamily: "'Space Mono', monospace",
               color: hovered === i ? s.cfg.color : "rgba(255,255,255,0.6)",
               transition: "color 0.2s", letterSpacing: "0.5px",
             }}>
@@ -145,7 +145,7 @@ export default function DonutChart({ genres }) {
             </span>
             <span style={{
               marginLeft: "auto", paddingLeft: "12px",
-              fontSize: "0.55rem", fontFamily: "'Space Mono', monospace",
+              fontSize: "0.75rem", fontFamily: "'Space Mono', monospace",
               color: "rgba(255,255,255,0.35)",
             }}>
               {s.count}

@@ -8,7 +8,7 @@ export default function StarRating({ rating }) {
   }
   return (
     <span
-      style={{ color: "#00e5ff", fontSize: "0.7rem", letterSpacing: "1px" }}>
+      style={{ color: "#00e5ff", fontSize: "0.75rem", letterSpacing: "1px" }}>
       {stars.join("")}
     </span>
   )

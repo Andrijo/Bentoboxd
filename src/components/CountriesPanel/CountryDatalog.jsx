@@ -38,15 +38,11 @@ export default function CountryDatalog({ countries }) {
               )}
             </div>
 
-            <span style={{
-              flex: 1, color: "#DBD5CA", fontSize: "0.85rem",
-              textTransform: "uppercase", letterSpacing: "1px", fontWeight: "bold",
-              whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
-            }}>
+            <span className="rd-country-name">
               {fullName}
             </span>
             <span style={{
-              fontSize: "0.6rem", color: themeColor, fontFamily: "'Space Mono', monospace",
+              fontSize: "0.75rem", color: themeColor, fontFamily: "'Space Mono', monospace",
               letterSpacing: "1px", background: `${themeColor}15`,
               padding: "4px 8px", borderRadius: "2px",
             }}>

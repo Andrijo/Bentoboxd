@@ -13,17 +13,7 @@ export default function AppHeader({ movies, onReset, onShowQuiz, onShowGame }) {
   }
 
   return (
-    <div
-      style={{
-        padding: "48px 40px 32px",
-        borderBottom: "1px solid rgba(255,255,255,0.06)",
-        position: "relative",
-        display: "flex",
-        justifyContent: "space-between",
-        alignItems: "center",
-        flexWrap: "wrap",
-        gap: "20px",
-      }}>
+    <div className="rd-header-bar">
       <div
         style={{
           position: "absolute",
@@ -38,17 +28,9 @@ export default function AppHeader({ movies, onReset, onShowQuiz, onShowGame }) {
 
       <h1
         onClick={onReset}
+        className="rd-header-title"
         style={{
-          fontFamily: "'Bebas Neue', sans-serif",
           fontSize: "clamp(2.5rem, 6vw, 5rem)",
-          letterSpacing: "2px",
-          lineHeight: 1,
-          margin: 0,
-          cursor: "pointer",
-          background:
-            "linear-gradient(135deg, #f8f9fa 0%, rgba(255,255,255,0.5) 100%)",
-          WebkitBackgroundClip: "text",
-          WebkitTextFillColor: "transparent",
         }}>
         BENTOBOXD
       </h1>

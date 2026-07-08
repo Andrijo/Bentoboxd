@@ -157,16 +157,7 @@ function GameHeader({ category, streak, onClose, onCategoryChange }) {
         }}>
         <button
           onClick={onClose}
-          style={{
-            background: "transparent",
-            border: "1px solid rgba(255,255,255,0.1)",
-            color: "#888",
-            padding: "8px 16px",
-            borderRadius: "4px",
-            cursor: "pointer",
-            transition: "all 0.2s",
-            width: "100px",
-          }}
+          className="rd-hlg-close-btn"
           onMouseEnter={(e) => (e.target.style.color = "#fff")}
           onMouseLeave={(e) => (e.target.style.color = "#888")}>
           ✕ Salir
@@ -240,7 +231,7 @@ function GameHeader({ category, streak, onClose, onCategoryChange }) {
               borderRadius: "4px",
               cursor: "pointer",
               fontWeight: "bold",
-              fontSize: "0.7rem",
+              fontSize: "0.75rem",
               fontFamily: "'Space Mono', monospace",
               transition: "all 0.3s",
               boxShadow:
@@ -443,17 +434,7 @@ export default function HighLowGame({ movies, onClose }) {
   if (!movieA || !movieB) return null
 
   return (
-    <div
-      style={{
-        position: "fixed",
-        inset: 0,
-        zIndex: 9999,
-        backgroundColor: "#181818",
-        display: "flex",
-        flexDirection: "column",
-        overflow: "hidden",
-        fontFamily: "'Space Mono', monospace",
-      }}>
+    <div className="rd-hlg-container">
       <GameHeader
         category={category}
         streak={state.streak}
