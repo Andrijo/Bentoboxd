@@ -51,7 +51,15 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
             }}>
               {topPlatforms.map(([name, count]) => (
                 <div key={name}
+                  role="button"
+                  tabIndex={0}
                   onClick={() => setSelectedPlatform(name)}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter' || e.key === ' ') {
+                      e.preventDefault()
+                      setSelectedPlatform(name)
+                    }
+                  }}
                   style={{
                     display: "flex", alignItems: "center", gap: "12px",
                     background: selectedPlatform === name ? `${themeColor}15` : "rgba(0,0,0,0.4)",
