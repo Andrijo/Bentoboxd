@@ -26,7 +26,7 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
           STREAMING
         </div>
         {selectedPlatform && (
-          <button onClick={() => setSelectedPlatform(null)} style={{
+          <button onClick={() => setSelectedPlatform(null)} type="button" style={{
             background: "none", border: `1px solid ${themeColor}`, color: themeColor,
             fontSize: "0.75rem", padding: "4px 10px", cursor: "pointer", textTransform: "uppercase",
           }}>
@@ -57,7 +57,7 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
                     background: selectedPlatform === name ? `${themeColor}15` : "rgba(0,0,0,0.4)",
                     padding: "10px", borderRadius: "4px",
                     border: `1px solid ${selectedPlatform === name ? themeColor : "rgba(255,255,255,0.05)"}`,
-                    cursor: "pointer", transition: "all 0.2s",
+                    cursor: "pointer", transition: "background 0.2s, border-color 0.2s",
                   }}>
                   <img src={logos[name]} alt={name}
                     style={{ width: "30px", height: "30px", borderRadius: "4px", border: `1px solid ${themeColor}30` }} />

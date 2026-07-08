@@ -21,6 +21,7 @@ export default function SearchSection({ url, loading, onUrlChange, onFetch }) {
       <button
         onClick={onFetch}
         disabled={loading}
+        type="button"
         className="rd-search-btn"
         style={{
           background: loading

@@ -1,14 +1,14 @@
 import { useState } from "react"
 import StarRating from "../StarRating.jsx"
 
+const SIZES = {
+  1: { gridColumn: "span 1", gridRow: "span 1" },
+  2: { gridColumn: "span 2", gridRow: "span 1" },
+  3: { gridColumn: "span 2", gridRow: "span 2" },
+}
+
 export default function MovieCard({ movie, size, index }) {
   const [hovered, setHovered] = useState(false)
-
-  const SIZES = {
-    1: { gridColumn: "span 1", gridRow: "span 1" },
-    2: { gridColumn: "span 2", gridRow: "span 1" },
-    3: { gridColumn: "span 2", gridRow: "span 2" },
-  }
 
   return (
     <div

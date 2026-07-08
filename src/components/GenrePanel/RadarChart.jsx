@@ -1,11 +1,12 @@
 import { GENRE_KEYS, GENRE_CONFIG } from "../../constants/genres.js"
 
+const levels = [0.25, 0.5, 0.75, 1.0]
+
 export default function RadarChart({ genres }) {
   const cx = 200, cy = 200, r = 140
   const keys = GENRE_KEYS.filter((k) => (genres[k] || 0) > 0 || true)
   const total = Object.values(genres).reduce((a, b) => a + b, 0) || 1
   const n = keys.length
-  const levels = [0.25, 0.5, 0.75, 1.0]
 
   const angleOf = (i) => (Math.PI * 2 * i) / n - Math.PI / 2
   const pointAt = (i, fraction) => ({

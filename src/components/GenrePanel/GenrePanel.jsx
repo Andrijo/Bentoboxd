@@ -56,6 +56,7 @@ export default function GenrePanel({ genres, loadingGenres, genreError }) {
               <button
                 key={key}
                 onClick={() => setChartType(key)}
+                type="button"
                 style={{
                   background: chartType === key ? "rgba(0,229,255,0.15)" : "transparent",
                   border: chartType === key
@@ -64,7 +65,7 @@ export default function GenrePanel({ genres, loadingGenres, genreError }) {
                   color: chartType === key ? "#00e5ff" : "rgba(255,255,255,0.3)",
                   padding: "5px 12px", borderRadius: "2px", cursor: "pointer",
                   fontSize: "0.75rem", fontFamily: "'Space Mono', monospace",
-                  letterSpacing: "1.5px", transition: "all 0.2s",
+                  letterSpacing: "1.5px", transition: "background 0.2s, border-color 0.2s, color 0.2s",
                 }}>
                 {label}
               </button>
