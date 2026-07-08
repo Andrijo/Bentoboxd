@@ -1,17 +1,17 @@
-export default function AppHeader({ movies, onReset, onShowQuiz, onShowGame }) {
-  const btnBase = {
-    padding: "10px 20px",
-    borderRadius: "3px",
-    fontFamily: "'Space Mono', monospace",
-    fontSize: "0.5rem",
-    letterSpacing: "2px",
-    cursor: "pointer",
-    textTransform: "uppercase",
-    transition: "all 0.2s",
-    width: "160px",
-    textAlign: "center",
-  }
+const btnBase = {
+  padding: "10px 20px",
+  borderRadius: "3px",
+  fontFamily: "'Space Mono', monospace",
+  fontSize: "0.5rem",
+  letterSpacing: "2px",
+  cursor: "pointer",
+  textTransform: "uppercase",
+  transition: "all 0.2s",
+  width: "160px",
+  textAlign: "center",
+}
 
+export default function AppHeader({ movies, onReset, onShowQuiz, onShowGame }) {
   return (
     <div className="rd-header-bar">
       <div
@@ -39,6 +39,7 @@ export default function AppHeader({ movies, onReset, onShowQuiz, onShowGame }) {
         <div style={{ display: "flex", gap: "12px" }}>
           <button
             onClick={onShowQuiz}
+            type="button"
             style={{
               ...btnBase,
               background: "rgba(0,229,255,0.05)",
@@ -49,6 +50,7 @@ export default function AppHeader({ movies, onReset, onShowQuiz, onShowGame }) {
           </button>
           <button
             onClick={onShowGame}
+            type="button"
             style={{
               ...btnBase,
               background: "rgba(250,204,21,0.05)",

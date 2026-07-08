@@ -68,6 +68,7 @@ export default function MovieViews({ movies, movieViewMode, username, onViewMode
             <button
               key={key}
               onClick={() => onViewModeChange(key)}
+              type="button"
               style={{
                 background:
                   movieViewMode === key
@@ -87,7 +88,7 @@ export default function MovieViews({ movies, movieViewMode, username, onViewMode
                 fontSize: "0.75rem",
                 fontFamily: "'Space Mono', monospace",
                 letterSpacing: "1.5px",
-                transition: "all 0.2s",
+                transition: "background 0.2s, border-color 0.2s, color 0.2s",
               }}>
               {label}
             </button>

@@ -76,7 +76,7 @@ export default function QuizModal({ movies, onClose }) {
   return (
     <div className="rd-modal-overlay">
       <div className="rd-modal-content">
-        <button onClick={onClose} className="rd-modal-close">
+        <button onClick={onClose} type="button" className="rd-modal-close">
           ✕
         </button>
 
@@ -95,7 +95,7 @@ export default function QuizModal({ movies, onClose }) {
               </span>{" "}
               / {questions.length}
             </div>
-            <button onClick={onClose} style={{
+            <button onClick={onClose} type="button" style={{
               background: "rgba(0,229,255,0.1)", border: "1px solid #00e5ff",
               color: "#00e5ff", padding: "10px 20px", cursor: "pointer",
               textTransform: "uppercase",
@@ -147,12 +147,13 @@ export default function QuizModal({ movies, onClose }) {
                       key={i}
                       disabled={selected !== null}
                       onClick={() => handleAnswer(opt)}
+                      type="button"
                       style={{
                         background: bgColor, border: `1px solid ${borderColor}`,
                         color: textColor, padding: "14px", borderRadius: "3px",
                         cursor: selected ? "default" : "pointer",
                         fontSize: "0.85rem", fontFamily: "'Space Mono', monospace",
-                        transition: "all 0.2s",
+                        transition: "background 0.2s, border-color 0.2s, color 0.2s",
                       }}>
                       {opt}{" "}
                       {opt !== "Sin calificar" && !current.isYear ? "⭐" : ""}

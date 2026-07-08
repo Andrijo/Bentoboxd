@@ -18,6 +18,7 @@ export default function RecentProfiles({ profiles, onSelect }) {
           <button
             key={profile}
             onClick={() => onSelect(profile)}
+            type="button"
             className="rd-profile-btn"
             onMouseEnter={(e) => {
               e.currentTarget.style.borderColor = "rgba(0,229,255,0.3)"

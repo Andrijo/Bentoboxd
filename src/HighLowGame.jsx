@@ -157,6 +157,7 @@ function GameHeader({ category, streak, onClose, onCategoryChange }) {
         }}>
         <button
           onClick={onClose}
+          type="button"
           className="rd-hlg-close-btn"
           onMouseEnter={(e) => (e.target.style.color = "#fff")}
           onMouseLeave={(e) => (e.target.style.color = "#888")}>
@@ -233,7 +234,7 @@ function GameHeader({ category, streak, onClose, onCategoryChange }) {
               fontWeight: "bold",
               fontSize: "0.75rem",
               fontFamily: "'Space Mono', monospace",
-              transition: "all 0.3s",
+              transition: "background 0.3s, color 0.3s, border 0.3s, box-shadow 0.3s",
               boxShadow:
                 category === cat.id
                   ? `0 0 15px ${CAT_CONFIG[cat.id].color}40`

@@ -43,6 +43,7 @@ export default function ActorsPanel({ actors, loading }) {
               <button
                 key={key}
                 onClick={() => setViewMode(key)}
+                type="button"
                 style={{
                   background: viewMode === key ? "rgba(74,222,128,0.15)" : "transparent",
                   border: viewMode === key
@@ -51,7 +52,7 @@ export default function ActorsPanel({ actors, loading }) {
                   color: viewMode === key ? "#4ade80" : "rgba(255,255,255,0.3)",
                   padding: "5px 12px", borderRadius: "2px", cursor: "pointer",
                   fontSize: "0.75rem", fontFamily: "'Space Mono', monospace",
-                  letterSpacing: "1.5px", transition: "all 0.2s",
+                  letterSpacing: "1.5px", transition: "background 0.2s, border-color 0.2s, color 0.2s",
                 }}>
                 {label}
               </button>

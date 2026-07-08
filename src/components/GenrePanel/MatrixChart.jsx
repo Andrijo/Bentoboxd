@@ -48,7 +48,7 @@ export default function MatrixChart({ genres }) {
                 boxShadow: isHovered
                   ? `0 0 10px ${cfg.glow}, 0 0 20px ${cfg.glow}`
                   : isDimmed ? "none" : `0 0 4px ${cfg.glow}`,
-                transition: "all 0.2s ease",
+                transition: "background 0.2s ease, border 0.2s ease, box-shadow 0.2s ease",
                 cursor: "crosshair",
                 animation: "fadeSlideIn 0.3s ease both",
                 animationDelay: `${i * 15}ms`,

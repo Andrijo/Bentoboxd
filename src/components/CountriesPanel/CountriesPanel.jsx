@@ -42,13 +42,14 @@ export default function CountriesPanel({ countries, loading }) {
               <button
                 key={key}
                 onClick={() => setViewMode(key)}
+                type="button"
                 style={{
                   background: viewMode === key ? `${themeColor}20` : "transparent",
                   border: viewMode === key ? `1px solid ${themeColor}50` : "1px solid transparent",
                   color: viewMode === key ? themeColor : "rgba(255,255,255,0.3)",
                   padding: "5px 12px", borderRadius: "2px", cursor: "pointer",
                   fontSize: "0.75rem", fontFamily: "'Space Mono', monospace",
-                  letterSpacing: "1.5px", transition: "all 0.2s",
+                  letterSpacing: "1.5px", transition: "background 0.2s, border-color 0.2s, color 0.2s",
                 }}>
                 {label}
               </button>
