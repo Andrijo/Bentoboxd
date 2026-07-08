@@ -17,13 +17,9 @@ export default function MovieCard({ movie, size, index }) {
       rel="noopener noreferrer"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      className="rd-movie-card"
       style={{
         ...SIZES[size],
-        position: "relative",
-        overflow: "hidden",
-        borderRadius: "4px",
-        display: "block",
-        textDecoration: "none",
         border: hovered
           ? "1px solid rgba(0,229,255,0.5)"
           : "1px solid rgba(255,255,255,0.06)",
@@ -33,7 +29,6 @@ export default function MovieCard({ movie, size, index }) {
         boxShadow: hovered ? "0 0 30px rgba(0,229,255,0.15)" : "none",
         animation: `fadeSlideIn 0.5s ease both`,
         animationDelay: `${index * 60}ms`,
-        background: "#0a0a0a",
       }}>
       {movie.poster ? (
         <img
@@ -83,7 +78,6 @@ export default function MovieCard({ movie, size, index }) {
             : size === 3
               ? "14px"
               : "8px",
-          transition: "padding-bottom 0.3s ease",
         }}>
         <div
           style={{

@@ -11,3 +11,12 @@ body {
   margin: 0 auto;
   background: linear-gradient(to bottom, #111315, #181818);
 }
+
+.rd-movie-card {
+  position: relative;
+  overflow: hidden;
+  border-radius: 4px;
+  display: block;
+  text-decoration: none;
+  background: #0a0a0a;
+}

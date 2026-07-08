@@ -108,7 +108,7 @@ export default function MovieViews({ movies, movieViewMode, username, onViewMode
           }}>
           {movies.map((movie, i) => (
             <MovieCard
-              key={i}
+              key={movie.link}
               movie={movie}
               size={dynamicPattern[i] || 1}
               index={i}
@@ -124,7 +124,7 @@ export default function MovieViews({ movies, movieViewMode, username, onViewMode
               href={movie.link}
               target="_blank"
               rel="noopener noreferrer"
-              key={i}
+              key={movie.link}
               className="rd-timeline-row"
               style={{
                 textDecoration: "none",
@@ -245,7 +245,7 @@ export default function MovieViews({ movies, movieViewMode, username, onViewMode
           <div style={{ display: "flex", flexDirection: "column" }}>
             {movies.map((movie, i) => (
               <div
-                key={i}
+                key={movie.link}
                 style={{
                   display: "flex",
                   justifyContent: "space-between",

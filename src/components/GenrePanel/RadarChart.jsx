@@ -50,7 +50,7 @@ export default function RadarChart({ genres }) {
         const val = genres[k] || 0
         if (val === 0) return null
         return (
-          <g key={i}>
+          <g key={k}>
             <circle cx={p.x} cy={p.y} r={5} fill={cfg.color} opacity={0.9} />
             <circle cx={p.x} cy={p.y} r={9} fill={cfg.color} opacity={0.15} />
           </g>
