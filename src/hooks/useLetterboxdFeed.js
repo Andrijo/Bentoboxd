@@ -1,5 +1,9 @@
 import { useState, useCallback } from "react"
-import { extractPoster, extractRating } from "../services/letterboxd.js"
+import {
+  parseUsername,
+  extractPoster,
+  extractRating,
+} from "../services/letterboxd.js"
 
 export function useLetterboxdFeed() {
   const [movies, setMovies] = useState([])
@@ -14,10 +18,7 @@ export function useLetterboxdFeed() {
     setMovies([])
 
     try {
-      let user = url.trim()
-      const match = user.match(/letterboxd\.com\/([^/]+)/)
-      if (match) user = match[1]
-      else user = user.replace(/^@/, "")
+      const user = parseUsername(url)
 
       setUsername(user)
 
@@ -93,5 +94,12 @@ export function useLetterboxdFeed() {
     }
   }, [])
 
-  return { movies, loading, error, username, fetchMovies, setMovies }
+  const resetFeed = useCallback(() => {
+    setMovies([])
+    setUsername(null)
+    setError(null)
+    setLoading(false)
+  }, [])
+
+  return { movies, loading, error, username, fetchMovies, resetFeed, setMovies }
 }

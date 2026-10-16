@@ -1,3 +1,9 @@
+export function parseUsername(input) {
+  const raw = (input || "").trim()
+  const match = raw.match(/letterboxd\.com\/([^/]+)/)
+  return match ? match[1] : raw.replace(/^@/, "")
+}
+
 export function extractPoster(description) {
   const match = description?.match(/<img[^>]+src="([^"]+)"/)
   return match ? match[1] : null

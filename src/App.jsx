@@ -1,4 +1,4 @@
-import { useState, useCallback, useReducer } from "react"
+import { useState, useCallback, useEffect } from "react"
 import HighLowGame from "./HighLowGame.jsx"
 import QuizModal from "./components/QuizModal/QuizModal.jsx"
 import AppHeader from "./components/AppHeader.jsx"
@@ -6,191 +6,109 @@ import SearchSection from "./components/SearchSection.jsx"
 import MovieViews from "./components/MovieViews.jsx"
 import DataPanels from "./components/DataPanels.jsx"
 import EmptyLanding from "./components/EmptyLanding.jsx"
-import { fetchMetadataFromTMDB } from "./services/tmdb.js"
-import { extractPoster, extractRating } from "./services/letterboxd.js"
-const initialMetadata = {
-  genres: {},
-  directors: {},
-  actors: {},
-  countries: {},
-  platforms: {},
-  loadingGenres: false,
-  genreError: null,
-  showQuiz: false,
-}
-
-function metadataReducer(state, action) {
-  switch (action.type) {
-    case "SET_METADATA":
-      return { ...state, ...action.payload }
-    case "RESET_METADATA":
-      return { ...initialMetadata }
-    case "SET_LOADING":
-      return { ...state, loadingGenres: action.payload }
-    case "SET_ERROR":
-      return { ...state, genreError: action.payload }
-    default:
-      return state
-  }
-}
+import { useLetterboxdFeed } from "./hooks/useLetterboxdFeed.js"
+import { useTMDBMetadata } from "./hooks/useTMDBMetadata.js"
+import { parseUsername } from "./services/letterboxd.js"
 
 export default function App() {
   const [url, setUrl] = useState("")
-  const [movies, setMovies] = useState([])
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
-  const [username, setUsername] = useState(null)
   const [movieViewMode, setMovieViewMode] = useState("bento")
   const [recentProfiles, setRecentProfiles] = useState(() => {
-    const saved = localStorage.getItem("letterboxd_recent_profiles:v1")
-    return saved ? JSON.parse(saved) : []
+    try {
+      const saved = localStorage.getItem("letterboxd_recent_profiles:v1")
+      const parsed = saved ? JSON.parse(saved) : []
+      return Array.isArray(parsed) ? parsed : []
+    } catch {
+      return []
+    }
   })
   const [showHighLowGame, setShowHighLowGame] = useState(false)
-  const [meta, dispatchMeta] = useReducer(metadataReducer, initialMetadata)
+  const [showQuiz, setShowQuiz] = useState(false)
 
-  const fetchMovies = useCallback(async () => {
-    if (!url.trim()) return
-    setLoading(true)
-    setError(null)
-    setMovies([])
-    dispatchMeta({ type: "RESET_METADATA" })
+  const {
+    movies,
+    loading: feedLoading,
+    error,
+    username,
+    fetchMovies: fetchFeed,
+    resetFeed,
+    setMovies,
+  } = useLetterboxdFeed()
 
+  const {
+    genres,
+    directors,
+    actors,
+    countries,
+    platforms,
+    loading: metaLoading,
+    error: genreError,
+    fetchMetadata,
+    resetMetadata,
+  } = useTMDBMetadata()
+
+  useEffect(() => {
     try {
-      let user = url.trim()
-      const match = user.match(/letterboxd\.com\/([^/]+)/)
-      if (match) user = match[1]
-      else user = user.replace(/^@/, "")
-
-      setUsername(user)
-
-      setRecentProfiles((prev) => {
-        const updated = [user, ...prev.filter((p) => p !== user)].slice(0, 3)
-        localStorage.setItem(
-          "letterboxd_recent_profiles:v1",
-          JSON.stringify(updated),
-        )
-        return updated
-      })
-
-      const rssUrl = `/rss-proxy/${user}/rss/`
-      const res = await fetch(rssUrl)
-      if (!res.ok)
-        throw new Error(
-          "No se pudo obtener el feed. Verifica el usuario o tu conexión.",
-        )
-      const xmlText = await res.text()
-      const parser = new DOMParser()
-      const xml = parser.parseFromString(xmlText, "text/xml")
-      const items = Array.from(xml.querySelectorAll("item")).slice(0, 15)
-
-      if (items.length === 0)
-        throw new Error("No se encontraron películas. Verifica el usuario.")
-
-      const parsed = items.map((item) => {
-        const rawTitleNode = item.querySelector("title")?.textContent || ""
-        const title =
-          item.querySelector("filmTitle")?.textContent ||
-          rawTitleNode.split(",")[0] ||
-          "Unknown"
-        const link = item.querySelector("link")?.textContent || "#"
-        const description = item.querySelector("description")?.textContent || ""
-        const ratingNode =
-          item.getElementsByTagNameNS(
-            "https://letterboxd.com",
-            "memberRating",
-          )[0] || item.getElementsByTagName("letterboxd:memberRating")[0]
-        let movieRating = ratingNode
-          ? parseFloat(ratingNode.textContent)
-          : null
-        if (!movieRating) {
-          const starMatch = rawTitleNode.match(/ - ([★½]+)$/)
-          if (starMatch) {
-            const starsText = starMatch[1]
-            const full = (starsText.match(/★/g) || []).length
-            const half = starsText.includes("½") ? 0.5 : 0
-            movieRating = full + half
-          }
-        }
-        if (!movieRating) {
-          movieRating = extractRating(description)
-        }
-        const yearNode =
-          item.getElementsByTagNameNS(
-            "https://letterboxd.com",
-            "filmYear",
-          )[0] || item.getElementsByTagName("letterboxd:filmYear")[0]
-        return {
-          title,
-          link,
-          poster: extractPoster(description),
-          rating: movieRating,
-          year: yearNode ? yearNode.textContent : null,
-        }
-      })
-
-      setMovies(parsed)
-
-      dispatchMeta({ type: "SET_LOADING", payload: true })
-      try {
-        const titles = parsed.map((m) => m.title)
-        const metadata = await fetchMetadataFromTMDB(titles)
-        setMovies((prev) =>
-          prev.map((m) => {
-            const meta = metadata.rawResults.find(
-              (r) => r && r.title === m.title,
-            )
-            return {
-              ...m,
-              platforms: meta?.platforms || [],
-              metrics: {
-                rating: meta?.globalRating
-                  ? parseFloat(meta.globalRating)
-                  : 0,
-                popularity: meta?.popularity || 0,
-                year: meta?.releaseDate
-                  ? parseInt(meta.releaseDate.split("-")[0])
-                  : 0,
-              },
-            }
-          }),
-        )
-        dispatchMeta({
-          type: "SET_METADATA",
-          payload: {
-            genres: metadata.genres,
-            directors: metadata.directors,
-            actors: metadata.actors,
-            countries: metadata.countries,
-            platforms: metadata.platforms,
-          },
-        })
-      } catch (ge) {
-        dispatchMeta({
-          type: "SET_ERROR",
-          payload:
-            "No se pudieron clasificar los géneros: " +
-            (ge.message || "Error inesperado"),
-        })
-      } finally {
-        dispatchMeta({ type: "SET_LOADING", payload: false })
-      }
-    } catch (e) {
-      setError(e.message || "Error inesperado")
-    } finally {
-      setLoading(false)
+      localStorage.setItem(
+        "letterboxd_recent_profiles:v1",
+        JSON.stringify(recentProfiles),
+      )
+    } catch {
+      // Almacenamiento no disponible (modo privado o cuota llena)
     }
-  }, [url])
+  }, [recentProfiles])
+
+  const handleFetch = useCallback(
+    async (input) => {
+      // SearchSection llama con el evento del click; los perfiles con un string.
+      const target = (typeof input === "string" ? input : url).trim()
+      if (!target) return
+
+      setShowQuiz(false)
+      resetMetadata()
+
+      const user = parseUsername(target)
+      setRecentProfiles((prev) =>
+        [user, ...prev.filter((p) => p !== user)].slice(0, 3),
+      )
+
+      const parsed = await fetchFeed(target)
+      if (!parsed?.length) return
+
+      const metadata = await fetchMetadata(parsed.map((m) => m.title))
+      if (!metadata) return
+
+      setMovies((prev) =>
+        prev.map((m) => {
+          const found = metadata.rawResults.find(
+            (r) => r && r.title === m.title,
+          )
+          return {
+            ...m,
+            platforms: found?.platforms || [],
+            metrics: {
+              rating: found?.globalRating ? parseFloat(found.globalRating) : 0,
+              popularity: found?.popularity || 0,
+              year: found?.releaseDate
+                ? parseInt(found.releaseDate.split("-")[0])
+                : 0,
+            },
+          }
+        }),
+      )
+    },
+    [url, fetchFeed, fetchMetadata, resetMetadata, setMovies],
+  )
 
   const resetToStart = useCallback(() => {
     setUrl("")
-    setMovies([])
-    setUsername(null)
-    setError(null)
-    setLoading(false)
-    dispatchMeta({ type: "RESET_METADATA" })
-  }, [])
+    setShowQuiz(false)
+    resetFeed()
+    resetMetadata()
+  }, [resetFeed, resetMetadata])
 
-  const showGenrePanel = movies.length > 0 || meta.loadingGenres
+  const loading = feedLoading || metaLoading
+  const showGenrePanel = movies.length > 0 || metaLoading
 
   return (
     <div
@@ -241,12 +159,7 @@ export default function App() {
       <AppHeader
         movies={movies}
         onReset={resetToStart}
-        onShowQuiz={() =>
-          dispatchMeta({
-            type: "SET_METADATA",
-            payload: { showQuiz: true },
-          })
-        }
+        onShowQuiz={() => setShowQuiz(true)}
         onShowGame={() => setShowHighLowGame(true)}
       />
 
@@ -254,7 +167,7 @@ export default function App() {
         url={url}
         loading={loading}
         onUrlChange={setUrl}
-        onFetch={fetchMovies}
+        onFetch={handleFetch}
       />
 
       {error && (
@@ -289,13 +202,13 @@ export default function App() {
       <DataPanels
         showGenrePanel={showGenrePanel}
         movies={movies}
-        genres={meta.genres}
-        directors={meta.directors}
-        actors={meta.actors}
-        countries={meta.countries}
-        platforms={meta.platforms}
-        loadingGenres={meta.loadingGenres}
-        genreError={meta.genreError}
+        genres={genres}
+        directors={directors}
+        actors={actors}
+        countries={countries}
+        platforms={platforms}
+        loadingGenres={metaLoading}
+        genreError={genreError}
       />
 
       <EmptyLanding
@@ -305,7 +218,7 @@ export default function App() {
         recentProfiles={recentProfiles}
         onProfileSelect={(user) => {
           setUrl(user)
-          setTimeout(() => fetchMovies(), 10)
+          handleFetch(user)
         }}
       />
 
@@ -313,15 +226,10 @@ export default function App() {
         <HighLowGame movies={movies} onClose={() => setShowHighLowGame(false)} />
       )}
 
-      {meta.showQuiz && (
+      {showQuiz && (
         <QuizModal
           movies={movies}
-          onClose={() =>
-            dispatchMeta({
-              type: "SET_METADATA",
-              payload: { showQuiz: false },
-            })
-          }
+          onClose={() => setShowQuiz(false)}
         />
       )}
     </div>

@@ -135,7 +135,7 @@ export default function QuizModal({ movies, onClose }) {
               </div>
 
               <div style={{ display: "grid", gap: "12px" }}>
-                {current.options.map((opt, i) => {
+                {current.options.map((opt) => {
                   let bgColor = "rgba(255,255,255,0.03)"
                   let borderColor = "rgba(255,255,255,0.1)"
                   let textColor = "#DBD5CA"
