@@ -68,6 +68,7 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
                     cursor: "pointer", transition: "background 0.2s, border-color 0.2s",
                   }}>
                   <img src={logos[name]} alt={name}
+                    loading="lazy" decoding="async"
                     style={{ width: "30px", height: "30px", borderRadius: "4px", border: `1px solid ${themeColor}30` }} />
                   <div style={{ overflow: "hidden" }}>
                     <div style={{ fontSize: "var(--fs-xs)", color: "#DBD5CA", fontWeight: "bold", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>

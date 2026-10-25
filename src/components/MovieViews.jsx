@@ -161,6 +161,8 @@ export default function MovieViews({ movies, movieViewMode, username, onViewMode
                   <img
                     src={movie.poster}
                     alt={movie.title}
+                    loading="lazy"
+                    decoding="async"
                     style={{
                       width: "100%",
                       height: "100%",

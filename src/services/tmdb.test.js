@@ -1,5 +1,9 @@
 import { describe, it, expect, vi, afterEach, beforeEach } from "vitest"
-import { fetchMetadataFromTMDB, clearMetadataCache } from "./tmdb.js"
+import {
+  fetchMetadataFromTMDB,
+  clearMetadataCache,
+  TMDB_CONCURRENCY,
+} from "./tmdb.js"
 import { GENRE_KEYS } from "../constants/genres.js"
 
 function jsonResponse(data, status = 200) {
@@ -37,6 +41,7 @@ beforeEach(() => {
 
 afterEach(() => {
   vi.unstubAllGlobals()
+  vi.useRealTimers()
 })
 
 describe("fetchMetadataFromTMDB", () => {
@@ -130,15 +135,14 @@ describe("fetchMetadataFromTMDB", () => {
   })
 
   it("no rompe si la petición falla", async () => {
-    vi.stubGlobal(
-      "fetch",
-      vi.fn(() => Promise.reject(new Error("network down"))),
-    )
+    const fetchMock = vi.fn(() => Promise.reject(new Error("network down")))
+    vi.stubGlobal("fetch", fetchMock)
 
     const result = await fetchMetadataFromTMDB(["Inception"])
 
     expect(result.rawResults).toEqual([null])
     expect(result.platforms.counts).toEqual({})
+    expect(fetchMock).toHaveBeenCalledTimes(3)
   })
 
   it("reutiliza la caché entre llamadas", async () => {
@@ -182,12 +186,13 @@ describe("fetchMetadataFromTMDB", () => {
   })
 
   it("propaga un error claro cuando TMDB rechaza la API key (401)", async () => {
-    vi.stubGlobal(
-      "fetch",
-      vi.fn(() => jsonResponse({ status_message: "Invalid API key" }, 401)),
+    const fetchMock = vi.fn(() =>
+      jsonResponse({ status_message: "Invalid API key" }, 401),
     )
+    vi.stubGlobal("fetch", fetchMock)
 
     await expect(fetchMetadataFromTMDB(["Inception"])).rejects.toThrow(/401/)
+    expect(fetchMock).toHaveBeenCalledTimes(1)
   })
 
   it("incluye el año del RSS en la búsqueda de TMDB", async () => {
@@ -316,5 +321,90 @@ describe("fetchMetadataFromTMDB", () => {
 
     expect(Object.keys(result.genres)).toEqual(GENRE_KEYS)
     expect(Object.values(result.genres).every(Number.isFinite)).toBe(true)
+  })
+
+  it("reintenta con backoff cuando TMDB responde 429", async () => {
+    let searchCalls = 0
+    const fetchMock = vi.fn((url) => {
+      if (url.includes("/search/movie")) {
+        searchCalls += 1
+        if (searchCalls === 1) {
+          return jsonResponse({ status_message: "Rate limited" }, 429)
+        }
+        return jsonResponse({
+          results: [{ id: 1, release_date: "2010-01-01", genre_ids: [18] }],
+        })
+      }
+      return jsonResponse(detailsResponse())
+    })
+    vi.stubGlobal("fetch", fetchMock)
+
+    const result = await fetchMetadataFromTMDB(["Inception"])
+
+    expect(result.rawResults[0]).not.toBeNull()
+    expect(searchCalls).toBe(2)
+  })
+
+  it("no reintenta errores 4xx no recuperables", async () => {
+    const fetchMock = vi.fn(() => jsonResponse({}, 400))
+    vi.stubGlobal("fetch", fetchMock)
+
+    const result = await fetchMetadataFromTMDB(["Inception"])
+
+    expect(result.rawResults).toEqual([null])
+    expect(fetchMock).toHaveBeenCalledTimes(1)
+  })
+
+  it("aborta la petición tras el timeout sin reintentarla", async () => {
+    vi.useFakeTimers()
+
+    const fetchMock = vi.fn(
+      (url, { signal } = {}) =>
+        new Promise((_, reject) => {
+          signal?.addEventListener("abort", () => reject(signal.reason))
+        }),
+    )
+    vi.stubGlobal("fetch", fetchMock)
+
+    const promise = fetchMetadataFromTMDB(["Inception"])
+
+    // Un timeout no se reintenta: 6s y la película se descarta.
+    await vi.advanceTimersByTimeAsync(6000)
+
+    const result = await promise
+    expect(result.rawResults).toEqual([null])
+    expect(fetchMock).toHaveBeenCalledTimes(1)
+  })
+
+  it("limita las peticiones concurrentes", async () => {
+    let active = 0
+    let maxActive = 0
+
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(async (url) => {
+        active += 1
+        maxActive = Math.max(maxActive, active)
+        await new Promise((resolve) => setTimeout(resolve, 5))
+        active -= 1
+
+        if (url.includes("/search/movie")) {
+          return jsonResponse({
+            results: [{ id: 1, release_date: "2010-01-01", genre_ids: [18] }],
+          })
+        }
+        return jsonResponse(detailsResponse())
+      }),
+    )
+
+    const movies = Array.from({ length: 15 }, (_, i) => ({
+      title: `Movie ${i}`,
+      year: 2010,
+    }))
+
+    const result = await fetchMetadataFromTMDB(movies)
+
+    expect(result.rawResults).toHaveLength(15)
+    expect(maxActive).toBeLessThanOrEqual(TMDB_CONCURRENCY)
   })
 })

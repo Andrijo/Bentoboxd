@@ -296,7 +296,13 @@ function GamePlayArea({
         <>
           <div style={{ textAlign: "center" }}>
             <div style={cardStyle}>
-              <img src={movieA.poster} alt={movieA.title} style={imgStyle} />
+              <img
+                src={movieA.poster}
+                alt={movieA.title}
+                loading="lazy"
+                decoding="async"
+                style={imgStyle}
+              />
               <div style={darkOverlayStyle} />
 
               <div style={labelStyle(CAT_CONFIG[category].color)}>
@@ -318,6 +324,8 @@ function GamePlayArea({
               <img
                 src={movieB.poster}
                 alt={movieB.title}
+                loading="lazy"
+                decoding="async"
                 style={{
                   ...imgStyle,
                   filter: feedback

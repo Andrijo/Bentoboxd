@@ -36,6 +36,7 @@ export default async function handler(req, res) {
         Accept: "application/rss+xml, application/xml;q=0.9, */*;q=0.8",
         "User-Agent": "letterboxd-bento (feed proxy)",
       },
+      signal: AbortSignal.timeout(8000),
     })
 
     if (!upstream.ok) {

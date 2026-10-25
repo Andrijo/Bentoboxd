@@ -34,6 +34,8 @@ export default function MovieCard({ movie, size, index }) {
         <img
           src={movie.poster}
           alt={movie.title}
+          loading="lazy"
+          decoding="async"
           style={{
             position: "absolute",
             inset: 0,

@@ -5,6 +5,13 @@ const AUTH_ERROR =
 const CACHE_LIMIT = 300
 const SEARCH_URL = "https://api.themoviedb.org/3/search/movie"
 const DETAILS_URL = "https://api.themoviedb.org/3/movie"
+const REQUEST_TIMEOUT_MS = 6000
+const MAX_RETRIES = 2
+const BASE_BACKOFF_MS = 400
+const MAX_RETRY_DELAY_MS = 5000
+
+/** Máximo de películas procesadas en paralelo (cada una hace 2-3 requests). */
+export const TMDB_CONCURRENCY = 5
 
 const metadataCache = new Map()
 const platformLogoCache = new Map()
@@ -13,6 +20,113 @@ function tmdbAuthError() {
   const error = new Error(AUTH_ERROR)
   error.code = "TMDB_AUTH"
   return error
+}
+
+function createAbortError() {
+  const error = new Error("Aborted")
+  error.name = "AbortError"
+  return error
+}
+
+function createTimeoutError() {
+  const error = new Error("TMDB tardó demasiado en responder")
+  error.name = "TimeoutError"
+  return error
+}
+
+function sleep(ms, signal) {
+  if (signal?.aborted) {
+    return Promise.reject(signal.reason || createAbortError())
+  }
+
+  return new Promise((resolve, reject) => {
+    const id = setTimeout(() => {
+      signal?.removeEventListener("abort", onAbort)
+      resolve()
+    }, ms)
+
+    function onAbort() {
+      clearTimeout(id)
+      reject(signal.reason || createAbortError())
+    }
+
+    signal?.addEventListener("abort", onAbort, { once: true })
+  })
+}
+
+/**
+ * Hace una petición con timeout propio, combinado con la señal externa.
+ * El timeout se limpia siempre para no dejar timers colgando.
+ */
+async function fetchWithTimeout(url, signal) {
+  const controller = new AbortController()
+  const timeoutId = setTimeout(
+    () => controller.abort(createTimeoutError()),
+    REQUEST_TIMEOUT_MS,
+  )
+
+  const onAbort = () => controller.abort(signal.reason || createAbortError())
+  if (signal) {
+    if (signal.aborted) onAbort()
+    else signal.addEventListener("abort", onAbort, { once: true })
+  }
+
+  try {
+    return await fetch(url, { signal: controller.signal })
+  } finally {
+    clearTimeout(timeoutId)
+    signal?.removeEventListener("abort", onAbort)
+  }
+}
+
+function isRetryableStatus(status) {
+  return status === 429 || status >= 500
+}
+
+/**
+ * Reintenta con backoff exponencial los errores transitorios (429, 5xx,
+ * red o timeout). Un 401 se propaga de inmediato.
+ */
+async function fetchWithRetry(url, signal) {
+  let attempt = 0
+
+  while (true) {
+    let res
+
+    try {
+      res = await fetchWithTimeout(url, signal)
+    } catch (error) {
+      // Si el usuario canceló, no reintentes.
+      if (signal?.aborted) throw signal.reason || error
+
+      // Un timeout ya consumió el presupuesto de espera: no lo repitas.
+      if (error.name === "TimeoutError") throw error
+
+      if (attempt < MAX_RETRIES) {
+        await sleep(BASE_BACKOFF_MS * 2 ** attempt, signal)
+        attempt += 1
+        continue
+      }
+
+      throw error
+    }
+
+    if (res.status === 401) throw tmdbAuthError()
+    if (res.ok) return res
+
+    if (!isRetryableStatus(res.status) || attempt >= MAX_RETRIES) {
+      return res
+    }
+
+    const retryAfterHeader = res.headers?.get?.("Retry-After")
+    const retryAfter = retryAfterHeader ? Number(retryAfterHeader) : NaN
+    const delay = Number.isFinite(retryAfter)
+      ? Math.min(retryAfter * 1000, MAX_RETRY_DELAY_MS)
+      : BASE_BACKOFF_MS * 2 ** attempt
+
+    await sleep(delay, signal)
+    attempt += 1
+  }
 }
 
 /** Vacía la caché en memoria (tests o cambio de contexto). */
@@ -97,9 +211,7 @@ async function searchMovies(title, year, signal) {
   })
   if (year) params.set("year", String(year))
 
-  const res = await fetch(`${SEARCH_URL}?${params}`, { signal })
-
-  if (res.status === 401) throw tmdbAuthError()
+  const res = await fetchWithRetry(`${SEARCH_URL}?${params}`, signal)
   if (!res.ok) return null
 
   const data = await res.json()
@@ -125,12 +237,11 @@ async function fetchOne({ title, year }, signal) {
   }
 
   const movieInfo = pickBestResult(results, year)
-  const detailsRes = await fetch(
+  const detailsRes = await fetchWithRetry(
     `${DETAILS_URL}/${movieInfo.id}?api_key=${TMDB_API_KEY}&append_to_response=credits,watch/providers&language=es-MX`,
-    { signal },
+    signal,
   )
 
-  if (detailsRes.status === 401) throw tmdbAuthError()
   if (!detailsRes.ok) return null
 
   const detailsData = await detailsRes.json()
@@ -189,6 +300,29 @@ async function fetchOne({ title, year }, signal) {
   return item
 }
 
+/** Ejecuta `mapper` sobre `items` con un máximo de `limit` en paralelo. */
+async function mapWithConcurrency(items, limit, mapper) {
+  const results = new Array(items.length)
+  let nextIndex = 0
+
+  async function worker() {
+    while (true) {
+      const index = nextIndex
+      nextIndex += 1
+      if (index >= items.length) return
+      results[index] = await mapper(items[index])
+    }
+  }
+
+  const workers = Array.from(
+    { length: Math.min(limit, items.length) },
+    () => worker(),
+  )
+
+  await Promise.all(workers)
+  return results
+}
+
 export async function fetchMetadataFromTMDB(movies, { signal } = {}) {
   if (!TMDB_API_KEY) {
     throw new Error(
@@ -203,24 +337,32 @@ export async function fetchMetadataFromTMDB(movies, { signal } = {}) {
     .map(normalizeMovie)
     .filter((movie) => movie.title)
 
-  // Deduplica títulos (y años) repetidos dentro de una misma tanda.
-  const inFlight = new Map()
-  const fetchPromises = normalized.map((movie) => {
+  // Deduplica por título + año antes de repartir el trabajo.
+  const uniqueMovies = new Map()
+  normalized.forEach((movie) => {
     const key = movieCacheKey(movie)
-    if (!inFlight.has(key)) {
-      inFlight.set(
-        key,
-        fetchOne(movie, signal).catch((e) => {
-          // Un fallo puntual de red no debe tumbar el resto; auth y abort sí.
-          if (e.code === "TMDB_AUTH" || e.name === "AbortError") throw e
-          return null
-        }),
-      )
-    }
-    return inFlight.get(key)
+    if (!uniqueMovies.has(key)) uniqueMovies.set(key, movie)
   })
 
-  const results = await Promise.all(fetchPromises)
+  // Un fallo puntual de red no tumba el resto; auth y abort sí.
+  let fatalError = null
+  const results = await mapWithConcurrency(
+    [...uniqueMovies.values()],
+    TMDB_CONCURRENCY,
+    async (movie) => {
+      if (fatalError) return null
+
+      try {
+        return await fetchOne(movie, signal)
+      } catch (e) {
+        if (e.code === "TMDB_AUTH" || e.name === "AbortError") {
+          fatalError = e
+          throw e
+        }
+        return null
+      }
+    },
+  )
 
   const directorCounts = {}
   const actorCounts = {}
