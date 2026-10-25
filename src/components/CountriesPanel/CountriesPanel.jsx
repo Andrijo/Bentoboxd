@@ -1,6 +1,7 @@
 import { useState } from "react"
 import CountryDatalog from "./CountryDatalog.jsx"
 import CountrySectors from "./CountrySectors.jsx"
+import { PanelSkeleton } from "../Skeleton.jsx"
 
 const themeColor = "#ff8c00"
 
@@ -58,17 +59,7 @@ export default function CountriesPanel({ countries, loading }) {
         )}
       </div>
       <div style={{ padding: "24px", minHeight: "150px" }}>
-        {loading && (
-          <div style={{ display: "flex", justifyContent: "center", padding: "20px" }}>
-            <div style={{
-              fontSize: "var(--fs-xs)", letterSpacing: "4px", color: `${themeColor}80`,
-              animation: "pulse 1.2s ease infinite", fontFamily: "var(--font-mono)",
-              textTransform: "uppercase",
-            }}>
-              ◈ Rastreando señales satelitales...
-            </div>
-          </div>
-        )}
+        {loading && <PanelSkeleton variant="rows" label="Rastreando países…" />}
         {!loading && hasData && (
           <>
             {viewMode === "list" && <CountryDatalog countries={countries} />}

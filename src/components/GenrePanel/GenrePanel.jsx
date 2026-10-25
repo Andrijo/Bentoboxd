@@ -1,10 +1,10 @@
 import { useState } from "react"
-import { GENRE_KEYS, GENRE_CONFIG } from "../../constants/genres.js"
 import DonutChart from "./DonutChart.jsx"
 import RadarChart from "./RadarChart.jsx"
 import BarChart from "./BarChart.jsx"
 import MatrixChart from "./MatrixChart.jsx"
 import GaugesChart from "./GaugesChart.jsx"
+import { PanelSkeleton } from "../Skeleton.jsx"
 
 export default function GenrePanel({ genres, movieCount, loadingGenres, genreError }) {
   const [chartType, setChartType] = useState("donut")
@@ -78,27 +78,7 @@ export default function GenrePanel({ genres, movieCount, loadingGenres, genreErr
         padding: "32px 24px", minHeight: "200px",
         display: "flex", alignItems: "center", justifyContent: "center",
       }}>
-        {loadingGenres && (
-          <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "14px" }}>
-            <div style={{
-              fontSize: "var(--fs-2xs)", letterSpacing: "4px", color: "rgba(0,229,255,0.5)",
-              animation: "pulse 1.2s ease infinite", fontFamily: "var(--font-mono)",
-              textTransform: "uppercase",
-            }}>
-              ◈ Clasificando géneros con TMDB...
-            </div>
-            <div style={{ display: "flex", gap: "6px" }}>
-              {GENRE_KEYS.slice(0, 5).map((k) => (
-                <div key={k} style={{
-                  width: "6px", height: "6px", borderRadius: "50%",
-                  background: GENRE_CONFIG[k].color,
-                  animation: "pulse 1.2s ease infinite",
-                  animationDelay: `${GENRE_KEYS.indexOf(k) * 100}ms`, opacity: 0.6,
-                }} />
-              ))}
-            </div>
-          </div>
-        )}
+        {loadingGenres && <PanelSkeleton variant="chart" label="Clasificando géneros…" />}
 
         {genreError && !loadingGenres && (
           <div style={{

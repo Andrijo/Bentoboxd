@@ -1,5 +1,6 @@
 import { useState } from "react"
 import StarRating from "../StarRating.jsx"
+import PosterImage from "../PosterImage.jsx"
 
 const SIZES = {
   1: { gridColumn: "span 1", gridRow: "span 1" },
@@ -17,6 +18,8 @@ export default function MovieCard({ movie, size, index }) {
       rel="noopener noreferrer"
       onMouseEnter={() => setHovered(true)}
       onMouseLeave={() => setHovered(false)}
+      onFocus={() => setHovered(true)}
+      onBlur={() => setHovered(false)}
       className="rd-movie-card"
       style={{
         ...SIZES[size],
@@ -31,11 +34,9 @@ export default function MovieCard({ movie, size, index }) {
         animationDelay: `${index * 60}ms`,
       }}>
       {movie.poster ? (
-        <img
+        <PosterImage
           src={movie.poster}
           alt={movie.title}
-          loading="lazy"
-          decoding="async"
           style={{
             position: "absolute",
             inset: 0,
