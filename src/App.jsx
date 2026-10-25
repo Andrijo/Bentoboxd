@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect } from "react"
+import { useState, useCallback, useEffect, useRef } from "react"
 import HighLowGame from "./HighLowGame.jsx"
 import QuizModal from "./components/QuizModal/QuizModal.jsx"
 import AppHeader from "./components/AppHeader.jsx"
@@ -24,6 +24,7 @@ export default function App() {
   })
   const [showHighLowGame, setShowHighLowGame] = useState(false)
   const [showQuiz, setShowQuiz] = useState(false)
+  const requestIdRef = useRef(0)
 
   const {
     movies,
@@ -64,6 +65,9 @@ export default function App() {
       const target = (typeof input === "string" ? input : url).trim()
       if (!target) return
 
+      // Ignora respuestas de búsquedas que ya fueron reemplazadas.
+      const requestId = ++requestIdRef.current
+
       setShowQuiz(false)
       resetMetadata()
 
@@ -73,9 +77,11 @@ export default function App() {
       )
 
       const parsed = await fetchFeed(target)
+      if (requestId !== requestIdRef.current) return
       if (!parsed?.length) return
 
       const metadata = await fetchMetadata(parsed.map((m) => m.title))
+      if (requestId !== requestIdRef.current) return
       if (!metadata) return
 
       setMovies((prev) =>
@@ -101,6 +107,7 @@ export default function App() {
   )
 
   const resetToStart = useCallback(() => {
+    requestIdRef.current += 1
     setUrl("")
     setShowQuiz(false)
     resetFeed()
@@ -114,7 +121,7 @@ export default function App() {
     <div
       style={{
         minHeight: "100vh",
-        background: "linear-gradient(to bottom, #111315, #181818)",
+        background: "linear-gradient(to bottom, #111312, #181818)",
         color: "#DBD5CA",
         fontFamily: "var(--font-mono)",
         padding: "0",

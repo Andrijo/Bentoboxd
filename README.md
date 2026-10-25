@@ -90,6 +90,8 @@ El RSS de Letterboxd **no permite CORS**, así que en producción necesita un pr
    - `VITE_RSS_PROXY_URL` — **opcional**: en producción se usa `/api/rss` por defecto. Solo cámbialo si usas otro proxy.
 3. Deploy. La app llamará a `/api/rss?user=<usuario>`.
 
+> **Si ves un error 401 de TMDB**, la variable `VITE_TMDB_API_KEY` no está definida en el build. Vite la inyecta en tiempo de compilación: añádela en Vercel y haz **Redeploy**.
+
 En local no hace falta nada: `npm run dev` usa el proxy de `vite.config.js` (`/rss-proxy`).
 
 > En otro hosting, apunta `VITE_RSS_PROXY_URL` a tu propio proxy. Por defecto se le pasa `?user=<usuario>`; si la URL contiene `{user}`, se usa en modo path-style.

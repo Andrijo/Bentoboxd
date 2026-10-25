@@ -7,7 +7,7 @@ export default function MatrixChart({ genres }) {
   const sortedGenres = GENRE_KEYS.filter((k) => (genres[k] || 0) > 0).sort(
     (a, b) => genres[b] - genres[a],
   )
-  const totalFilms = Object.values(genres).reduce((a, b) => a + b, 0)
+  const totalNodes = Object.values(genres).reduce((a, b) => a + b, 0)
 
   const blocks = []
   sortedGenres.forEach((genre) => {
@@ -75,7 +75,7 @@ export default function MatrixChart({ genres }) {
               color: "rgba(255,255,255,0.5)",
             }}>
               {genres[hoveredGenre]} NODOS DETECTADOS (
-              {((genres[hoveredGenre] / totalFilms) * 100).toFixed(1)}%)
+              {((genres[hoveredGenre] / totalNodes) * 100).toFixed(1)}%)
             </div>
           </>
         ) : (
