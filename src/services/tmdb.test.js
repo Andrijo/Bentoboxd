@@ -310,7 +310,7 @@ describe("fetchMetadataFromTMDB", () => {
       { title: "Star Wars: Episode IV - A New Hope", year: 1977 },
     ])
 
-    const searchUrl = new URL(fetchMock.mock.calls[0][0])
+    const searchUrl = new URL(fetchMock.mock.calls[0][0], "http://localhost")
     expect(searchUrl.searchParams.get("query")).toBe(
       "Star Wars: Episode IV - A New Hope",
     )
