@@ -1,6 +1,7 @@
 import { useState, useCallback } from "react"
 import {
   parseUsername,
+  buildRssUrl,
   extractPoster,
   extractRating,
 } from "../services/letterboxd.js"
@@ -22,7 +23,7 @@ export function useLetterboxdFeed() {
 
       setUsername(user)
 
-      const rssUrl = `/rss-proxy/${user}/rss/`
+      const rssUrl = buildRssUrl(user)
       const res = await fetch(rssUrl)
       if (!res.ok)
         throw new Error(

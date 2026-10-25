@@ -35,13 +35,13 @@ html {
   --fs-xl: 1.8rem; /* display medio */
   --fs-2xl: 2rem; /* títulos de panel */
 
-  background: linear-gradient(to bottom, #111315, #181818);
+  background: linear-gradient(to bottom, #111312, #181818);
 }
 
 body {
   max-width: 1400px;
   margin: 0 auto;
-  background: linear-gradient(to bottom, #111315, #181818);
+  background: linear-gradient(to bottom, #111312, #181818);
 }
 
 .rd-movie-card {
