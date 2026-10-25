@@ -1,10 +1,14 @@
-import { GENRE_KEYS, TMDB_API_KEY, TMDB_GENRES } from "../constants/genres.js"
+import { GENRE_KEYS, TMDB_GENRES } from "../constants/genres.js"
 
 const AUTH_ERROR =
-  "TMDB rechazó la API key (401). Revisa TMDB_API_KEY y vuelve a desplegar."
+  "TMDB rechazó la API key (401). Revisa que TMDB_API_KEY esté definida en el servidor (o en .env en local)."
 const CACHE_LIMIT = 300
-const SEARCH_URL = "https://api.themoviedb.org/3/search/movie"
-const DETAILS_URL = "https://api.themoviedb.org/3/movie"
+// La key la añade el proxy (api/tmdb.js en producción, vite.config.js en dev).
+const TMDB_PROXY_URL = (
+  import.meta.env.VITE_TMDB_PROXY_URL || "/api/tmdb"
+).replace(/\/$/, "")
+const SEARCH_URL = `${TMDB_PROXY_URL}/search/movie`
+const DETAILS_URL = `${TMDB_PROXY_URL}/movie`
 const REQUEST_TIMEOUT_MS = 6000
 const MAX_RETRIES = 2
 const BASE_BACKOFF_MS = 400
@@ -205,7 +209,6 @@ function pickBestResult(results, year) {
  */
 async function searchMovies(title, year, signal) {
   const params = new URLSearchParams({
-    api_key: TMDB_API_KEY,
     query: title,
     language: "es-MX",
   })
@@ -238,7 +241,7 @@ async function fetchOne({ title, year }, signal) {
 
   const movieInfo = pickBestResult(results, year)
   const detailsRes = await fetchWithRetry(
-    `${DETAILS_URL}/${movieInfo.id}?api_key=${TMDB_API_KEY}&append_to_response=credits,watch/providers&language=es-MX`,
+    `${DETAILS_URL}/${movieInfo.id}?append_to_response=credits,watch/providers&language=es-MX`,
     signal,
   )
 
@@ -324,12 +327,6 @@ async function mapWithConcurrency(items, limit, mapper) {
 }
 
 export async function fetchMetadataFromTMDB(movies, { signal } = {}) {
-  if (!TMDB_API_KEY) {
-    throw new Error(
-      "Falta la API key de TMDB (TMDB_API_KEY). Añádela a .env o a las variables del hosting y reconstruye.",
-    )
-  }
-
   // Se deriva de GENRE_KEYS para no duplicar la lista de géneros.
   const genreCounts = Object.fromEntries(GENRE_KEYS.map((genre) => [genre, 0]))
 

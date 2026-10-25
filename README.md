@@ -67,6 +67,8 @@ TMDB_API_KEY=tu_api_key_de_tmdb
 # VITE_RSS_PROXY_URL=/api/rss
 ```
 
+La key de TMDB **nunca llega al navegador**: el cliente llama a `/api/tmdb/...` y el proxy (Vite en local, `api/tmdb.js` en producción) la añade del lado del servidor. Solo se permiten los endpoints que usa la app (`search/movie` y `movie/<id>`).
+
 Obtén una API key gratuita en [themoviedb.org](https://www.themoviedb.org/settings/api).
 
 ## Uso
@@ -82,17 +84,19 @@ npm run test:run   # Ejecutar tests una vez (CI)
 
 ## Despliegue (Vercel)
 
-El RSS de Letterboxd **no permite CORS**, así que en producción necesita un proxy. El repo incluye `api/rss.js`, una función serverless lista para Vercel.
+El RSS de Letterboxd **no permite CORS** y la key de TMDB no debe ir en el bundle, así que en producción la app usa dos funciones serverless listas para Vercel: `api/rss.js` y `api/tmdb.js` (enrutada por `vercel.json`).
 
 1. Importa el repositorio en Vercel (detecta Vite automáticamente).
 2. En **Settings → Environment Variables** define:
-   - `TMDB_API_KEY` — tu key de TMDB.
+   - `TMDB_API_KEY` — tu key de TMDB. Si antes usabas `VITE_TMDB_API_KEY`, bórrala: ya no se usa y el prefijo `VITE_` la expondría.
    - `VITE_RSS_PROXY_URL` — **opcional**: en producción se usa `/api/rss` por defecto. Solo cámbialo si usas otro proxy.
-3. Deploy. La app llamará a `/api/rss?user=<usuario>`.
+3. Deploy. La app llamará a `/api/rss?user=<usuario>` y a `/api/tmdb/...`.
 
-> **Si ves un error 401 de TMDB**, la variable `TMDB_API_KEY` no está definida en el build. Vite la inyecta en tiempo de compilación: añádela en Vercel y haz **Redeploy**.
+> **Si ves un error 401 de TMDB**, la variable `TMDB_API_KEY` no está definida (o es inválida) en el entorno de las funciones de Vercel. Corrígela y haz **Redeploy**.
 
-En local no hace falta nada: `npm run dev` usa el proxy de `vite.config.js` (`/rss-proxy`).
+En local solo necesitas `TMDB_API_KEY` en `.env`: `npm run dev` usa los proxies de `vite.config.js` (`/rss-proxy` y `/api/tmdb`).
+
+> Como la key ya no se compila en el bundle, rótala en TMDB si la versión anterior estuvo publicada.
 
 > En otro hosting, apunta `VITE_RSS_PROXY_URL` a tu propio proxy. Por defecto se le pasa `?user=<usuario>`; si la URL contiene `{user}`, se usa en modo path-style.
 
@@ -100,7 +104,9 @@ En local no hace falta nada: `npm run dev` usa el proxy de `vite.config.js` (`/r
 
 ```
 api/
-└── rss.js                   # Proxy serverless del RSS (Vercel)
+├── rss.js                   # Proxy serverless del RSS (Vercel)
+├── tmdb.js                  # Proxy serverless de TMDB (Vercel)
+└── _lib/tmdbUpstream.js     # Rutas permitidas de TMDB (prod y dev)
 
 src/
 ├── App.jsx                  # Componente principal
