@@ -18,7 +18,7 @@ Nace como un experimento personal para explorar visualización de datos, integra
 
 ## Características
 
-- **Feed RSS de Letterboxd** — Ingresa un nombre de usuario o URL y obtén sus últimas 15 películas vistas
+- **Feed RSS de Letterboxd** — Ingresa un nombre de usuario o URL y obtén sus últimas 50 películas vistas (las listas del feed se ignoran). Las vistas muestran las 20 más recientes; las estadísticas y los juegos usan las 50
 - **3 modos de visualización:**
   - **Bento** — Cuadrícula dinámica con 10 patrones aleatorios
   - **Timeline** — Línea de tiempo cronológica con pósters y calificaciones

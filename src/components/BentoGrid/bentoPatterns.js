@@ -10,15 +10,9 @@
 // número de filas elegimos para lograr una densidad agradable, de modo que el
 // área total coincida con `columns * rows` y las fichas encajen sin huecos.
 
-const MAX_SEARCH_NODES = 50000
+import { shuffle } from "../../utils/shuffle.js"
 
-function shuffle(items) {
-  for (let i = items.length - 1; i > 0; i--) {
-    const j = Math.floor(Math.random() * (i + 1))
-    ;[items[i], items[j]] = [items[j], items[i]]
-  }
-  return items
-}
+const MAX_SEARCH_NODES = 50000
 
 function tileSize(size) {
   const width = size === 1 ? 1 : 2
@@ -99,6 +93,58 @@ function rankedRows(count, columns) {
   return rows
 }
 
+// Recorre las fichas en orden de lectura y devuelve la fila de cada una
+// (igual que el auto-placement de CSS grid con estas fichas).
+function tileRows(columns, rows, sizes) {
+  const grid = Array.from({ length: rows }, () => new Array(columns).fill(false))
+  let cursor = 0
+
+  return sizes.map((size) => {
+    while (grid[Math.floor(cursor / columns)][cursor % columns]) cursor++
+    const row = Math.floor(cursor / columns)
+    const col = cursor % columns
+    const { width, height } = tileSize(size)
+    for (let y = row; y < row + height; y++) {
+      for (let x = col; x < col + width; x++) grid[y][x] = true
+    }
+    return row
+  })
+}
+
+// Puntúa qué tan "bento" se ve un layout: fichas grandes repartidas por toda
+// la altura (no amontonadas arriba) y pocas fichas anchas 2x1.
+function scoreLayout(columns, rows, sizes) {
+  const positions = tileRows(columns, rows, sizes)
+  const rowsWithBig = new Set()
+  let big = 0
+  let wide = 0
+
+  sizes.forEach((size, i) => {
+    if (size === 3) {
+      big++
+      rowsWithBig.add(positions[i])
+      rowsWithBig.add(positions[i] + 1)
+    } else if (size === 2) {
+      wide++
+    }
+  })
+
+  // Una ficha grande por cada ~6 películas, y suficientes para tocar cada par
+  // de filas.
+  const targetBig = Math.max(1, Math.round(sizes.length / 6), Math.ceil(rows / 2))
+  const rowsWithoutBig = rows - rowsWithBig.size
+
+  return (
+    -3 * Math.abs(big - targetBig) -
+    2 * rowsWithoutBig -
+    Math.max(0, wide - big)
+  )
+}
+
+// Cuántos layouts candidatos se generan para elegir el mejor. Cada uno cuesta
+// décimas de milisegundo.
+const CANDIDATES = 80
+
 // Devuelve `{ columns, rows, sizes }`. Si el número de películas es demasiado
 // pequeño para llenar el ancho pedido, se reducen las columnas hasta que el
 // rectángulo se pueda cubrir por completo.
@@ -106,8 +152,21 @@ export function generateBentoLayout(columns, count) {
   if (count <= 0) return { columns, rows: 0, sizes: [] }
 
   for (const rows of rankedRows(count, columns)) {
-    const sizes = solve(columns, rows, count, { nodes: MAX_SEARCH_NODES })
-    if (sizes) return { columns, rows, sizes }
+    let best = null
+    let bestScore = -Infinity
+
+    for (let i = 0; i < CANDIDATES; i++) {
+      const sizes = solve(columns, rows, count, { nodes: MAX_SEARCH_NODES })
+      // Si no hay solución con estas filas, otro intento tampoco la hallará.
+      if (!sizes) break
+      const score = scoreLayout(columns, rows, sizes)
+      if (score > bestScore) {
+        best = sizes
+        bestScore = score
+      }
+    }
+
+    if (best) return { columns, rows, sizes: best }
   }
 
   for (let narrower = columns - 1; narrower >= 1; narrower--) {
