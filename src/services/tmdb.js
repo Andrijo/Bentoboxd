@@ -1,6 +1,21 @@
 import { TMDB_API_KEY, TMDB_GENRES } from "../constants/genres.js"
 
+const AUTH_ERROR =
+  "TMDB rechazó la API key (401). Revisa VITE_TMDB_API_KEY y vuelve a desplegar."
+
+function tmdbAuthError() {
+  const error = new Error(AUTH_ERROR)
+  error.code = "TMDB_AUTH"
+  return error
+}
+
 export async function fetchMetadataFromTMDB(movieTitles) {
+  if (!TMDB_API_KEY) {
+    throw new Error(
+      "Falta la API key de TMDB (VITE_TMDB_API_KEY). Añádela a .env o a las variables del hosting y reconstruye.",
+    )
+  }
+
   const genreCounts = {
     Terror: 0,
     Acción: 0,
@@ -25,6 +40,10 @@ export async function fetchMetadataFromTMDB(movieTitles) {
       const searchRes = await fetch(
         `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(cleanTitle)}&language=es-MX`,
       )
+
+      if (searchRes.status === 401) throw tmdbAuthError()
+      if (!searchRes.ok) return null
+
       const searchData = await searchRes.json()
 
       if (searchData.results?.length > 0) {
@@ -32,6 +51,10 @@ export async function fetchMetadataFromTMDB(movieTitles) {
         const detailsRes = await fetch(
           `https://api.themoviedb.org/3/movie/${movieInfo.id}?api_key=${TMDB_API_KEY}&append_to_response=credits,watch/providers&language=es-MX`,
         )
+
+        if (detailsRes.status === 401) throw tmdbAuthError()
+        if (!detailsRes.ok) return null
+
         const detailsData = await detailsRes.json()
 
         const platforms =
@@ -66,7 +89,9 @@ export async function fetchMetadataFromTMDB(movieTitles) {
         }
       }
       return null
-    } catch {
+    } catch (e) {
+      // Un fallo puntual de red no debe tumbar el resto; un 401 sí es global.
+      if (e.code === "TMDB_AUTH") throw e
       return null
     }
   })

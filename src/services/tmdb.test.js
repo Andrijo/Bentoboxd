@@ -1,8 +1,12 @@
 import { describe, it, expect, vi, afterEach } from "vitest"
 import { fetchMetadataFromTMDB } from "./tmdb.js"
 
-function jsonResponse(data) {
-  return Promise.resolve({ json: async () => data })
+function jsonResponse(data, status = 200) {
+  return Promise.resolve({
+    ok: status >= 200 && status < 300,
+    status,
+    json: async () => data,
+  })
 }
 
 afterEach(() => {
@@ -84,5 +88,14 @@ describe("fetchMetadataFromTMDB", () => {
 
     expect(result.rawResults).toEqual([null])
     expect(result.platforms.counts).toEqual({})
+  })
+
+  it("propaga un error claro cuando TMDB rechaza la API key (401)", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() => jsonResponse({ status_message: "Invalid API key" }, 401)),
+    )
+
+    await expect(fetchMetadataFromTMDB(["Inception"])).rejects.toThrow(/401/)
   })
 })

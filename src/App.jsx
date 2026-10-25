@@ -114,7 +114,7 @@ export default function App() {
     <div
       style={{
         minHeight: "100vh",
-        background: "linear-gradient(to bottom, #111315, #181818)",
+        background: "linear-gradient(to bottom, #111312, #181818)",
         color: "#DBD5CA",
         fontFamily: "var(--font-mono)",
         padding: "0",

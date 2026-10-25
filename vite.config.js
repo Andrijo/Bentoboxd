@@ -16,5 +16,6 @@ export default defineConfig({
     environment: "jsdom",
     setupFiles: ["./src/test/setup.js"],
     include: ["src/**/*.{test,spec}.{js,jsx}"],
+    env: { VITE_TMDB_API_KEY: "test-key" },
   },
 })
