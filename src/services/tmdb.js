@@ -1,8 +1,17 @@
-import { TMDB_API_KEY, TMDB_GENRES } from "../constants/genres.js"
+import { GENRE_KEYS, TMDB_API_KEY, TMDB_GENRES } from "../constants/genres.js"
 
 const AUTH_ERROR =
   "TMDB rechazó la API key (401). Revisa TMDB_API_KEY y vuelve a desplegar."
 const CACHE_LIMIT = 300
+const SEARCH_URL = "https://api.themoviedb.org/3/search/movie"
+const DETAILS_URL = "https://api.themoviedb.org/3/movie"
+const REQUEST_TIMEOUT_MS = 6000
+const MAX_RETRIES = 2
+const BASE_BACKOFF_MS = 400
+const MAX_RETRY_DELAY_MS = 5000
+
+/** Máximo de películas procesadas en paralelo (cada una hace 2-3 requests). */
+export const TMDB_CONCURRENCY = 5
 
 const metadataCache = new Map()
 const platformLogoCache = new Map()
@@ -13,18 +22,146 @@ function tmdbAuthError() {
   return error
 }
 
+function createAbortError() {
+  const error = new Error("Aborted")
+  error.name = "AbortError"
+  return error
+}
+
+function createTimeoutError() {
+  const error = new Error("TMDB tardó demasiado en responder")
+  error.name = "TimeoutError"
+  return error
+}
+
+function sleep(ms, signal) {
+  if (signal?.aborted) {
+    return Promise.reject(signal.reason || createAbortError())
+  }
+
+  return new Promise((resolve, reject) => {
+    const id = setTimeout(() => {
+      signal?.removeEventListener("abort", onAbort)
+      resolve()
+    }, ms)
+
+    function onAbort() {
+      clearTimeout(id)
+      reject(signal.reason || createAbortError())
+    }
+
+    signal?.addEventListener("abort", onAbort, { once: true })
+  })
+}
+
+/**
+ * Hace una petición con timeout propio, combinado con la señal externa.
+ * El timeout se limpia siempre para no dejar timers colgando.
+ */
+async function fetchWithTimeout(url, signal) {
+  const controller = new AbortController()
+  const timeoutId = setTimeout(
+    () => controller.abort(createTimeoutError()),
+    REQUEST_TIMEOUT_MS,
+  )
+
+  const onAbort = () => controller.abort(signal.reason || createAbortError())
+  if (signal) {
+    if (signal.aborted) onAbort()
+    else signal.addEventListener("abort", onAbort, { once: true })
+  }
+
+  try {
+    return await fetch(url, { signal: controller.signal })
+  } finally {
+    clearTimeout(timeoutId)
+    signal?.removeEventListener("abort", onAbort)
+  }
+}
+
+function isRetryableStatus(status) {
+  return status === 429 || status >= 500
+}
+
+/**
+ * Reintenta con backoff exponencial los errores transitorios (429, 5xx,
+ * red o timeout). Un 401 se propaga de inmediato.
+ */
+async function fetchWithRetry(url, signal) {
+  let attempt = 0
+
+  while (true) {
+    let res
+
+    try {
+      res = await fetchWithTimeout(url, signal)
+    } catch (error) {
+      // Si el usuario canceló, no reintentes.
+      if (signal?.aborted) throw signal.reason || error
+
+      // Un timeout ya consumió el presupuesto de espera: no lo repitas.
+      if (error.name === "TimeoutError") throw error
+
+      if (attempt < MAX_RETRIES) {
+        await sleep(BASE_BACKOFF_MS * 2 ** attempt, signal)
+        attempt += 1
+        continue
+      }
+
+      throw error
+    }
+
+    if (res.status === 401) throw tmdbAuthError()
+    if (res.ok) return res
+
+    if (!isRetryableStatus(res.status) || attempt >= MAX_RETRIES) {
+      return res
+    }
+
+    const retryAfterHeader = res.headers?.get?.("Retry-After")
+    const retryAfter = retryAfterHeader ? Number(retryAfterHeader) : NaN
+    const delay = Number.isFinite(retryAfter)
+      ? Math.min(retryAfter * 1000, MAX_RETRY_DELAY_MS)
+      : BASE_BACKOFF_MS * 2 ** attempt
+
+    await sleep(delay, signal)
+    attempt += 1
+  }
+}
+
 /** Vacía la caché en memoria (tests o cambio de contexto). */
 export function clearMetadataCache() {
   metadataCache.clear()
   platformLogoCache.clear()
 }
 
-function cacheSet(title, value) {
+function cacheSet(key, value) {
   if (metadataCache.size >= CACHE_LIMIT) {
     const oldest = metadataCache.keys().next().value
     metadataCache.delete(oldest)
   }
-  metadataCache.set(title, value)
+  metadataCache.set(key, value)
+}
+
+function normalizeYear(year) {
+  const value = Number(year)
+  return Number.isFinite(value) && value > 0 ? value : null
+}
+
+/** Acepta strings (compatibilidad) u objetos { title, year }. */
+function normalizeMovie(movie) {
+  if (typeof movie === "string") {
+    return { title: movie.trim(), year: null }
+  }
+
+  return {
+    title: String(movie?.title || "").trim(),
+    year: normalizeYear(movie?.year),
+  }
+}
+
+function movieCacheKey({ title, year }) {
+  return year ? `${title}::${year}` : title
 }
 
 /** Devuelve todos los géneros conocidos de una película (o ["Otro"]). */
@@ -37,32 +174,74 @@ function pickGenres(movieInfo, detailsData) {
   return known.length > 0 ? known : ["Otro"]
 }
 
-async function fetchOne(title, signal) {
-  if (metadataCache.has(title)) return metadataCache.get(title)
+/**
+ * Elige el resultado cuyo estreno se acerca más al año del RSS.
+ * Si no hay año o ninguno está a ±1 año, mantiene el primer resultado.
+ */
+function pickBestResult(results, year) {
+  if (!year) return results[0]
 
-  const cleanTitle = title.split(" - ")[0]
-  const searchRes = await fetch(
-    `https://api.themoviedb.org/3/search/movie?api_key=${TMDB_API_KEY}&query=${encodeURIComponent(cleanTitle)}&language=es-MX`,
-    { signal },
-  )
+  let best = null
+  let bestDiff = Infinity
 
-  if (searchRes.status === 401) throw tmdbAuthError()
-  if (!searchRes.ok) return null
+  for (const result of results) {
+    if (!result.release_date) continue
+    const releaseYear = Number(result.release_date.slice(0, 4))
+    if (!Number.isFinite(releaseYear)) continue
 
-  const searchData = await searchRes.json()
+    const diff = Math.abs(releaseYear - year)
+    if (diff < bestDiff) {
+      best = result
+      bestDiff = diff
+    }
+  }
 
-  if (!(searchData.results?.length > 0)) {
-    cacheSet(title, null)
+  return best && bestDiff <= 1 ? best : results[0]
+}
+
+/**
+ * Busca una película. Devuelve [] si no hay resultados y null si la petición
+ * falla, para no cachear errores transitorios.
+ */
+async function searchMovies(title, year, signal) {
+  const params = new URLSearchParams({
+    api_key: TMDB_API_KEY,
+    query: title,
+    language: "es-MX",
+  })
+  if (year) params.set("year", String(year))
+
+  const res = await fetchWithRetry(`${SEARCH_URL}?${params}`, signal)
+  if (!res.ok) return null
+
+  const data = await res.json()
+  return data?.results || []
+}
+
+async function fetchOne({ title, year }, signal) {
+  const key = movieCacheKey({ title, year })
+  if (metadataCache.has(key)) return metadataCache.get(key)
+
+  let results = await searchMovies(title, year, signal)
+  if (results === null) return null
+
+  // Si el año del RSS no coincide con el de TMDB, reintenta sin filtro.
+  if (year && results.length === 0) {
+    results = await searchMovies(title, null, signal)
+    if (results === null) return null
+  }
+
+  if (results.length === 0) {
+    cacheSet(key, null)
     return null
   }
 
-  const movieInfo = searchData.results[0]
-  const detailsRes = await fetch(
-    `https://api.themoviedb.org/3/movie/${movieInfo.id}?api_key=${TMDB_API_KEY}&append_to_response=credits,watch/providers&language=es-MX`,
-    { signal },
+  const movieInfo = pickBestResult(results, year)
+  const detailsRes = await fetchWithRetry(
+    `${DETAILS_URL}/${movieInfo.id}?api_key=${TMDB_API_KEY}&append_to_response=credits,watch/providers&language=es-MX`,
+    signal,
   )
 
-  if (detailsRes.status === 401) throw tmdbAuthError()
   if (!detailsRes.ok) return null
 
   const detailsData = await detailsRes.json()
@@ -76,12 +255,26 @@ async function fetchOne(title, signal) {
       return p.provider_name
     }) || []
 
-  const director = detailsData.credits?.crew?.find(
-    (p) => p.job === "Director",
-  )?.name
+  const directors = [
+    ...new Set(
+      (detailsData.credits?.crew || [])
+        .filter((person) => person.job === "Director")
+        .map((person) => person.name)
+        .filter(Boolean),
+    ),
+  ]
+
   const actors =
     detailsData.credits?.cast?.slice(0, 9).map((a) => a.name) || []
-  const country = detailsData.production_countries?.[0]?.iso_3166_1 || "UNKNOWN"
+
+  const countries = [
+    ...new Set(
+      (detailsData.production_countries || [])
+        .map((country) => country.iso_3166_1)
+        .filter(Boolean),
+    ),
+  ]
+
   const globalRating = detailsData.vote_average
     ? (detailsData.vote_average / 2).toFixed(1)
     : null
@@ -89,58 +282,87 @@ async function fetchOne(title, signal) {
 
   const item = {
     title,
+    queryYear: year,
     genres,
     genre: genres[0],
-    director,
+    directors,
+    director: directors[0] || null,
     actors,
-    country,
+    countries,
+    country: countries[0] || "UNKNOWN",
     platforms,
     globalRating,
     popularity: detailsData.popularity || 0,
     releaseDate: detailsData.release_date || null,
   }
 
-  cacheSet(title, item)
+  cacheSet(key, item)
   return item
 }
 
-export async function fetchMetadataFromTMDB(movieTitles, { signal } = {}) {
+/** Ejecuta `mapper` sobre `items` con un máximo de `limit` en paralelo. */
+async function mapWithConcurrency(items, limit, mapper) {
+  const results = new Array(items.length)
+  let nextIndex = 0
+
+  async function worker() {
+    while (true) {
+      const index = nextIndex
+      nextIndex += 1
+      if (index >= items.length) return
+      results[index] = await mapper(items[index])
+    }
+  }
+
+  const workers = Array.from(
+    { length: Math.min(limit, items.length) },
+    () => worker(),
+  )
+
+  await Promise.all(workers)
+  return results
+}
+
+export async function fetchMetadataFromTMDB(movies, { signal } = {}) {
   if (!TMDB_API_KEY) {
     throw new Error(
       "Falta la API key de TMDB (TMDB_API_KEY). Añádela a .env o a las variables del hosting y reconstruye.",
     )
   }
 
-  const genreCounts = {
-    Terror: 0,
-    Acción: 0,
-    "Ciencia Ficción": 0,
-    Drama: 0,
-    Comedia: 0,
-    Thriller: 0,
-    Romance: 0,
-    Animación: 0,
-    Documental: 0,
-    Otro: 0,
-  }
+  // Se deriva de GENRE_KEYS para no duplicar la lista de géneros.
+  const genreCounts = Object.fromEntries(GENRE_KEYS.map((genre) => [genre, 0]))
 
-  // Deduplica títulos repetidos dentro de una misma tanda.
-  const inFlight = new Map()
-  const fetchPromises = movieTitles.map((title) => {
-    if (!inFlight.has(title)) {
-      inFlight.set(
-        title,
-        fetchOne(title, signal).catch((e) => {
-          // Un fallo puntual de red no debe tumbar el resto; auth y abort sí.
-          if (e.code === "TMDB_AUTH" || e.name === "AbortError") throw e
-          return null
-        }),
-      )
-    }
-    return inFlight.get(title)
+  const normalized = (movies || [])
+    .map(normalizeMovie)
+    .filter((movie) => movie.title)
+
+  // Deduplica por título + año antes de repartir el trabajo.
+  const uniqueMovies = new Map()
+  normalized.forEach((movie) => {
+    const key = movieCacheKey(movie)
+    if (!uniqueMovies.has(key)) uniqueMovies.set(key, movie)
   })
 
-  const results = await Promise.all(fetchPromises)
+  // Un fallo puntual de red no tumba el resto; auth y abort sí.
+  let fatalError = null
+  const results = await mapWithConcurrency(
+    [...uniqueMovies.values()],
+    TMDB_CONCURRENCY,
+    async (movie) => {
+      if (fatalError) return null
+
+      try {
+        return await fetchOne(movie, signal)
+      } catch (e) {
+        if (e.code === "TMDB_AUTH" || e.name === "AbortError") {
+          fatalError = e
+          throw e
+        }
+        return null
+      }
+    },
+  )
 
   const directorCounts = {}
   const actorCounts = {}
@@ -151,18 +373,27 @@ export async function fetchMetadataFromTMDB(movieTitles, { signal } = {}) {
     if (!item) return
 
     item.genres.forEach((genre) => {
-      genreCounts[genre] += 1
+      if (genre in genreCounts) genreCounts[genre] += 1
     })
 
-    if (item.director)
-      directorCounts[item.director] = (directorCounts[item.director] || 0) + 1
-    item.actors.forEach((a) => {
-      actorCounts[a] = (actorCounts[a] || 0) + 1
+    const directors = item.directors || (item.director ? [item.director] : [])
+    directors.forEach((director) => {
+      directorCounts[director] = (directorCounts[director] || 0) + 1
     })
-    if (item.country !== "UNKNOWN")
-      countryCounts[item.country] = (countryCounts[item.country] || 0) + 1
-    item.platforms.forEach((p) => {
-      platformCounts[p] = (platformCounts[p] || 0) + 1
+
+    item.actors.forEach((actor) => {
+      actorCounts[actor] = (actorCounts[actor] || 0) + 1
+    })
+
+    const countries = item.countries || (item.country ? [item.country] : [])
+    countries.forEach((country) => {
+      if (country !== "UNKNOWN") {
+        countryCounts[country] = (countryCounts[country] || 0) + 1
+      }
+    })
+
+    item.platforms.forEach((platform) => {
+      platformCounts[platform] = (platformCounts[platform] || 0) + 1
     })
   })
 

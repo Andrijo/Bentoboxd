@@ -80,24 +80,34 @@ export default function App() {
       if (requestId !== requestIdRef.current) return
       if (!parsed?.length) return
 
-      const metadata = await fetchMetadata(parsed.map((m) => m.title))
+      const metadata = await fetchMetadata(
+        parsed.map((m) => ({ title: m.title, year: m.year })),
+      )
       if (requestId !== requestIdRef.current) return
       if (!metadata) return
 
       setMovies((prev) =>
         prev.map((m) => {
           const found = metadata.rawResults.find(
-            (r) => r && r.title === m.title,
+            (r) =>
+              r &&
+              r.title === m.title.trim() &&
+              (r.queryYear == null ||
+                !m.year ||
+                String(r.queryYear) === String(m.year).trim()),
           )
+          const releaseYear = found?.releaseDate
+            ? parseInt(found.releaseDate.split("-")[0], 10)
+            : 0
+          const fallbackYear = m.year ? parseInt(m.year, 10) : 0
+
           return {
             ...m,
             platforms: found?.platforms || [],
             metrics: {
               rating: found?.globalRating ? parseFloat(found.globalRating) : 0,
               popularity: found?.popularity || 0,
-              year: found?.releaseDate
-                ? parseInt(found.releaseDate.split("-")[0])
-                : 0,
+              year: releaseYear || fallbackYear,
             },
           }
         }),

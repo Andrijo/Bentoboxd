@@ -20,8 +20,8 @@ export function useTMDBMetadata() {
     [],
   )
 
-  const fetchMetadata = useCallback(async (movieTitles) => {
-    if (!movieTitles?.length) return null
+  const fetchMetadata = useCallback(async (movies) => {
+    if (!movies?.length) return null
 
     // Cancela una carga anterior antes de empezar la nueva.
     controllerRef.current?.abort()
@@ -32,7 +32,7 @@ export function useTMDBMetadata() {
     setError(null)
 
     try {
-      const metadata = await fetchMetadataFromTMDB(movieTitles, {
+      const metadata = await fetchMetadataFromTMDB(movies, {
         signal: controller.signal,
       })
       setGenres(metadata.genres)
@@ -44,7 +44,7 @@ export function useTMDBMetadata() {
     } catch (e) {
       if (e.name === "AbortError") return null
       setError(
-        "No se pudieron clasificar los géneros: " +
+        "No se pudieron obtener los metadatos de TMDB: " +
           (e.message || "Error inesperado"),
       )
       return null

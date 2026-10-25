@@ -44,6 +44,7 @@ export default function CountrySectors({ countries }) {
                 overflow: "hidden", border: "1px solid rgba(255,255,255,0.05)",
               }}>
                 <img src={flagUrl} alt={fullName}
+                  loading="lazy" decoding="async"
                   style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               </div>
             </div>
