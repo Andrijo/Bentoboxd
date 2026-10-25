@@ -76,6 +76,21 @@ describe("useLetterboxdFeed", () => {
     })
   })
 
+  it("rechaza un usuario inválido sin hacer la petición", async () => {
+    const fetchMock = vi.fn()
+    vi.stubGlobal("fetch", fetchMock)
+
+    const { result } = renderHook(() => useLetterboxdFeed())
+
+    await act(async () => {
+      await result.current.fetchMovies("dos palabras")
+    })
+
+    expect(fetchMock).not.toHaveBeenCalled()
+    expect(result.current.error).toMatch(/Usuario inválido/)
+    expect(result.current.username).toBeNull()
+  })
+
   it("expone un error cuando el feed responde con fallo", async () => {
     vi.stubGlobal(
       "fetch",

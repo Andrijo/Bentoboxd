@@ -1,5 +1,6 @@
 import { describe, it, expect } from "vitest"
 import {
+  isValidUsername,
   parseUsername,
   buildRssUrl,
   extractPoster,
@@ -97,5 +98,19 @@ describe("extractTitle", () => {
 
   it("devuelve null si no coincide el patrón", () => {
     expect(extractTitle("<p>otra cosa</p>")).toBeNull()
+  })
+})
+
+describe("isValidUsername", () => {
+  it("acepta usuarios con letras, números, guiones y guiones bajos", () => {
+    expect(isValidUsername("andrijo")).toBe(true)
+    expect(isValidUsername("user_name-2")).toBe(true)
+  })
+
+  it("rechaza vacíos, espacios, rutas y nombres demasiado largos", () => {
+    expect(isValidUsername("")).toBe(false)
+    expect(isValidUsername("dos palabras")).toBe(false)
+    expect(isValidUsername("../etc")).toBe(false)
+    expect(isValidUsername("a".repeat(61))).toBe(false)
   })
 })

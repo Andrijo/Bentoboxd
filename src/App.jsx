@@ -71,14 +71,15 @@ export default function App() {
       setShowQuiz(false)
       resetMetadata()
 
+      const parsed = await fetchFeed(target)
+      if (requestId !== requestIdRef.current) return
+      if (!parsed?.length) return
+
+      // Solo se recuerdan perfiles cuyo feed cargó.
       const user = parseUsername(target)
       setRecentProfiles((prev) =>
         [user, ...prev.filter((p) => p !== user)].slice(0, 3),
       )
-
-      const parsed = await fetchFeed(target)
-      if (requestId !== requestIdRef.current) return
-      if (!parsed?.length) return
 
       const metadata = await fetchMetadata(
         parsed.map((m) => ({ title: m.title, year: m.year })),

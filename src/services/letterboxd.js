@@ -1,3 +1,10 @@
+// Mismo formato que acepta el proxy (api/rss.js).
+const USERNAME_RE = /^[A-Za-z0-9_-]{1,60}$/
+
+export function isValidUsername(username) {
+  return USERNAME_RE.test(username || "")
+}
+
 export function parseUsername(input) {
   const raw = (input || "").trim()
   const match = raw.match(/letterboxd\.com\/([^/]+)/)
