@@ -1,7 +1,7 @@
 import { TMDB_API_KEY, TMDB_GENRES } from "../constants/genres.js"
 
 const AUTH_ERROR =
-  "TMDB rechazó la API key (401). Revisa VITE_TMDB_API_KEY y vuelve a desplegar."
+  "TMDB rechazó la API key (401). Revisa TMDB_API_KEY y vuelve a desplegar."
 const CACHE_LIMIT = 300
 
 const metadataCache = new Map()
@@ -107,7 +107,7 @@ async function fetchOne(title, signal) {
 export async function fetchMetadataFromTMDB(movieTitles, { signal } = {}) {
   if (!TMDB_API_KEY) {
     throw new Error(
-      "Falta la API key de TMDB (VITE_TMDB_API_KEY). Añádela a .env o a las variables del hosting y reconstruye.",
+      "Falta la API key de TMDB (TMDB_API_KEY). Añádela a .env o a las variables del hosting y reconstruye.",
     )
   }
 

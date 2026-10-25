@@ -16,7 +16,10 @@ export const GENRE_CONFIG = {
 
 export const GENRE_KEYS = Object.keys(GENRE_CONFIG)
 
-export const TMDB_API_KEY = import.meta.env.VITE_TMDB_API_KEY
+// Acepta TMDB_API_KEY (sin prefijo) y VITE_TMDB_API_KEY.
+// Ambos prefijos están declarados en envPrefix (vite.config.js).
+export const TMDB_API_KEY =
+  import.meta.env.VITE_TMDB_API_KEY || import.meta.env.TMDB_API_KEY
 
 export const TMDB_GENRES = {
   27: "Terror",

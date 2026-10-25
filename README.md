@@ -62,7 +62,7 @@ npm install
 Copia `.env.example` a `.env` y completa las variables:
 
 ```env
-VITE_TMDB_API_KEY=tu_api_key_de_tmdb
+TMDB_API_KEY=tu_api_key_de_tmdb
 # Solo producción (ver Despliegue)
 # VITE_RSS_PROXY_URL=/api/rss
 ```
@@ -86,11 +86,11 @@ El RSS de Letterboxd **no permite CORS**, así que en producción necesita un pr
 
 1. Importa el repositorio en Vercel (detecta Vite automáticamente).
 2. En **Settings → Environment Variables** define:
-   - `VITE_TMDB_API_KEY` — tu key de TMDB.
+   - `TMDB_API_KEY` — tu key de TMDB.
    - `VITE_RSS_PROXY_URL` — **opcional**: en producción se usa `/api/rss` por defecto. Solo cámbialo si usas otro proxy.
 3. Deploy. La app llamará a `/api/rss?user=<usuario>`.
 
-> **Si ves un error 401 de TMDB**, la variable `VITE_TMDB_API_KEY` no está definida en el build. Vite la inyecta en tiempo de compilación: añádela en Vercel y haz **Redeploy**.
+> **Si ves un error 401 de TMDB**, la variable `TMDB_API_KEY` no está definida en el build. Vite la inyecta en tiempo de compilación: añádela en Vercel y haz **Redeploy**.
 
 En local no hace falta nada: `npm run dev` usa el proxy de `vite.config.js` (`/rss-proxy`).
 
