@@ -20,7 +20,7 @@ export default function DataPanels({
   return (
     <>
       <PlatformsPanel platformsData={platforms} movies={movies} loading={loadingGenres} />
-      <GenrePanel genres={genres} loadingGenres={loadingGenres} genreError={genreError} />
+      <GenrePanel genres={genres} movieCount={movies.length} loadingGenres={loadingGenres} genreError={genreError} />
       <DirectorsPanel directors={directors} movie={movies[0]} loading={loadingGenres} />
       <ActorsPanel actors={actors} loading={loadingGenres} />
       <CountriesPanel countries={countries} loading={loadingGenres} />

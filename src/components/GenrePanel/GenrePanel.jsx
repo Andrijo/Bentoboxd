@@ -6,7 +6,7 @@ import BarChart from "./BarChart.jsx"
 import MatrixChart from "./MatrixChart.jsx"
 import GaugesChart from "./GaugesChart.jsx"
 
-export default function GenrePanel({ genres, loadingGenres, genreError }) {
+export default function GenrePanel({ genres, movieCount, loadingGenres, genreError }) {
   const [chartType, setChartType] = useState("donut")
 
   const total = Object.values(genres || {}).reduce((a, b) => a + b, 0)
@@ -35,7 +35,7 @@ export default function GenrePanel({ genres, loadingGenres, genreError }) {
               letterSpacing: "2px", marginTop: "4px",
               fontFamily: "var(--font-mono)", textTransform: "uppercase",
             }}>
-              Clasificado por TMDB — {total} películas consumidas
+              Clasificado por TMDB — {movieCount ?? total} películas · {total} géneros
             </div>
           )}
         </div>
