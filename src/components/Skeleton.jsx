@@ -27,7 +27,7 @@ export function BentoSkeleton() {
   )
 
   return (
-    <div style={{ padding: "32px 40px" }} role="status" aria-busy="true">
+    <div style={{ padding: "32px var(--gutter)" }} role="status" aria-busy="true">
       <span className="rd-sr-only">Cargando películas…</span>
       <div
         style={{
@@ -38,8 +38,8 @@ export function BentoSkeleton() {
           gap: "16px",
           marginBottom: "24px",
         }}>
-        <Skeleton width="240px" height="14px" />
-        <Skeleton width="300px" height="30px" radius="3px" />
+        <Skeleton width="min(240px, 100%)" height="14px" />
+        <Skeleton width="min(300px, 100%)" height="30px" radius="3px" />
       </div>
       <div
         ref={gridRef}

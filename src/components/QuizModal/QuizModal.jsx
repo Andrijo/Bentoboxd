@@ -40,9 +40,9 @@ export default function QuizModal({ movies, onClose }) {
         </button>
 
         {showResult ? (
-          <div style={{ padding: "50px", textAlign: "center" }}>
+          <div style={{ padding: "clamp(24px, 8vw, 50px)", textAlign: "center" }}>
             <h2 style={{
-              fontFamily: "var(--font-display)", fontSize: "3rem",
+              fontFamily: "var(--font-display)", fontSize: "clamp(2rem, 9vw, 3rem)",
               color: "#00e5ff", margin: 0,
             }}>
               TEST COMPLETADO
@@ -73,7 +73,7 @@ export default function QuizModal({ movies, onClose }) {
               <span>PREGUNTA {currentQ + 1} / {questions.length}</span>
             </div>
 
-            <div style={{ padding: "30px" }}>
+            <div style={{ padding: "clamp(20px, 6vw, 30px)" }}>
               <div style={{ textAlign: "center", marginBottom: "20px" }}>
                 <div style={{
                   fontSize: "var(--fs-md)", color: "#F0EDE5",

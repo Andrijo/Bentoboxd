@@ -16,7 +16,7 @@ export default function CountriesPanel({ countries, loading }) {
 
   return (
     <div style={{
-      margin: "0 40px 40px", border: "1px solid rgba(255,255,255,0.07)",
+      margin: "0 var(--gutter) 40px", border: "1px solid rgba(255,255,255,0.07)",
       borderRadius: "4px", background: "rgba(255,255,255,0.02)", overflow: "hidden",
     }}>
       <div style={{
@@ -32,7 +32,7 @@ export default function CountriesPanel({ countries, loading }) {
         </div>
         {hasData && !loading && (
           <div style={{
-            display: "flex", gap: "4px", background: "rgba(0,0,0,0.3)",
+            display: "flex", flexWrap: "wrap", gap: "4px", background: "rgba(0,0,0,0.3)",
             borderRadius: "3px", padding: "3px",
             border: "1px solid rgba(255,255,255,0.07)",
           }}>

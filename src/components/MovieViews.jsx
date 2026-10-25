@@ -20,7 +20,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
     [columns, movies.length],
   )
   return (
-    <div style={{ padding: "32px 40px 32px" }}>
+    <div style={{ padding: "32px var(--gutter)" }}>
       <div
         style={{
           display: "flex",
@@ -47,6 +47,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
         <div
           style={{
             display: "flex",
+            flexWrap: "wrap",
             gap: "4px",
             background: "rgba(0,0,0,0.3)",
             borderRadius: "3px",
@@ -123,6 +124,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
               }}
 >
               <div
+                className="rd-timeline-index"
                 style={{
                   fontFamily: "var(--font-display)",
                   fontSize: "var(--fs-2xl)",
@@ -168,11 +170,11 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                 )}
               </div>
 
-              <div style={{ flex: 1 }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
                 <div
                   style={{
                     fontFamily: "var(--font-display)",
-                    fontSize: "var(--fs-xl)",
+                    fontSize: "clamp(1.1rem, 4vw, 1.8rem)",
                     color: "#F0EDE5",
                     letterSpacing: "1px",
                     lineHeight: 1,
@@ -180,7 +182,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                   }}>
                   {movie.title}
                 </div>
-                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
                   {movie.year && (
                     <span
                       style={{
