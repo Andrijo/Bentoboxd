@@ -15,7 +15,7 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
 
   return (
     <div style={{
-      margin: "0 40px 40px", border: "1px solid rgba(255,255,255,0.07)",
+      margin: "0 var(--gutter) 40px", border: "1px solid rgba(255,255,255,0.07)",
       borderRadius: "4px", background: "rgba(255,255,255,0.02)",
       overflow: "hidden", fontFamily: "var(--font-mono)",
     }}>

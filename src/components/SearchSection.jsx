@@ -2,7 +2,7 @@ export default function SearchSection({ url, loading, onUrlChange, onFetch }) {
   return (
     <div
       style={{
-        padding: "32px 40px",
+        padding: "32px var(--gutter)",
         display: "flex",
         gap: "12px",
         alignItems: "center",

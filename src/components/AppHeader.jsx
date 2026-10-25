@@ -7,7 +7,7 @@ const btnBase = {
   cursor: "pointer",
   textTransform: "uppercase",
   transition: "all 0.2s",
-  width: "160px",
+  flex: "1 1 160px",
   textAlign: "center",
 }
 
@@ -47,7 +47,7 @@ export default function AppHeader({ movies, onReset, onShowQuiz, onShowGame }) {
       </h1>
 
       {movies.length > 0 && (
-        <div style={{ display: "flex", gap: "12px" }}>
+        <div className="rd-header-actions" style={{ display: "flex", gap: "12px" }}>
           <button
             onClick={onShowQuiz}
             type="button"
