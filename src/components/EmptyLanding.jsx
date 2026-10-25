@@ -10,7 +10,7 @@ export default function EmptyLanding({
   if (loading || movies.length > 0 || error) return null
 
   return (
-    <div style={{ padding: "30px 40px", textAlign: "center" }}>
+    <div style={{ padding: "30px var(--gutter)", textAlign: "center" }}>
       <div style={{ fontSize: "4rem", marginBottom: "16px", opacity: 0.3 }}>
         🎞
       </div>
