@@ -24,16 +24,16 @@ export default function GenrePanel({ genres, loadingGenres, genreError }) {
       }}>
         <div>
           <div style={{
-            fontFamily: "'Bebas Neue', sans-serif", fontSize: "2rem",
+            fontFamily: "var(--font-display)", fontSize: "var(--fs-2xl)",
             letterSpacing: "2px", color: "#F0EDE5", lineHeight: 1,
           }}>
             TOP GÉNEROS
           </div>
           {hasData && (
             <div style={{
-              fontSize: "0.5rem", color: "rgba(255,255,255,0.25)",
+              fontSize: "var(--fs-2xs)", color: "rgba(255,255,255,0.25)",
               letterSpacing: "2px", marginTop: "4px",
-              fontFamily: "'Space Mono', monospace", textTransform: "uppercase",
+              fontFamily: "var(--font-mono)", textTransform: "uppercase",
             }}>
               Clasificado por TMDB — {total} películas consumidas
             </div>
@@ -64,7 +64,7 @@ export default function GenrePanel({ genres, loadingGenres, genreError }) {
                     : "1px solid transparent",
                   color: chartType === key ? "#00e5ff" : "rgba(255,255,255,0.3)",
                   padding: "5px 12px", borderRadius: "2px", cursor: "pointer",
-                  fontSize: "0.75rem", fontFamily: "'Space Mono', monospace",
+                  fontSize: "var(--fs-xs)", fontFamily: "var(--font-mono)",
                   letterSpacing: "1.5px", transition: "background 0.2s, border-color 0.2s, color 0.2s",
                 }}>
                 {label}
@@ -81,8 +81,8 @@ export default function GenrePanel({ genres, loadingGenres, genreError }) {
         {loadingGenres && (
           <div style={{ display: "flex", flexDirection: "column", alignItems: "center", gap: "14px" }}>
             <div style={{
-              fontSize: "0.55rem", letterSpacing: "4px", color: "rgba(0,229,255,0.5)",
-              animation: "pulse 1.2s ease infinite", fontFamily: "'Space Mono', monospace",
+              fontSize: "var(--fs-2xs)", letterSpacing: "4px", color: "rgba(0,229,255,0.5)",
+              animation: "pulse 1.2s ease infinite", fontFamily: "var(--font-mono)",
               textTransform: "uppercase",
             }}>
               ◈ Clasificando géneros con TMDB...
@@ -102,8 +102,8 @@ export default function GenrePanel({ genres, loadingGenres, genreError }) {
 
         {genreError && !loadingGenres && (
           <div style={{
-            fontSize: "0.6rem", color: "rgba(255,80,80,0.7)",
-            letterSpacing: "1px", fontFamily: "'Space Mono', monospace",
+            fontSize: "var(--fs-2xs)", color: "rgba(255,80,80,0.7)",
+            letterSpacing: "1px", fontFamily: "var(--font-mono)",
             textAlign: "center",
           }}>
             ⚠ {genreError}
@@ -122,8 +122,8 @@ export default function GenrePanel({ genres, loadingGenres, genreError }) {
 
         {!loadingGenres && !genreError && !hasData && (
           <div style={{
-            fontSize: "0.75rem", color: "rgba(255,255,255,0.2)",
-            letterSpacing: "2px", fontFamily: "'Space Mono', monospace",
+            fontSize: "var(--fs-xs)", color: "rgba(255,255,255,0.2)",
+            letterSpacing: "2px", fontFamily: "var(--font-mono)",
           }}>
             Sin datos de géneros disponibles
           </div>

@@ -16,7 +16,7 @@ export default function EmptyLanding({
       </div>
       <div
         style={{
-          fontSize: "0.6rem",
+          fontSize: "var(--fs-2xs)",
           letterSpacing: "3px",
           textTransform: "uppercase",
           color: "#E5E5E5",

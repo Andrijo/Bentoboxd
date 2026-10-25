@@ -15,8 +15,8 @@ export const colors = {
 }
 
 export const fonts = {
-  display: "'Bebas Neue', sans-serif",
-  mono: "'Space Mono', monospace",
+  display: "var(--font-display)",
+  mono: "var(--font-mono)",
 }
 
 export const panelStyle = {
@@ -39,7 +39,7 @@ export const panelHeaderStyle = {
 
 export const panelTitleStyle = {
   fontFamily: fonts.display,
-  fontSize: "2rem",
+  fontSize: "var(--fs-2xl)",
   letterSpacing: "2px",
   color: colors.textBright,
   lineHeight: 1,
@@ -60,7 +60,7 @@ export const toggleGroupStyle = {
 }
 
 export const loadingTextStyle = (color = colors.accent) => ({
-  fontSize: "0.55rem",
+  fontSize: "var(--fs-2xs)",
   letterSpacing: "4px",
   color: `${color}80`,
   animation: "pulse 1.2s ease infinite",
@@ -70,7 +70,7 @@ export const loadingTextStyle = (color = colors.accent) => ({
 
 export const emptyTextStyle = {
   textAlign: "center",
-  fontSize: "0.55rem",
+  fontSize: "var(--fs-2xs)",
   color: colors.textDim,
   marginTop: "20px",
   fontFamily: fonts.mono,

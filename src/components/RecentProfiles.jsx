@@ -5,7 +5,7 @@ export default function RecentProfiles({ profiles, onSelect }) {
     <div style={{ marginTop: "40px", animation: "fadeSlideIn 0.8s ease both" }}>
       <div
         style={{
-          fontSize: "0.55rem",
+          fontSize: "var(--fs-2xs)",
           letterSpacing: "3px",
           color: "rgba(255,255,255,0.2)",
           textTransform: "uppercase",

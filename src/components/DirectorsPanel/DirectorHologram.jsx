@@ -23,7 +23,7 @@ export default function DirectorHologram({ directors }) {
             animation: "fadeSlideIn 0.6s ease both", animationDelay: `${i * 80}ms`,
           }}>
             <div style={{
-              fontSize: "1.2rem", fontFamily: "'Bebas Neue', sans-serif",
+              fontSize: "var(--fs-md)", fontFamily: "var(--font-display)",
               color: color, textShadow: `0 0 10px ${color}`,
             }}>
               {count}
@@ -41,7 +41,7 @@ export default function DirectorHologram({ directors }) {
               }} />
             </div>
             <div style={{
-              fontSize: "0.75rem", textAlign: "center",
+              fontSize: "var(--fs-xs)", textAlign: "center",
               color: "rgba(255,255,255,0.7)", letterSpacing: "1px", height: "30px",
             }}>
               {name.split(" ").map((word) => (

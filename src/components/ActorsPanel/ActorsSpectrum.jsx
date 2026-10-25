@@ -25,7 +25,7 @@ export default function ActorsSpectrum({ actors }) {
             animation: "fadeSlideIn 0.5s ease both", animationDelay: `${i * 40}ms`,
           }}>
             <div style={{
-              fontSize: "0.9rem", fontFamily: "'Space Mono', monospace",
+              fontSize: "var(--fs-sm)", fontFamily: "var(--font-mono)",
               color: color, fontWeight: "bold",
             }}>
               {count}
@@ -42,7 +42,7 @@ export default function ActorsSpectrum({ actors }) {
               }} />
             </div>
             <div style={{
-              fontSize: "0.75rem", textAlign: "center",
+              fontSize: "var(--fs-xs)", textAlign: "center",
               color: "rgba(255,255,255,0.5)", writingMode: "vertical-rl",
               transform: "rotate(180deg)", height: "60px", letterSpacing: "1px",
             }}>

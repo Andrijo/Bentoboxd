@@ -45,21 +45,21 @@ export default function GaugesChart({ genres }) {
               />
 
               <text x="50" y="58" textAnchor="middle" fontSize="26"
-                fontFamily="'Bebas Neue', sans-serif" fill="#F0EDE5">
+                style={{ fontFamily: "var(--font-display)" }} fill="#F0EDE5">
                 {count}
               </text>
             </svg>
 
             <div style={{ textAlign: "center" }}>
               <div style={{
-                fontSize: "0.65rem", fontFamily: "'Space Mono', monospace",
+                fontSize: "var(--fs-2xs)", fontFamily: "var(--font-mono)",
                 color: cfg.color, letterSpacing: "1px", textTransform: "uppercase",
               }}>
                 {cfg.icon} {k}
               </div>
               <div style={{
-                fontSize: "0.75rem", color: "rgba(255,255,255,0.3)",
-                fontFamily: "'Space Mono', monospace", marginTop: "2px",
+                fontSize: "var(--fs-xs)", color: "rgba(255,255,255,0.3)",
+                fontFamily: "var(--font-mono)", marginTop: "2px",
               }}>
                 {Math.round(percent * 100)}% DEL MÁXIMO
               </div>

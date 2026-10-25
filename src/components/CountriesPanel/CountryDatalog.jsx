@@ -31,7 +31,7 @@ export default function CountryDatalog({ countries }) {
               ) : (
                 <div style={{
                   width: "100%", height: "100%", display: "flex",
-                  alignItems: "center", justifyContent: "center", fontSize: "0.8rem",
+                  alignItems: "center", justifyContent: "center", fontSize: "var(--fs-sm)",
                 }}>
                   📍
                 </div>
@@ -42,7 +42,7 @@ export default function CountryDatalog({ countries }) {
               {fullName}
             </span>
             <span style={{
-              fontSize: "0.75rem", color: themeColor, fontFamily: "'Space Mono', monospace",
+              fontSize: "var(--fs-xs)", color: themeColor, fontFamily: "var(--font-mono)",
               letterSpacing: "1px", background: `${themeColor}15`,
               padding: "4px 8px", borderRadius: "2px",
             }}>

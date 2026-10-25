@@ -65,13 +65,13 @@ export default function MatrixChart({ genres }) {
         {hoveredGenre ? (
           <>
             <div style={{
-              fontSize: "1.2rem", fontFamily: "'Bebas Neue', sans-serif",
+              fontSize: "var(--fs-md)", fontFamily: "var(--font-display)",
               color: GENRE_CONFIG[hoveredGenre].color, letterSpacing: "2px",
             }}>
               {GENRE_CONFIG[hoveredGenre].icon} {hoveredGenre}
             </div>
             <div style={{
-              fontSize: "0.75rem", fontFamily: "'Space Mono', monospace",
+              fontSize: "var(--fs-xs)", fontFamily: "var(--font-mono)",
               color: "rgba(255,255,255,0.5)",
             }}>
               {genres[hoveredGenre]} NODOS DETECTADOS (
@@ -80,7 +80,7 @@ export default function MatrixChart({ genres }) {
           </>
         ) : (
           <div style={{
-              fontSize: "0.75rem", fontFamily: "'Space Mono', monospace",
+              fontSize: "var(--fs-xs)", fontFamily: "var(--font-mono)",
               color: "rgba(255,255,255,0.2)", letterSpacing: "2px",
           }}>
             [ PASE EL CURSOR PARA ANALIZAR NODOS ]

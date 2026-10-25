@@ -16,19 +16,19 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
     <div style={{
       margin: "0 40px 40px", border: "1px solid rgba(255,255,255,0.07)",
       borderRadius: "4px", background: "rgba(255,255,255,0.02)",
-      overflow: "hidden", fontFamily: "'Space Mono', monospace",
+      overflow: "hidden", fontFamily: "var(--font-mono)",
     }}>
       <div style={{
         padding: "16px 24px", borderBottom: "1px solid rgba(255,255,255,0.06)",
         display: "flex", justifyContent: "space-between", alignItems: "center",
       }}>
-        <div style={{ fontFamily: "'Bebas Neue', sans-serif", fontSize: "2rem", letterSpacing: "2px", color: "#F0EDE5" }}>
+        <div style={{ fontFamily: "var(--font-display)", fontSize: "var(--fs-2xl)", letterSpacing: "2px", color: "#F0EDE5" }}>
           STREAMING
         </div>
         {selectedPlatform && (
           <button onClick={() => setSelectedPlatform(null)} type="button" style={{
             background: "none", border: `1px solid ${themeColor}`, color: themeColor,
-            fontSize: "0.75rem", padding: "4px 10px", cursor: "pointer", textTransform: "uppercase",
+            fontSize: "var(--fs-xs)", padding: "4px 10px", cursor: "pointer", textTransform: "uppercase",
           }}>
             ✕ Desvincular
           </button>
@@ -38,7 +38,7 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
       <div style={{ padding: "24px" }}>
         {loading ? (
           <div style={{
-            textAlign: "center", fontSize: "0.75rem", letterSpacing: "4px",
+            textAlign: "center", fontSize: "var(--fs-xs)", letterSpacing: "4px",
             color: themeColor, animation: "pulse 1.2s ease infinite",
           }}>
             ◈ ESCANEANDO FRECUENCIAS...
@@ -70,10 +70,10 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
                   <img src={logos[name]} alt={name}
                     style={{ width: "30px", height: "30px", borderRadius: "4px", border: `1px solid ${themeColor}30` }} />
                   <div style={{ overflow: "hidden" }}>
-                    <div style={{ fontSize: "0.75rem", color: "#DBD5CA", fontWeight: "bold", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
+                    <div style={{ fontSize: "var(--fs-xs)", color: "#DBD5CA", fontWeight: "bold", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
                       {name}
                     </div>
-                    <div style={{ fontSize: "0.75rem", color: themeColor }}>{count} ITEMS</div>
+                    <div style={{ fontSize: "var(--fs-xs)", color: themeColor }}>{count} ITEMS</div>
                   </div>
                 </div>
               ))}
@@ -85,7 +85,7 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
                 padding: "16px", borderRadius: "4px", animation: "fadeSlideIn 0.3s ease both",
               }}>
                 <div style={{
-                  fontSize: "0.75rem", color: themeColor, letterSpacing: "2px",
+                  fontSize: "var(--fs-xs)", color: themeColor, letterSpacing: "2px",
                   marginBottom: "12px", borderBottom: `1px solid ${themeColor}20`, paddingBottom: "8px",
                 }}>
                   MOSTRANDO ARCHIVOS EN: {selectedPlatform.toUpperCase()}
@@ -93,7 +93,7 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
                 <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                   {filteredMovies.map((m) => (
                     <div key={m.title} style={{
-                      fontSize: "0.75rem", color: "#F0EDE5",
+                      fontSize: "var(--fs-xs)", color: "#F0EDE5",
                       display: "flex", justifyContent: "space-between",
                     }}>
                       <span>&gt; {m.title}</span>

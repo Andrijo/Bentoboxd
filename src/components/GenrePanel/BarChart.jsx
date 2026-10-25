@@ -19,7 +19,7 @@ export default function BarChart({ genres }) {
         return (
           <div key={k} style={{ display: "flex", alignItems: "center", gap: "14px" }}>
             <div style={{
-              width: "90px", fontSize: "0.75rem", fontFamily: "'Space Mono', monospace",
+              width: "90px", fontSize: "var(--fs-xs)", fontFamily: "var(--font-mono)",
               color: "rgba(255,255,255,0.7)", textAlign: "right",
               letterSpacing: "0.5px", whiteSpace: "nowrap",
             }}>
@@ -48,7 +48,7 @@ export default function BarChart({ genres }) {
             </div>
 
             <div style={{
-              width: "25px", fontSize: "0.8rem", fontFamily: "'Bebas Neue', sans-serif",
+              width: "25px", fontSize: "var(--fs-sm)", fontFamily: "var(--font-display)",
               color: cfg.color, letterSpacing: "1px",
             }}>
               {count}

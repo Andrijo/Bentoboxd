@@ -74,6 +74,8 @@ npm run dev        # Servidor de desarrollo → http://localhost:5173
 npm run build      # Build de producción → dist/
 npm run preview    # Previsualizar build
 npm run lint       # Ejecutar ESLint
+npm run test       # Ejecutar tests (Vitest, modo watch)
+npm run test:run   # Ejecutar tests una vez (CI)
 ```
 
 ## Estructura

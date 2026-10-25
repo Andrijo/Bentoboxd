@@ -93,12 +93,12 @@ export default function QuizModal({ movies, onClose }) {
         {showResult ? (
           <div style={{ padding: "50px", textAlign: "center" }}>
             <h2 style={{
-              fontFamily: "'Bebas Neue', sans-serif", fontSize: "3rem",
+              fontFamily: "var(--font-display)", fontSize: "3rem",
               color: "#00e5ff", margin: 0,
             }}>
               TEST COMPLETADO
             </h2>
-            <div style={{ fontSize: "1rem", color: "#DBD5CA", margin: "20px 0" }}>
+            <div style={{ fontSize: "var(--fs-base)", color: "#DBD5CA", margin: "20px 0" }}>
               Puntuación:{" "}
               <span style={{ color: "#facc15", fontWeight: "bold" }}>
                 {score}
@@ -118,7 +118,7 @@ export default function QuizModal({ movies, onClose }) {
             <div style={{
               padding: "20px", borderBottom: "1px solid rgba(255,255,255,0.05)",
               display: "flex", justifyContent: "space-between",
-              color: "#00e5ff", fontSize: "0.75rem",
+              color: "#00e5ff", fontSize: "var(--fs-xs)",
             }}>
               <span>SYSTEM.TRIVIA_MODULE</span>
               <span>PREGUNTA {currentQ + 1} / {questions.length}</span>
@@ -127,7 +127,7 @@ export default function QuizModal({ movies, onClose }) {
             <div style={{ padding: "30px" }}>
               <div style={{ textAlign: "center", marginBottom: "20px" }}>
                 <div style={{
-                  fontSize: "1.1rem", color: "#F0EDE5",
+                  fontSize: "var(--fs-md)", color: "#F0EDE5",
                   marginBottom: "20px", lineHeight: "1.4",
                 }}>
                   {current.qText}
@@ -162,7 +162,7 @@ export default function QuizModal({ movies, onClose }) {
                         background: bgColor, border: `1px solid ${borderColor}`,
                         color: textColor, padding: "14px", borderRadius: "3px",
                         cursor: selected ? "default" : "pointer",
-                        fontSize: "0.85rem", fontFamily: "'Space Mono', monospace",
+                        fontSize: "var(--fs-sm)", fontFamily: "var(--font-mono)",
                         transition: "background 0.2s, border-color 0.2s, color 0.2s",
                       }}>
                       {opt}{" "}

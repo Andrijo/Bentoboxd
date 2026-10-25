@@ -32,7 +32,7 @@ export default function ActorsConstellation({ actors }) {
                   dur={`${2 + i}s`} repeatCount="indefinite" />
               </circle>
               <text x={x} y={y - (count + 8)} textAnchor="middle" fontSize="7"
-                fill="#F0EDE5" fontFamily="'Space Mono', monospace" opacity="0.8">
+                fill="#F0EDE5" style={{ fontFamily: "var(--font-mono)" }} opacity="0.8">
                 {name.split(" ").pop()}
               </text>
             </g>

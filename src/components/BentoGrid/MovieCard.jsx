@@ -81,8 +81,8 @@ export default function MovieCard({ movie, size, index }) {
         }}>
         <div
           style={{
-            fontFamily: "'Bebas Neue', sans-serif",
-            fontSize: size === 3 ? "1.8rem" : size === 2 ? "1.25rem" : "1rem",
+            fontFamily: "var(--font-display)",
+            fontSize: size === 3 ? "var(--fs-xl)" : size === 2 ? "var(--fs-md)" : "var(--fs-base)",
             color: "#F0EDE5",
             lineHeight: 1.1,
             letterSpacing: "0.5px",
@@ -102,9 +102,9 @@ export default function MovieCard({ movie, size, index }) {
           {movie.year && (
             <span
               style={{
-                fontSize: "0.75rem",
+                fontSize: "var(--fs-xs)",
                 color: "rgba(255,255,255,0.4)",
-                fontFamily: "'Space Mono', monospace",
+                fontFamily: "var(--font-mono)",
               }}>
               {movie.year}
             </span>
@@ -116,9 +116,9 @@ export default function MovieCard({ movie, size, index }) {
           <div
             style={{
               marginTop: "5px",
-              fontSize: "0.75rem",
+              fontSize: "var(--fs-xs)",
               color: "rgba(0,229,255,0.6)",
-              fontFamily: "'Space Mono', monospace",
+              fontFamily: "var(--font-mono)",
               letterSpacing: "1px",
               textTransform: "uppercase",
             }}>

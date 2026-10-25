@@ -13,7 +13,7 @@ export default function DirectorOrbit({ directors }) {
       <svg viewBox="0 0 300 300" style={{ width: "100%", maxWidth: "280px", overflow: "visible" }}>
         <circle cx={cx} cy={cy} r={8} fill="#ffffff" opacity={0.8} />
         <text x={cx} y={cy + 4} textAnchor="middle" fontSize="6"
-          fontFamily="'Space Mono', monospace" fill="#000" fontWeight="bold">
+          style={{ fontFamily: "var(--font-mono)" }} fill="#000" fontWeight="bold">
           TÚ
         </text>
 
@@ -35,12 +35,12 @@ export default function DirectorOrbit({ directors }) {
                 opacity={0.8} filter={`drop-shadow(0 0 5px ${color})`} />
               <text x={x + (x > cx ? 12 : -12)} y={y}
                 textAnchor={x > cx ? "start" : "end"} dominantBaseline="middle"
-                fontSize="8" fill="#F0EDE5" fontFamily="'Space Mono', monospace" letterSpacing="0.5">
+                fontSize="8" fill="#F0EDE5" style={{ fontFamily: "var(--font-mono)" }} letterSpacing="0.5">
                 {name}
               </text>
               <text x={x + (x > cx ? 12 : -12)} y={y + 10}
                 textAnchor={x > cx ? "start" : "end"} fontSize="6"
-                fill={color} fontFamily="'Space Mono', monospace">
+                fill={color} style={{ fontFamily: "var(--font-mono)" }}>
                 {count} FILMS
               </text>
             </g>

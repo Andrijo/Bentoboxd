@@ -31,13 +31,13 @@ export default function ActorsGrid({ actors }) {
             </div>
             <div style={{ flex: 1, overflow: "hidden" }}>
               <div style={{
-                fontSize: "0.75rem", fontWeight: "bold", textTransform: "uppercase",
+                fontSize: "var(--fs-xs)", fontWeight: "bold", textTransform: "uppercase",
                 color: "#DBD5CA", whiteSpace: "nowrap", overflow: "hidden",
                 textOverflow: "ellipsis",
               }}>
                 {name}
               </div>
-              <div style={{ fontSize: "0.75rem", color: "rgba(255,255,255,0.4)" }}>
+              <div style={{ fontSize: "var(--fs-xs)", color: "rgba(255,255,255,0.4)" }}>
                 {count} CRÉDITOS DETECTADOS
               </div>
             </div>
