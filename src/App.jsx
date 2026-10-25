@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect, useRef } from "react"
 import HighLowGame from "./HighLowGame.jsx"
-import QuizModal from "./components/QuizModal/QuizModal.jsx"
+import Quiz from "./components/Quiz/Quiz.jsx"
 import AppHeader from "./components/AppHeader.jsx"
 import SearchSection from "./components/SearchSection.jsx"
 import MovieViews from "./components/MovieViews.jsx"
@@ -9,6 +9,7 @@ import EmptyLanding from "./components/EmptyLanding.jsx"
 import { BentoSkeleton } from "./components/Skeleton.jsx"
 import { useLetterboxdFeed } from "./hooks/useLetterboxdFeed.js"
 import { useTMDBMetadata } from "./hooks/useTMDBMetadata.js"
+import { useHashRoute } from "./hooks/useHashRoute.js"
 import { parseUsername } from "./services/letterboxd.js"
 
 export default function App() {
@@ -23,8 +24,7 @@ export default function App() {
       return []
     }
   })
-  const [showHighLowGame, setShowHighLowGame] = useState(false)
-  const [showQuiz, setShowQuiz] = useState(false)
+  const [route, navigate] = useHashRoute()
   const requestIdRef = useRef(0)
 
   const {
@@ -69,7 +69,6 @@ export default function App() {
       // Ignora respuestas de búsquedas que ya fueron reemplazadas.
       const requestId = ++requestIdRef.current
 
-      setShowQuiz(false)
       resetMetadata()
 
       const parsed = await fetchFeed(target)
@@ -121,18 +120,20 @@ export default function App() {
   const resetToStart = useCallback(() => {
     requestIdRef.current += 1
     setUrl("")
-    setShowQuiz(false)
+    navigate("profile")
     resetFeed()
     resetMetadata()
-  }, [resetFeed, resetMetadata])
+  }, [navigate, resetFeed, resetMetadata])
 
   const showGenrePanel = movies.length > 0 || metaLoading
+  // Sin feed cargado (p. ej. al recargar en #quiz) solo existe el perfil.
+  const hasMovies = movies.length > 0
+  const page = hasMovies ? route : "profile"
 
   return (
     <div
       style={{
         minHeight: "100vh",
-        background: "linear-gradient(to bottom, #111312, #181818)",
         color: "#DBD5CA",
         fontFamily: "var(--font-mono)",
         padding: "0",
@@ -159,14 +160,23 @@ export default function App() {
         .rd-skeleton { background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 75%); background-size: 200% 100%; animation: shimmer 1.6s linear infinite; }
         .rd-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
         .rd-timeline-row:hover, .rd-timeline-row:focus-visible { background: rgba(0,229,255,0.05) !important; }
+        .rd-hlg-controls { position: relative; flex-shrink: 0; width: clamp(64px, 18vw, 88px); aspect-ratio: 60 / 150; container-type: inline-size; }
+        .rd-hlg-arrow { position: absolute; left: 0; width: 100%; height: 33.67%; padding: 0; border: none; background: none; pointer-events: none; transition: opacity 0.3s; }
+        .rd-hlg-arrow-up { top: 0; }
+        .rd-hlg-arrow-down { bottom: 0; }
+        .rd-hlg-arrow svg { display: block; width: 100%; height: 100%; overflow: visible; }
+        .rd-hlg-arrow-down svg { transform: rotate(180deg); }
+        .rd-hlg-arrow path { pointer-events: auto; cursor: pointer; filter: drop-shadow(0 2px 6px rgba(0,0,0,0.5)); transition: filter 0.15s; }
+        .rd-hlg-arrow:not(:disabled) path:hover { filter: brightness(1.15) drop-shadow(0 0 8px rgba(255,255,255,0.25)); }
+        .rd-hlg-arrow:disabled { opacity: 0.3; }
+        .rd-hlg-arrow:disabled path { pointer-events: none; }
+        .rd-hlg-vs { position: absolute; left: 8.333%; top: 33.333%; width: 83.333%; aspect-ratio: 1; border-radius: 50%; background: #facc15; color: #000; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 28cqw; box-shadow: 0 0 20px rgba(250,204,21,0.4); }
         @media (max-width: 640px) {
           .rd-header-actions { width: 100%; }
           .rd-search-btn { width: 100%; }
           .rd-timeline-row { gap: 12px; padding: 10px; }
           .rd-timeline-index { display: none; }
           .rd-terminal-box { padding: 16px; }
-          .rd-hlg-guess { flex-basis: 100%; flex-direction: row; justify-content: center; }
-          .rd-hlg-guess > button { flex: 1; max-width: 200px; }
         }
         @media (prefers-reduced-motion: reduce) {
           *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; animation-delay: 0ms !important; transition-duration: 0.01ms !important; }
@@ -177,9 +187,9 @@ export default function App() {
         .rd-error-box { margin: 24px var(--gutter); padding: 14px 20px; border: 1px solid rgba(255,80,80,0.3); border-radius: 3px; background: rgba(255,80,80,0.05); color: rgba(255,80,80,0.8); font-size: 0.75rem; letter-spacing: 1px; }
         .rd-header-bar { padding: clamp(24px, 6vw, 48px) var(--gutter) 32px; border-bottom: 1px solid rgba(255,255,255,0.06); position: relative; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
         .rd-header-title { font-family: var(--font-display); letter-spacing: 2px; line-height: 1; margin: 0; cursor: pointer; background: linear-gradient(135deg, #f8f9fa 0%, rgba(255,255,255,0.5) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
-        .rd-hlg-close-btn { background: transparent; border: 1px solid rgba(255,255,255,0.1); color: #888; padding: 8px 16px; border-radius: 4px; cursor: pointer; transition: all 0.2s; width: 100px; }
-        .rd-hlg-container { position: fixed; inset: 0; z-index: 9999; background-color: #181818; display: flex; flex-direction: column; overflow-x: hidden; overflow-y: auto; font-family: var(--font-mono); }
-        .rd-hlg-guess { display: flex; flex-direction: column; gap: 15px; }
+        .rd-page { padding: 32px var(--gutter) 48px; animation: fadeSlideIn 0.3s ease both; }
+        .rd-page-notice { padding: 48px 0; text-align: center; font-size: var(--fs-xs); letter-spacing: 2px; color: rgba(255,255,255,0.5); text-transform: uppercase; }
+        .rd-hlg { display: flex; flex-direction: column; min-height: 75vh; overflow-x: hidden; }
         .rd-rank-circle { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; margin-right: 12px; font-family: var(--font-display); font-size: 1rem; }
         .rd-no-poster { position: absolute; inset: 0; background: linear-gradient(to top, #0a0a0a 0%, rgba(10,10,10,0.85) 25%, rgba(10,10,10,0.3) 55%, transparent 100%); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.15); font-size: 2rem; }
         .rd-index-badge { position: absolute; top: 8px; right: 8px; z-index: 10; width: 25px; height: 25px; border-radius: 50%; background: rgba(0,0,0,0.7); border: 1px solid rgba(0,229,255,0.3); display: flex; align-items: center; justify-content: center; color: rgba(0,229,255,0.7); font-family: var(--font-mono); font-size: 0.75rem; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
@@ -187,76 +197,78 @@ export default function App() {
         .rd-timeline-row { display: flex; gap: 20px; background: rgba(255,255,255,0.02); border: 1px solid rgba(255,255,255,0.05); padding: 12px; border-radius: 4px; align-items: center; cursor: pointer; transition: background 0.2s; }
         .rd-terminal-box { background: #050505; border: 1px solid rgba(0,229,255,0.2); padding: 24px; border-radius: 4px; font-family: var(--font-mono); box-shadow: inset 0 0 20px rgba(0,0,0,0.8); position: relative; overflow: hidden; }
         .rd-terminal-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(rgba(18, 16, 16, 0) 50%, rgba(0, 0, 0, 0.25) 50%), linear-gradient(90deg, rgba(255, 0, 0, 0.06), rgba(0, 255, 0, 0.02), rgba(0, 0, 255, 0.06)); background-size: 100% 4px, 3px 100%; pointer-events: none; }
-        .rd-modal-overlay { position: fixed; inset: 0; z-index: 100; background: rgba(10,10,10,0.9); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; padding: 20px; font-family: var(--font-mono); }
-        .rd-modal-content { background: #121212; border: 1px solid rgba(0,229,255,0.3); box-shadow: 0 0 30px rgba(0,229,255,0.1); border-radius: 4px; width: 100%; max-width: 500px; overflow: hidden; position: relative; }
-        .rd-modal-close { position: absolute; top: 16px; right: 16px; background: none; border: none; color: rgba(255,255,255,0.5); font-size: 1.2rem; cursor: pointer; z-index: 10; }
+        .rd-quiz-card { background: #121212; border: 1px solid rgba(0,229,255,0.3); box-shadow: 0 0 30px rgba(0,229,255,0.1); border-radius: 4px; width: 100%; max-width: 560px; margin: 0 auto; overflow: hidden; }
         .rd-profile-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); color: #DBD5CA; padding: 8px 16px; border-radius: 3px; font-family: var(--font-mono); font-size: 0.75rem; cursor: pointer; transition: all 0.2s; }
         .rd-search-input { flex: 1; min-width: min(260px, 100%); background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 3px; padding: 12px 16px; color: #E5E5E5; font-family: var(--font-mono); transition: border 0.2s; }
         .rd-search-btn { padding: 12px 28px; border-radius: 3px; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; transition: all 0.2s; width: 160px; text-align: center; }
       `}</style>
 
       <AppHeader
-        movies={movies}
+        page={page}
+        showTabs={hasMovies}
+        onNavigate={navigate}
         onReset={resetToStart}
-        onShowQuiz={() => setShowQuiz(true)}
-        onShowGame={() => setShowHighLowGame(true)}
       />
 
-      <SearchSection
-        url={url}
-        loading={feedLoading}
-        onUrlChange={setUrl}
-        onFetch={handleFetch}
-      />
-
-      {error && (
-        <div className="rd-error-box" role="alert">
-          ⚠ {error}
-        </div>
-      )}
-
-      {feedLoading && <BentoSkeleton />}
-
-      {movies.length > 0 && (
-        <MovieViews
-          movies={movies}
-          movieViewMode={movieViewMode}
-          username={username}
-          onViewModeChange={setMovieViewMode}
+      {/* El perfil solo se oculta para conservar su estado entre pestañas. */}
+      <div hidden={page !== "profile"}>
+        <SearchSection
+          url={url}
+          loading={feedLoading}
+          onUrlChange={setUrl}
+          onFetch={handleFetch}
         />
-      )}
 
-      <DataPanels
-        showGenrePanel={showGenrePanel}
-        movies={movies}
-        genres={genres}
-        directors={directors}
-        actors={actors}
-        countries={countries}
-        platforms={platforms}
-        loadingGenres={metaLoading}
-        genreError={genreError}
-      />
+        {error && (
+          <div className="rd-error-box" role="alert">
+            ⚠ {error}
+          </div>
+        )}
 
-      <EmptyLanding
-        loading={feedLoading}
-        movies={movies}
-        error={error}
-        recentProfiles={recentProfiles}
-        onProfileSelect={(user) => {
-          setUrl(user)
-          handleFetch(user)
-        }}
-      />
+        {feedLoading && <BentoSkeleton />}
 
-      {showHighLowGame && (
-        <HighLowGame movies={movies} onClose={() => setShowHighLowGame(false)} />
-      )}
+        {movies.length > 0 && (
+          <MovieViews
+            movies={movies}
+            movieViewMode={movieViewMode}
+            username={username}
+            onViewModeChange={setMovieViewMode}
+          />
+        )}
 
-      {showQuiz && (
-        <QuizModal
+        <DataPanels
+          showGenrePanel={showGenrePanel}
           movies={movies}
-          onClose={() => setShowQuiz(false)}
+          genres={genres}
+          directors={directors}
+          actors={actors}
+          countries={countries}
+          platforms={platforms}
+          loadingGenres={metaLoading}
+          genreError={genreError}
+        />
+
+        <EmptyLanding
+          loading={feedLoading}
+          movies={movies}
+          error={error}
+          recentProfiles={recentProfiles}
+          onProfileSelect={(user) => {
+            setUrl(user)
+            handleFetch(user)
+          }}
+        />
+      </div>
+
+      {page === "higher-lower" && (
+        <HighLowGame key={username} movies={movies} loading={metaLoading} />
+      )}
+
+      {page === "quiz" && (
+        <Quiz
+          key={username}
+          movies={movies}
+          onBack={() => navigate("profile")}
         />
       )}
     </div>

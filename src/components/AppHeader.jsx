@@ -1,4 +1,10 @@
-const btnBase = {
+const TABS = [
+  { page: "profile", label: "Perfil", color: "219,213,202" },
+  { page: "quiz", label: "Quiz", color: "0,229,255" },
+  { page: "higher-lower", label: "High or Low", color: "250,204,21" },
+]
+
+const tabBase = {
   padding: "10px 20px",
   borderRadius: "3px",
   fontFamily: "var(--font-mono)",
@@ -7,11 +13,11 @@ const btnBase = {
   cursor: "pointer",
   textTransform: "uppercase",
   transition: "all 0.2s",
-  flex: "1 1 160px",
+  flex: "1 1 120px",
   textAlign: "center",
 }
 
-export default function AppHeader({ movies, onReset, onShowQuiz, onShowGame }) {
+export default function AppHeader({ page, showTabs, onNavigate, onReset }) {
   return (
     <div className="rd-header-bar">
       <div
@@ -46,31 +52,30 @@ export default function AppHeader({ movies, onReset, onShowQuiz, onShowGame }) {
         </button>
       </h1>
 
-      {movies.length > 0 && (
-        <div className="rd-header-actions" style={{ display: "flex", gap: "12px" }}>
-          <button
-            onClick={onShowQuiz}
-            type="button"
-            style={{
-              ...btnBase,
-              background: "rgba(0,229,255,0.05)",
-              border: "1px solid rgba(0,229,255,0.3)",
-              color: "#00e5ff",
-            }}>
-            Quiz
-          </button>
-          <button
-            onClick={onShowGame}
-            type="button"
-            style={{
-              ...btnBase,
-              background: "rgba(250,204,21,0.05)",
-              border: "1px solid rgba(250,204,21,0.3)",
-              color: "#facc15",
-            }}>
-            High or Low
-          </button>
-        </div>
+      {showTabs && (
+        <nav
+          aria-label="Secciones"
+          className="rd-header-actions"
+          style={{ display: "flex", gap: "12px" }}>
+          {TABS.map(({ page: tab, label, color }) => {
+            const active = page === tab
+            return (
+              <button
+                key={tab}
+                onClick={() => onNavigate(tab)}
+                type="button"
+                aria-current={active ? "page" : undefined}
+                style={{
+                  ...tabBase,
+                  background: `rgba(${color},${active ? 0.15 : 0.03})`,
+                  border: `1px solid rgba(${color},${active ? 0.6 : 0.2})`,
+                  color: `rgba(${color},${active ? 1 : 0.6})`,
+                }}>
+                {label}
+              </button>
+            )
+          })}
+        </nav>
       )}
     </div>
   )

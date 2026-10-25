@@ -1,14 +1,26 @@
 import { useState } from "react"
 import { generateQuestions } from "./quizQuestions.js"
-import { useEscapeKey } from "../../hooks/useEscapeKey.js"
 
-export default function QuizModal({ movies, onClose }) {
+const actionBtn = {
+  background: "rgba(0,229,255,0.1)", border: "1px solid #00e5ff",
+  color: "#00e5ff", padding: "10px 20px", cursor: "pointer",
+  textTransform: "uppercase", fontFamily: "var(--font-mono)",
+}
+
+export default function Quiz({ movies, onBack }) {
   const [currentQ, setCurrentQ] = useState(0)
   const [score, setScore] = useState(0)
   const [showResult, setShowResult] = useState(false)
   const [selected, setSelected] = useState(null)
-  const [questions] = useState(() => generateQuestions(movies))
-  useEscapeKey(onClose)
+  const [questions, setQuestions] = useState(() => generateQuestions(movies))
+
+  const restart = () => {
+    setQuestions(generateQuestions(movies))
+    setCurrentQ(0)
+    setScore(0)
+    setSelected(null)
+    setShowResult(false)
+  }
 
   const handleAnswer = (option) => {
     if (selected !== null) return
@@ -28,17 +40,21 @@ export default function QuizModal({ movies, onClose }) {
     }, 1200)
   }
 
-  if (questions.length === 0) return null
+  if (questions.length === 0) {
+    return (
+      <section className="rd-page" aria-label="Quiz">
+        <div className="rd-page-notice">
+          No hay suficientes películas calificadas para armar un quiz.
+        </div>
+      </section>
+    )
+  }
 
   const current = questions[currentQ]
 
   return (
-    <div className="rd-modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
-      <div className="rd-modal-content" role="dialog" aria-modal="true" aria-label="Quiz">
-        <button onClick={onClose} type="button" className="rd-modal-close" aria-label="Cerrar" autoFocus>
-          ✕
-        </button>
-
+    <section className="rd-page" aria-label="Quiz">
+      <div className="rd-quiz-card">
         {showResult ? (
           <div style={{ padding: "clamp(24px, 8vw, 50px)", textAlign: "center" }}>
             <h2 style={{
@@ -54,13 +70,17 @@ export default function QuizModal({ movies, onClose }) {
               </span>{" "}
               / {questions.length}
             </div>
-            <button onClick={onClose} type="button" style={{
-              background: "rgba(0,229,255,0.1)", border: "1px solid #00e5ff",
-              color: "#00e5ff", padding: "10px 20px", cursor: "pointer",
-              textTransform: "uppercase",
-            }}>
-              Cerrar Terminal
-            </button>
+            <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
+              <button onClick={restart} type="button" style={actionBtn}>
+                Jugar de nuevo
+              </button>
+              <button onClick={onBack} type="button" style={{
+                ...actionBtn, background: "transparent",
+                borderColor: "rgba(255,255,255,0.2)", color: "#DBD5CA",
+              }}>
+                Volver al perfil
+              </button>
+            </div>
           </div>
         ) : (
           <div>
@@ -124,6 +144,6 @@ export default function QuizModal({ movies, onClose }) {
           </div>
         )}
       </div>
-    </div>
+    </section>
   )
 }
