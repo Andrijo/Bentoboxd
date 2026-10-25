@@ -62,7 +62,7 @@ export default function RadarChart({ genres }) {
         const cfg = GENRE_CONFIG[k]
         const val = genres[k] || 0
         return (
-          <g key={i}>
+          <g key={k}>
             <text x={lp.x} y={lp.y - 6} textAnchor="middle" dominantBaseline="middle"
               fontSize="9" style={{ fontFamily: "var(--font-mono)" }}
               fill={val > 0 ? cfg.color : "rgba(255,255,255,0.2)"} letterSpacing="0.5">

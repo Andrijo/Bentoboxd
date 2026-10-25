@@ -1,58 +1,5 @@
 import { useState } from "react"
-
-function generateQuestions(movies) {
-  const shuffled = movies.toSorted(() => 0.5 - Math.random())
-  const selectedMovies = shuffled.slice(0, 5)
-
-  const possibleRatings = [
-    "0.5", "1", "1.5", "2", "2.5", "3", "3.5", "4", "4.5", "5", "Sin calificar",
-  ]
-
-  return selectedMovies.map((movie) => {
-    const isYear = Math.random() > 0.5 && Boolean(movie.year)
-
-    let qText = ""
-    let correct = ""
-    let options = []
-
-    if (isYear) {
-      qText = `¿En qué año se estrenó "${movie.title}"?`
-      correct = movie.year
-      options = [correct]
-
-      const yearSet = new Set(options)
-
-      while (options.length < 4) {
-        const fakeYear = (
-          parseInt(correct) + (Math.floor(Math.random() * 11) - 5)
-        ).toString()
-        if (!yearSet.has(fakeYear)) {
-          options.push(fakeYear)
-          yearSet.add(fakeYear)
-        }
-      }
-    } else {
-      qText = `¿Qué calificación le diste a "${movie.title}"?`
-      correct = movie.rating ? `${movie.rating}` : "Sin calificar"
-      options = [correct]
-
-      const ratingSet = new Set(options)
-
-      while (options.length < 4) {
-        const fakeRating =
-          possibleRatings[Math.floor(Math.random() * possibleRatings.length)]
-        if (!ratingSet.has(fakeRating)) {
-          options.push(fakeRating)
-          ratingSet.add(fakeRating)
-        }
-      }
-    }
-
-    options = options.sort(() => 0.5 - Math.random())
-
-    return { movie, qText, options, correct, isYear }
-  })
-}
+import { generateQuestions } from "./quizQuestions.js"
 
 export default function QuizModal({ movies, onClose }) {
   const [currentQ, setCurrentQ] = useState(0)

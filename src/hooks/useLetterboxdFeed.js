@@ -1,5 +1,6 @@
 import { useState, useCallback, useRef } from "react"
 import {
+  isValidUsername,
   parseUsername,
   buildRssUrl,
   extractPoster,
@@ -25,6 +26,12 @@ export function useLetterboxdFeed() {
 
     try {
       const user = parseUsername(url)
+
+      // Evita una petición que el proxy rechazaría de todos modos.
+      if (!isValidUsername(user))
+        throw new Error(
+          "Usuario inválido. Usa solo letras, números, guiones o guiones bajos.",
+        )
 
       setUsername(user)
 
