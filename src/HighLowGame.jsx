@@ -1,5 +1,4 @@
-import { useState, useReducer } from "react"
-import { useEscapeKey } from "./hooks/useEscapeKey.js"
+import { useState, useReducer, useEffect } from "react"
 
 function shuffleArray(arr, seed) {
   const shuffled = [...arr]
@@ -67,7 +66,7 @@ function gameReducer(state, action) {
 const cardStyle = {
   position: "relative",
   // En móvil el ancho manda para que ambas cartas quepan lado a lado.
-  height: "min(55vh, 52vw)",
+  height: "min(55vh, 46vw)",
   maxHeight: "400px",
   aspectRatio: "2/3",
   borderRadius: "4px",
@@ -102,55 +101,73 @@ const labelStyle = (color) => ({
   textShadow: "0px 4px 20px rgba(0,0,0,1), 0px 2px 5px rgba(0,0,0,1)",
   zIndex: 2,
 })
+// width 0 + minWidth 100%: el título toma el ancho de la carta sin
+// ensancharla; hasta 2 líneas centradas antes de recortar con "…".
+// minHeight reserva las 2 líneas para que ambas cartas queden alineadas.
 const titleStyle = {
   color: "#ffffff",
   marginTop: "15px",
-  fontSize: "var(--fs-md)",
+  fontSize: "clamp(0.85rem, 3vw, 1.25rem)",
   fontWeight: "bold",
-  maxWidth: "min(200px, 34vw)",
-  whiteSpace: "nowrap",
+  lineHeight: 1.25,
+  minHeight: "2.5em",
+  width: 0,
+  minWidth: "100%",
+  textAlign: "center",
+  overflowWrap: "break-word",
+  display: "-webkit-box",
+  WebkitBoxOrient: "vertical",
+  WebkitLineClamp: 2,
   overflow: "hidden",
-  textOverflow: "ellipsis",
   textShadow: "0 2px 8px rgba(0,0,0,0.8)",
 }
-const vsStyle = {
-  background: "#facc15",
-  width: "clamp(36px, 10vw, 50px)",
-  height: "clamp(36px, 10vw, 50px)",
-  flexShrink: 0,
-  borderRadius: "50%",
-  display: "flex",
-  alignItems: "center",
-  justifyContent: "center",
-  fontWeight: "bold",
-  color: "#000",
-  boxShadow: "0 0 20px rgba(250,204,21,0.4)",
-  fontFamily: "var(--font-display)",
-}
-const guessBtn = (bg, col) => ({
-  background: bg,
-  color: col,
-  border: "none",
-  padding: "15px 25px",
-  borderRadius: "8px",
-  cursor: "pointer",
-  fontWeight: "bold",
-  width: "150px",
-  boxShadow: `0 4px 15px ${bg}40`,
-  transition: "transform 0.1s",
-})
+// Controles en un lienzo de 60×150 (ver .rd-hlg-controls): el círculo VS
+// está en (30,75) con r=25 y la base de cada flecha es un arco concéntrico
+// de r=35, así que ambas flechas abrazan el círculo con 10 de separación.
+// La flecha de abajo es la misma figura girada 180°.
+const ARROW_PATH = "M30 0 L55 50.51 A35 35 0 0 0 5 50.51 Z"
 
-function GameHeader({ category, streak, onClose, onCategoryChange }) {
+function GuessControls({ disabled, onGuess }) {
+  return (
+    <div className="rd-hlg-controls">
+      <button
+        onClick={() => onGuess("higher")}
+        type="button"
+        disabled={disabled}
+        aria-label="Higher (mayor)"
+        title="Higher (↑)"
+        className="rd-hlg-arrow rd-hlg-arrow-up">
+        <svg viewBox="0 0 60 50.51" aria-hidden="true">
+          <path d={ARROW_PATH} fill="#facc15" />
+        </svg>
+      </button>
+
+      <div className="rd-hlg-vs">VS</div>
+
+      <button
+        onClick={() => onGuess("lower")}
+        type="button"
+        disabled={disabled}
+        aria-label="Lower (menor)"
+        title="Lower (↓)"
+        className="rd-hlg-arrow rd-hlg-arrow-down">
+        <svg viewBox="0 0 60 50.51" aria-hidden="true">
+          <path d={ARROW_PATH} fill="#22c55e" />
+        </svg>
+      </button>
+    </div>
+  )
+}
+
+function GameHeader({ category, streak, onCategoryChange }) {
   return (
     <div
       style={{
         display: "flex",
         flexDirection: "column",
         gap: "15px",
-        padding: "20px",
-        scrollSnapAlign: "start",
-        background: "linear-gradient(to bottom, #111315, #181818)",
-        borderBottom: "1px solid rgba(57, 32, 32, 0.05)",
+        paddingBottom: "20px",
+        borderBottom: "1px solid rgba(255,255,255,0.06)",
       }}>
       <div
         style={{
@@ -158,26 +175,19 @@ function GameHeader({ category, streak, onClose, onCategoryChange }) {
           justifyContent: "space-between",
           alignItems: "center",
         }}>
-        <button
-          onClick={onClose}
-          type="button"
-          className="rd-hlg-close-btn"
-          autoFocus
-          onMouseEnter={(e) => (e.target.style.color = "#fff")}
-          onMouseLeave={(e) => (e.target.style.color = "#888")}>
-          ✕ Salir
-        </button>
-
-        <div style={{ textAlign: "center", flex: 1, padding: "0 20px" }}>
-          <div
+        <div style={{ flex: 1, minWidth: 0, paddingRight: "20px" }}>
+          <h2
             style={{
-              fontSize: "var(--fs-lg)",
-              fontWeight: "bold",
+              fontFamily: "var(--font-display)",
+              fontSize: "var(--fs-2xl)",
+              fontWeight: "normal",
+              letterSpacing: "2px",
+              lineHeight: 1,
               color: "#F0EDE5",
-              marginBottom: "4px",
+              marginBottom: "8px",
             }}>
-            Higher or Lower
-          </div>
+            HIGHER OR LOWER
+          </h2>
           <div
             style={{
               fontSize: "var(--fs-xs)",
@@ -202,7 +212,8 @@ function GameHeader({ category, streak, onClose, onCategoryChange }) {
             fontSize: "clamp(1.1rem, 4vw, 1.8rem)",
             fontFamily: "var(--font-display)",
             letterSpacing: "2px",
-            width: "100px",
+            whiteSpace: "nowrap",
+            flexShrink: 0,
             textAlign: "right",
           }}>
           STREAK: {streak}
@@ -270,7 +281,7 @@ function GamePlayArea({
         justifyContent: "center",
         alignItems: "center",
         gap: "4vw",
-        padding: "20px 12px",
+        padding: "20px 0",
       }}>
       {gameOver ? (
         <div style={{ textAlign: "center" }}>
@@ -319,10 +330,10 @@ function GamePlayArea({
                 </div>
               </div>
             </div>
-            <div style={titleStyle}>{movieA.title}</div>
+            <div style={titleStyle} title={movieA.title}>{movieA.title}</div>
           </div>
 
-          <div style={vsStyle}>VS</div>
+          <GuessControls disabled={!!feedback} onGuess={onGuess} />
 
           <div style={{ textAlign: "center" }}>
             <div style={cardStyle}>
@@ -366,28 +377,7 @@ function GamePlayArea({
                 </div>
               )}
             </div>
-            <div style={titleStyle}>{movieB.title}</div>
-          </div>
-
-          <div
-            className="rd-hlg-guess"
-            style={{
-              opacity: feedback ? 0.3 : 1,
-              pointerEvents: feedback ? "none" : "auto",
-              transition: "opacity 0.3s",
-            }}>
-            <button
-              onClick={() => onGuess("higher")}
-              type="button"
-              style={guessBtn("#facc15", "#000")}>
-              ▲ HIGHER
-            </button>
-            <button
-              onClick={() => onGuess("lower")}
-              type="button"
-              style={guessBtn("#22c55e", "#fff")}>
-              ▼ LOWER
-            </button>
+            <div style={titleStyle} title={movieB.title}>{movieB.title}</div>
           </div>
         </>
       )}
@@ -395,10 +385,9 @@ function GamePlayArea({
   )
 }
 
-export default function HighLowGame({ movies, onClose }) {
+export default function HighLowGame({ movies, loading }) {
   const [category, setCategory] = useState("rating")
   const [state, dispatch] = useReducer(gameReducer, initialGameState)
-  useEscapeKey(onClose)
 
   const eligible = movies.filter(
     (m) => m.metrics && m.metrics[category] > 0,
@@ -444,29 +433,47 @@ export default function HighLowGame({ movies, onClose }) {
     dispatch({ type: "RESTART" })
   }
 
-  if (!movieA || !movieB) return null
+  // Atajos: ↑ higher, ↓ lower.
+  useEffect(() => {
+    if (!movieA || !movieB) return
+    const onKey = (e) => {
+      if (e.key !== "ArrowUp" && e.key !== "ArrowDown") return
+      e.preventDefault()
+      handleGuess(e.key === "ArrowUp" ? "higher" : "lower")
+    }
+    window.addEventListener("keydown", onKey)
+    return () => window.removeEventListener("keydown", onKey)
+  })
+
+  // Las métricas vienen de TMDB; sin ellas no hay con qué comparar.
+  const notice = loading
+    ? "Cargando datos de TMDB…"
+    : "No hay suficientes películas con datos para esta categoría."
 
   return (
-    <div className="rd-hlg-container" role="dialog" aria-modal="true" aria-label="Higher or Lower">
+    <section className="rd-page rd-hlg" aria-label="Higher or Lower">
       <GameHeader
         category={category}
         streak={state.streak}
-        onClose={onClose}
         onCategoryChange={(id) => {
           setCategory(id)
           dispatch({ type: "RESTART" })
         }}
       />
 
-      <GamePlayArea
-        movieA={movieA}
-        movieB={movieB}
-        category={category}
-        feedback={state.feedback}
-        gameOver={state.gameOver}
-        onGuess={handleGuess}
-        onRestart={restart}
-      />
-    </div>
+      {movieA && movieB ? (
+        <GamePlayArea
+          movieA={movieA}
+          movieB={movieB}
+          category={category}
+          feedback={state.feedback}
+          gameOver={state.gameOver}
+          onGuess={handleGuess}
+          onRestart={restart}
+        />
+      ) : (
+        <div className="rd-page-notice" role="status">{notice}</div>
+      )}
+    </section>
   )
 }

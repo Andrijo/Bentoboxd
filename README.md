@@ -119,10 +119,11 @@ src/
 │   ├── ActorsPanel/         # Paneles de actores
 │   ├── CountriesPanel/      # Paneles de países
 │   ├── PlatformsPanel/      # Plataformas de streaming
-│   └── QuizModal/           # Modal de quiz
+│   └── Quiz/                # Página de quiz (#quiz)
 ├── hooks/                   # Custom hooks
 │   ├── useLetterboxdFeed.js # Fetch y parse de RSS
-│   └── useTMDBMetadata.js   # Fetch de metadatos TMDB
+│   ├── useTMDBMetadata.js   # Fetch de metadatos TMDB
+│   └── useHashRoute.js      # Páginas por hash (#quiz, #higher-lower)
 ├── services/                # Servicios API
 │   ├── letterboxd.js        # Parseo de RSS
 │   └── tmdb.js              # Cliente TMDB

@@ -1,5 +1,9 @@
+/* Único fondo de la app: fijo al viewport para que el degradado sea
+   el mismo en páginas cortas, largas y en pantallas anchas. */
 html {
   overscroll-behavior: none;
+  min-height: 100%;
+  background: #181818 linear-gradient(to bottom, #111312, #181818) fixed;
 }
 
 @font-face {
@@ -10,13 +14,13 @@ html {
   font-display: swap;
 }
 
+/* DM Sans variable (ejes wght y opsz, subconjunto latino de Google Fonts). */
 @font-face {
   font-family: "DMSans";
   src: url("/fonts/DMSans.woff2") format("woff2");
-  font-weight: 600;
+  font-weight: 100 1000;
   font-style: normal;
   font-display: swap;
-  letter-spacing: 0.2rem;
   size-adjust: 120%;
 }
 
@@ -37,14 +41,23 @@ html {
 
   /* Margen lateral: 16px en móvil, 40px en escritorio. */
   --gutter: clamp(16px, 4vw, 40px);
-
-  background: linear-gradient(to bottom, #111312, #181818);
 }
 
+/* opsz 9 es el corte para texto chico de DM Sans: letras más anchas y
+   abiertas. 600 mantiene el peso que tenía la fuente estática anterior. */
 body {
   max-width: 1400px;
   margin: 0 auto;
-  background: linear-gradient(to bottom, #111312, #181818);
+  font-weight: 600;
+  font-variation-settings: "opsz" 9;
+}
+
+/* Los controles de formulario no heredan la fuente por defecto. */
+button,
+input {
+  font-family: inherit;
+  font-weight: inherit;
+  font-variation-settings: inherit;
 }
 
 .rd-movie-card {
