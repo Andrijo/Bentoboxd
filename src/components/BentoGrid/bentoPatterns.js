@@ -14,6 +14,10 @@ import { shuffle } from "../../utils/shuffle.js"
 
 const MAX_SEARCH_NODES = 50000
 
+// Las vistas muestran solo las más recientes; las estadísticas y los juegos
+// usan el feed completo.
+export const VISIBLE_MOVIES = 20
+
 function tileSize(size) {
   const width = size === 1 ? 1 : 2
   const height = size === 3 ? 2 : 1

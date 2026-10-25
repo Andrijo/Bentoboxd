@@ -35,6 +35,9 @@ html {
   --fs-xl: 1.8rem; /* display medio */
   --fs-2xl: 2rem; /* títulos de panel */
 
+  /* Margen lateral: 16px en móvil, 40px en escritorio. */
+  --gutter: clamp(16px, 4vw, 40px);
+
   background: linear-gradient(to bottom, #111312, #181818);
 }
 

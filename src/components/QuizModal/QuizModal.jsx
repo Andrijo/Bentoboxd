@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { generateQuestions } from "./quizQuestions.js"
+import { useEscapeKey } from "../../hooks/useEscapeKey.js"
 
 export default function QuizModal({ movies, onClose }) {
   const [currentQ, setCurrentQ] = useState(0)
@@ -7,6 +8,7 @@ export default function QuizModal({ movies, onClose }) {
   const [showResult, setShowResult] = useState(false)
   const [selected, setSelected] = useState(null)
   const [questions] = useState(() => generateQuestions(movies))
+  useEscapeKey(onClose)
 
   const handleAnswer = (option) => {
     if (selected !== null) return
@@ -31,16 +33,16 @@ export default function QuizModal({ movies, onClose }) {
   const current = questions[currentQ]
 
   return (
-    <div className="rd-modal-overlay">
-      <div className="rd-modal-content">
-        <button onClick={onClose} type="button" className="rd-modal-close">
+    <div className="rd-modal-overlay" onClick={(e) => e.target === e.currentTarget && onClose()}>
+      <div className="rd-modal-content" role="dialog" aria-modal="true" aria-label="Quiz">
+        <button onClick={onClose} type="button" className="rd-modal-close" aria-label="Cerrar" autoFocus>
           ✕
         </button>
 
         {showResult ? (
-          <div style={{ padding: "50px", textAlign: "center" }}>
+          <div style={{ padding: "clamp(24px, 8vw, 50px)", textAlign: "center" }}>
             <h2 style={{
-              fontFamily: "var(--font-display)", fontSize: "3rem",
+              fontFamily: "var(--font-display)", fontSize: "clamp(2rem, 9vw, 3rem)",
               color: "#00e5ff", margin: 0,
             }}>
               TEST COMPLETADO
@@ -71,7 +73,7 @@ export default function QuizModal({ movies, onClose }) {
               <span>PREGUNTA {currentQ + 1} / {questions.length}</span>
             </div>
 
-            <div style={{ padding: "30px" }}>
+            <div style={{ padding: "clamp(20px, 6vw, 30px)" }}>
               <div style={{ textAlign: "center", marginBottom: "20px" }}>
                 <div style={{
                   fontSize: "var(--fs-md)", color: "#F0EDE5",

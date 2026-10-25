@@ -1,7 +1,9 @@
-import { useRef, useState, useEffect, useMemo } from "react"
+import { useMemo } from "react"
 import MovieCard from "./BentoGrid/MovieCard.jsx"
 import StarRating from "./StarRating.jsx"
-import { generateBentoLayout } from "./BentoGrid/bentoPatterns.js"
+import PosterImage from "./PosterImage.jsx"
+import { generateBentoLayout, VISIBLE_MOVIES } from "./BentoGrid/bentoPatterns.js"
+import { useGridColumns } from "../hooks/useGridColumns.js"
 
 const VIEW_OPTIONS = [
   { key: "bento", label: "▦ BENTO" },
@@ -9,36 +11,16 @@ const VIEW_OPTIONS = [
   { key: "terminal", label: ">_ TERMINAL" },
 ]
 
-// Las vistas muestran solo las más recientes; las estadísticas y los juegos
-// usan el feed completo.
-const VISIBLE_MOVIES = 20
-
 export default function MovieViews({ movies: allMovies, movieViewMode, username, onViewModeChange }) {
   const movies = allMovies.slice(0, VISIBLE_MOVIES)
-  const gridRef = useRef(null)
-  const [columns, setColumns] = useState(5)
-
-  useEffect(() => {
-    const el = gridRef.current
-    if (!el) return
-    const measure = () => {
-      const width = el.getBoundingClientRect().width
-      if (width > 0) {
-        setColumns(Math.max(2, Math.floor(width / 210)))
-      }
-    }
-    measure()
-    const ro = new ResizeObserver(measure)
-    ro.observe(el)
-    return () => ro.disconnect()
-  }, [movies.length])
+  const [gridRef, columns] = useGridColumns()
 
   const bentoLayout = useMemo(
     () => generateBentoLayout(columns, movies.length),
     [columns, movies.length],
   )
   return (
-    <div style={{ padding: "32px 40px 32px" }}>
+    <div style={{ padding: "32px var(--gutter)" }}>
       <div
         style={{
           display: "flex",
@@ -65,6 +47,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
         <div
           style={{
             display: "flex",
+            flexWrap: "wrap",
             gap: "4px",
             background: "rgba(0,0,0,0.3)",
             borderRadius: "3px",
@@ -76,6 +59,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
               key={key}
               onClick={() => onViewModeChange(key)}
               type="button"
+              aria-pressed={movieViewMode === key}
               style={{
                 background:
                   movieViewMode === key
@@ -138,13 +122,9 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                 animation: "fadeSlideIn 0.4s ease both",
                 animationDelay: `${i * 40}ms`,
               }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.background = "rgba(0,229,255,0.05)")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.background = "rgba(255,255,255,0.02)")
-              }>
+>
               <div
+                className="rd-timeline-index"
                 style={{
                   fontFamily: "var(--font-display)",
                   fontSize: "var(--fs-2xl)",
@@ -157,6 +137,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
 
               <div
                 style={{
+                  position: "relative",
                   width: "50px",
                   height: "75px",
                   flexShrink: 0,
@@ -165,11 +146,9 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                   overflow: "hidden",
                 }}>
                 {movie.poster ? (
-                  <img
+                  <PosterImage
                     src={movie.poster}
                     alt={movie.title}
-                    loading="lazy"
-                    decoding="async"
                     style={{
                       width: "100%",
                       height: "100%",
@@ -191,11 +170,11 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                 )}
               </div>
 
-              <div style={{ flex: 1 }}>
+              <div style={{ flex: 1, minWidth: 0 }}>
                 <div
                   style={{
                     fontFamily: "var(--font-display)",
-                    fontSize: "var(--fs-xl)",
+                    fontSize: "clamp(1.1rem, 4vw, 1.8rem)",
                     color: "#F0EDE5",
                     letterSpacing: "1px",
                     lineHeight: 1,
@@ -203,7 +182,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                   }}>
                   {movie.title}
                 </div>
-                <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+                <div style={{ display: "flex", alignItems: "center", gap: "12px", flexWrap: "wrap" }}>
                   {movie.year && (
                     <span
                       style={{

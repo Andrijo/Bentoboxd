@@ -6,6 +6,7 @@ import SearchSection from "./components/SearchSection.jsx"
 import MovieViews from "./components/MovieViews.jsx"
 import DataPanels from "./components/DataPanels.jsx"
 import EmptyLanding from "./components/EmptyLanding.jsx"
+import { BentoSkeleton } from "./components/Skeleton.jsx"
 import { useLetterboxdFeed } from "./hooks/useLetterboxdFeed.js"
 import { useTMDBMetadata } from "./hooks/useTMDBMetadata.js"
 import { parseUsername } from "./services/letterboxd.js"
@@ -125,7 +126,6 @@ export default function App() {
     resetMetadata()
   }, [resetFeed, resetMetadata])
 
-  const loading = feedLoading || metaLoading
   const showGenrePanel = movies.length > 0 || metaLoading
 
   return (
@@ -144,20 +144,42 @@ export default function App() {
           from { opacity: 0; transform: translateY(12px) scale(0.97); }
           to   { opacity: 1; transform: translateY(0) scale(1); }
         }
+        @keyframes shimmer {
+          from { background-position: 200% 0; }
+          to   { background-position: -200% 0; }
+        }
         @keyframes pulse {
           0%, 100% { opacity: 1; }
           50%       { opacity: 0.4; }
         }
         input::placeholder { color: rgba(255,255,255,0.2); }
-        input:focus { outline: none; border-color: rgba(19,63,67,0.5) !important; }
+        input:focus { outline: none; border-color: rgba(0,229,255,0.5) !important; }
+        :focus-visible { outline: 2px solid rgba(0,229,255,0.7); outline-offset: 2px; }
+        input:focus-visible { outline: none; }
+        .rd-skeleton { background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 75%); background-size: 200% 100%; animation: shimmer 1.6s linear infinite; }
+        .rd-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+        .rd-timeline-row:hover, .rd-timeline-row:focus-visible { background: rgba(0,229,255,0.05) !important; }
+        @media (max-width: 640px) {
+          .rd-header-actions { width: 100%; }
+          .rd-search-btn { width: 100%; }
+          .rd-timeline-row { gap: 12px; padding: 10px; }
+          .rd-timeline-index { display: none; }
+          .rd-terminal-box { padding: 16px; }
+          .rd-hlg-guess { flex-basis: 100%; flex-direction: row; justify-content: center; }
+          .rd-hlg-guess > button { flex: 1; max-width: 200px; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+          *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; animation-delay: 0ms !important; transition-duration: 0.01ms !important; }
+        }
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: #050505; }
         ::-webkit-scrollbar-thumb { background: rgba(0,229,255,0.3); border-radius: 2px; }
-        .rd-error-box { margin: 24px 40px; padding: 14px 20px; border: 1px solid rgba(255,80,80,0.3); border-radius: 3px; background: rgba(255,80,80,0.05); color: rgba(255,80,80,0.8); font-size: 0.75rem; letter-spacing: 1px; }
-        .rd-header-bar { padding: 48px 40px 32px; border-bottom: 1px solid rgba(255,255,255,0.06); position: relative; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+        .rd-error-box { margin: 24px var(--gutter); padding: 14px 20px; border: 1px solid rgba(255,80,80,0.3); border-radius: 3px; background: rgba(255,80,80,0.05); color: rgba(255,80,80,0.8); font-size: 0.75rem; letter-spacing: 1px; }
+        .rd-header-bar { padding: clamp(24px, 6vw, 48px) var(--gutter) 32px; border-bottom: 1px solid rgba(255,255,255,0.06); position: relative; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
         .rd-header-title { font-family: var(--font-display); letter-spacing: 2px; line-height: 1; margin: 0; cursor: pointer; background: linear-gradient(135deg, #f8f9fa 0%, rgba(255,255,255,0.5) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .rd-hlg-close-btn { background: transparent; border: 1px solid rgba(255,255,255,0.1); color: #888; padding: 8px 16px; border-radius: 4px; cursor: pointer; transition: all 0.2s; width: 100px; }
-        .rd-hlg-container { position: fixed; inset: 0; z-index: 9999; background-color: #181818; display: flex; flex-direction: column; overflow: hidden; font-family: var(--font-mono); }
+        .rd-hlg-container { position: fixed; inset: 0; z-index: 9999; background-color: #181818; display: flex; flex-direction: column; overflow-x: hidden; overflow-y: auto; font-family: var(--font-mono); }
+        .rd-hlg-guess { display: flex; flex-direction: column; gap: 15px; }
         .rd-rank-circle { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; margin-right: 12px; font-family: var(--font-display); font-size: 1rem; }
         .rd-no-poster { position: absolute; inset: 0; background: linear-gradient(to top, #0a0a0a 0%, rgba(10,10,10,0.85) 25%, rgba(10,10,10,0.3) 55%, transparent 100%); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.15); font-size: 2rem; }
         .rd-index-badge { position: absolute; top: 8px; right: 8px; z-index: 10; width: 25px; height: 25px; border-radius: 50%; background: rgba(0,0,0,0.7); border: 1px solid rgba(0,229,255,0.3); display: flex; align-items: center; justify-content: center; color: rgba(0,229,255,0.7); font-family: var(--font-mono); font-size: 0.75rem; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
@@ -169,7 +191,7 @@ export default function App() {
         .rd-modal-content { background: #121212; border: 1px solid rgba(0,229,255,0.3); box-shadow: 0 0 30px rgba(0,229,255,0.1); border-radius: 4px; width: 100%; max-width: 500px; overflow: hidden; position: relative; }
         .rd-modal-close { position: absolute; top: 16px; right: 16px; background: none; border: none; color: rgba(255,255,255,0.5); font-size: 1.2rem; cursor: pointer; z-index: 10; }
         .rd-profile-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); color: #DBD5CA; padding: 8px 16px; border-radius: 3px; font-family: var(--font-mono); font-size: 0.75rem; cursor: pointer; transition: all 0.2s; }
-        .rd-search-input { flex: 1; min-width: 260px; background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 3px; padding: 12px 16px; color: #E5E5E5; font-family: var(--font-mono); transition: border 0.2s; }
+        .rd-search-input { flex: 1; min-width: min(260px, 100%); background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 3px; padding: 12px 16px; color: #E5E5E5; font-family: var(--font-mono); transition: border 0.2s; }
         .rd-search-btn { padding: 12px 28px; border-radius: 3px; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; transition: all 0.2s; width: 160px; text-align: center; }
       `}</style>
 
@@ -182,30 +204,18 @@ export default function App() {
 
       <SearchSection
         url={url}
-        loading={loading}
+        loading={feedLoading}
         onUrlChange={setUrl}
         onFetch={handleFetch}
       />
 
       {error && (
-        <div className="rd-error-box">
+        <div className="rd-error-box" role="alert">
           ⚠ {error}
         </div>
       )}
 
-      {loading && (
-        <div style={{ padding: "48px 40px", textAlign: "center" }}>
-          <div
-            style={{
-              fontSize: "var(--fs-xs)",
-              letterSpacing: "4px",
-              color: "rgba(0,229,255,0.5)",
-              animation: "pulse 1.2s ease infinite",
-            }}>
-            ◈ Obteniendo películas...
-          </div>
-        </div>
-      )}
+      {feedLoading && <BentoSkeleton />}
 
       {movies.length > 0 && (
         <MovieViews
@@ -229,7 +239,7 @@ export default function App() {
       />
 
       <EmptyLanding
-        loading={loading}
+        loading={feedLoading}
         movies={movies}
         error={error}
         recentProfiles={recentProfiles}

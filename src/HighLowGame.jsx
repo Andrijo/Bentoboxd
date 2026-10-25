@@ -1,4 +1,5 @@
 import { useState, useReducer } from "react"
+import { useEscapeKey } from "./hooks/useEscapeKey.js"
 
 function shuffleArray(arr, seed) {
   const shuffled = [...arr]
@@ -65,7 +66,8 @@ function gameReducer(state, action) {
 
 const cardStyle = {
   position: "relative",
-  height: "55vh",
+  // En móvil el ancho manda para que ambas cartas quepan lado a lado.
+  height: "min(55vh, 52vw)",
   maxHeight: "400px",
   aspectRatio: "2/3",
   borderRadius: "4px",
@@ -105,7 +107,7 @@ const titleStyle = {
   marginTop: "15px",
   fontSize: "var(--fs-md)",
   fontWeight: "bold",
-  maxWidth: "200px",
+  maxWidth: "min(200px, 34vw)",
   whiteSpace: "nowrap",
   overflow: "hidden",
   textOverflow: "ellipsis",
@@ -113,8 +115,9 @@ const titleStyle = {
 }
 const vsStyle = {
   background: "#facc15",
-  width: "50px",
-  height: "50px",
+  width: "clamp(36px, 10vw, 50px)",
+  height: "clamp(36px, 10vw, 50px)",
+  flexShrink: 0,
   borderRadius: "50%",
   display: "flex",
   alignItems: "center",
@@ -159,6 +162,7 @@ function GameHeader({ category, streak, onClose, onCategoryChange }) {
           onClick={onClose}
           type="button"
           className="rd-hlg-close-btn"
+          autoFocus
           onMouseEnter={(e) => (e.target.style.color = "#fff")}
           onMouseLeave={(e) => (e.target.style.color = "#888")}>
           ✕ Salir
@@ -195,7 +199,7 @@ function GameHeader({ category, streak, onClose, onCategoryChange }) {
         <div
           style={{
             color: "#f59e0b",
-            fontSize: "var(--fs-xl)",
+            fontSize: "clamp(1.1rem, 4vw, 1.8rem)",
             fontFamily: "var(--font-display)",
             letterSpacing: "2px",
             width: "100px",
@@ -205,7 +209,7 @@ function GameHeader({ category, streak, onClose, onCategoryChange }) {
         </div>
       </div>
 
-      <div style={{ display: "flex", gap: "10px", justifyContent: "center" }}>
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "10px", justifyContent: "center" }}>
         {[
           { id: "rating", label: "RATING", icon: "⭐" },
           { id: "popularity", label: "POPULARIDAD", icon: "🔥" },
@@ -228,7 +232,7 @@ function GameHeader({ category, streak, onClose, onCategoryChange }) {
                 category === cat.id
                   ? `1px solid ${CAT_CONFIG[cat.id].color}`
                   : "1px solid rgba(255,255,255,0.1)",
-              padding: "8px 24px",
+              padding: "8px clamp(12px, 4vw, 24px)",
               borderRadius: "4px",
               cursor: "pointer",
               fontWeight: "bold",
@@ -262,16 +266,17 @@ function GamePlayArea({
       style={{
         flex: 1,
         display: "flex",
+        flexWrap: "wrap",
         justifyContent: "center",
         alignItems: "center",
         gap: "4vw",
-        padding: "20px",
+        padding: "20px 12px",
       }}>
       {gameOver ? (
         <div style={{ textAlign: "center" }}>
           <h2
             style={{
-              fontSize: "4rem",
+              fontSize: "clamp(2.5rem, 12vw, 4rem)",
               color: "#ff4444",
               fontFamily: "var(--font-display)",
             }}>
@@ -306,7 +311,7 @@ function GamePlayArea({
               <div style={darkOverlayStyle} />
 
               <div style={labelStyle(CAT_CONFIG[category].color)}>
-                <div style={{ fontSize: "3.5rem", lineHeight: 1 }}>
+                <div style={{ fontSize: "clamp(2rem, 9vw, 3.5rem)", lineHeight: 1 }}>
                   {movieA.metrics[category]}
                 </div>
                 <div style={{ fontSize: "var(--fs-sm)", opacity: 0.9 }}>
@@ -336,7 +341,7 @@ function GamePlayArea({
               <div style={darkOverlayStyle} />
 
               <div style={labelStyle(CAT_CONFIG[category].color)}>
-                <div style={{ fontSize: "3.5rem", lineHeight: 1 }}>
+                <div style={{ fontSize: "clamp(2rem, 9vw, 3.5rem)", lineHeight: 1 }}>
                   {feedback ? movieB.metrics[category] : "?"}
                 </div>
                 <div style={{ fontSize: "var(--fs-sm)", opacity: 0.9 }}>
@@ -352,7 +357,7 @@ function GamePlayArea({
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    fontSize: "6rem",
+                    fontSize: "clamp(3rem, 15vw, 6rem)",
                     color:
                       feedback === "correct" ? "#4ade80" : "#ff4444",
                     textShadow: "0 0 40px rgba(0,0,0,1)",
@@ -365,10 +370,8 @@ function GamePlayArea({
           </div>
 
           <div
+            className="rd-hlg-guess"
             style={{
-              display: "flex",
-              flexDirection: "column",
-              gap: "15px",
               opacity: feedback ? 0.3 : 1,
               pointerEvents: feedback ? "none" : "auto",
               transition: "opacity 0.3s",
@@ -395,6 +398,7 @@ function GamePlayArea({
 export default function HighLowGame({ movies, onClose }) {
   const [category, setCategory] = useState("rating")
   const [state, dispatch] = useReducer(gameReducer, initialGameState)
+  useEscapeKey(onClose)
 
   const eligible = movies.filter(
     (m) => m.metrics && m.metrics[category] > 0,
@@ -443,7 +447,7 @@ export default function HighLowGame({ movies, onClose }) {
   if (!movieA || !movieB) return null
 
   return (
-    <div className="rd-hlg-container">
+    <div className="rd-hlg-container" role="dialog" aria-modal="true" aria-label="Higher or Lower">
       <GameHeader
         category={category}
         streak={state.streak}

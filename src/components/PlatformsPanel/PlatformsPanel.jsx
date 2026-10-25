@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { PanelSkeleton } from "../Skeleton.jsx"
 
 const themeColor = "#e81cff"
 
@@ -14,7 +15,7 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
 
   return (
     <div style={{
-      margin: "0 40px 40px", border: "1px solid rgba(255,255,255,0.07)",
+      margin: "0 var(--gutter) 40px", border: "1px solid rgba(255,255,255,0.07)",
       borderRadius: "4px", background: "rgba(255,255,255,0.02)",
       overflow: "hidden", fontFamily: "var(--font-mono)",
     }}>
@@ -30,19 +31,14 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
             background: "none", border: `1px solid ${themeColor}`, color: themeColor,
             fontSize: "var(--fs-xs)", padding: "4px 10px", cursor: "pointer", textTransform: "uppercase",
           }}>
-            ✕ Desvincular
+            ✕ Quitar filtro
           </button>
         )}
       </div>
 
       <div style={{ padding: "24px" }}>
         {loading ? (
-          <div style={{
-            textAlign: "center", fontSize: "var(--fs-xs)", letterSpacing: "4px",
-            color: themeColor, animation: "pulse 1.2s ease infinite",
-          }}>
-            ◈ ESCANEANDO FRECUENCIAS...
-          </div>
+          <PanelSkeleton variant="tiles" label="Buscando plataformas…" />
         ) : (
           <>
             <div style={{
@@ -52,6 +48,7 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
               {topPlatforms.map(([name, count]) => (
                 <div key={name}
                   role="button"
+                  aria-pressed={selectedPlatform === name}
                   tabIndex={0}
                   onClick={() => setSelectedPlatform(name)}
                   onKeyDown={(e) => {
@@ -93,7 +90,7 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                   {filteredMovies.map((m) => (
-                    <div key={m.title} style={{
+                    <div key={m.link} style={{
                       fontSize: "var(--fs-xs)", color: "#F0EDE5",
                       display: "flex", justifyContent: "space-between",
                     }}>

@@ -2,6 +2,7 @@ import { useState } from "react"
 import DirectorCards from "./DirectorCards.jsx"
 import DirectorHologram from "./DirectorHologram.jsx"
 import DirectorOrbit from "./DirectorOrbit.jsx"
+import { PanelSkeleton } from "../Skeleton.jsx"
 
 export default function DirectorsPanel({ directors, loading }) {
   const [viewMode, setViewMode] = useState("cards")
@@ -14,7 +15,7 @@ export default function DirectorsPanel({ directors, loading }) {
 
   return (
     <div style={{
-      margin: "0 40px 40px", border: "1px solid rgba(255,255,255,0.07)",
+      margin: "0 var(--gutter) 40px", border: "1px solid rgba(255,255,255,0.07)",
       borderRadius: "4px", background: "rgba(255,255,255,0.02)", overflow: "hidden",
     }}>
       <div style={{
@@ -31,7 +32,7 @@ export default function DirectorsPanel({ directors, loading }) {
 
         {hasData && !loading && (
           <div style={{
-            display: "flex", gap: "4px", background: "rgba(0,0,0,0.3)",
+            display: "flex", flexWrap: "wrap", gap: "4px", background: "rgba(0,0,0,0.3)",
             borderRadius: "3px", padding: "3px",
             border: "1px solid rgba(255,255,255,0.07)",
           }}>
@@ -62,17 +63,7 @@ export default function DirectorsPanel({ directors, loading }) {
       </div>
 
       <div style={{ padding: "24px", minHeight: "220px" }}>
-        {loading && (
-          <div style={{ display: "flex", justifyContent: "center", padding: "40px 0" }}>
-            <div style={{
-              fontSize: "var(--fs-xs)", letterSpacing: "4px", color: "rgba(0,229,255,0.5)",
-              animation: "pulse 1.2s ease infinite", fontFamily: "var(--font-mono)",
-              textTransform: "uppercase",
-            }}>
-              ◈ Analizando directores...
-            </div>
-          </div>
-        )}
+        {loading && <PanelSkeleton variant="rows" label="Analizando directores…" />}
 
         {!loading && hasData && (
           <>

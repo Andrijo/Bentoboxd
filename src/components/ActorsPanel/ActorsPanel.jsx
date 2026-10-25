@@ -2,6 +2,7 @@ import { useState } from "react"
 import ActorsGrid from "./ActorsGrid.jsx"
 import ActorsSpectrum from "./ActorsSpectrum.jsx"
 import ActorsConstellation from "./ActorsConstellation.jsx"
+import { PanelSkeleton } from "../Skeleton.jsx"
 
 export default function ActorsPanel({ actors, loading }) {
   const [viewMode, setViewMode] = useState("grid")
@@ -14,7 +15,7 @@ export default function ActorsPanel({ actors, loading }) {
 
   return (
     <div style={{
-      margin: "0 40px 40px", border: "1px solid rgba(255,255,255,0.07)",
+      margin: "0 var(--gutter) 40px", border: "1px solid rgba(255,255,255,0.07)",
       borderRadius: "4px", background: "rgba(255,255,255,0.02)", overflow: "hidden",
     }}>
       <div style={{
@@ -31,7 +32,7 @@ export default function ActorsPanel({ actors, loading }) {
 
         {hasData && !loading && (
           <div style={{
-            display: "flex", gap: "4px", background: "rgba(0,0,0,0.3)",
+            display: "flex", flexWrap: "wrap", gap: "4px", background: "rgba(0,0,0,0.3)",
             borderRadius: "3px", padding: "3px",
             border: "1px solid rgba(255,255,255,0.07)",
           }}>
@@ -62,17 +63,7 @@ export default function ActorsPanel({ actors, loading }) {
       </div>
 
       <div style={{ padding: "24px", minHeight: "200px" }}>
-        {loading && (
-          <div style={{ display: "flex", justifyContent: "center", padding: "40px" }}>
-            <div style={{
-              fontSize: "var(--fs-xs)", letterSpacing: "4px", color: "rgba(74,222,128,0.5)",
-              animation: "pulse 1.2s ease infinite", fontFamily: "var(--font-mono)",
-              textTransform: "uppercase",
-            }}>
-              Explorando apariciones...
-            </div>
-          </div>
-        )}
+        {loading && <PanelSkeleton variant="rows" label="Explorando apariciones…" />}
 
         {!loading && hasData && (
           <>
