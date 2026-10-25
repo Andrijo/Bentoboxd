@@ -1,7 +1,9 @@
-import { useRef, useState, useEffect, useMemo } from "react"
+import { useMemo } from "react"
 import MovieCard from "./BentoGrid/MovieCard.jsx"
 import StarRating from "./StarRating.jsx"
-import { generateBentoLayout } from "./BentoGrid/bentoPatterns.js"
+import PosterImage from "./PosterImage.jsx"
+import { generateBentoLayout, VISIBLE_MOVIES } from "./BentoGrid/bentoPatterns.js"
+import { useGridColumns } from "../hooks/useGridColumns.js"
 
 const VIEW_OPTIONS = [
   { key: "bento", label: "▦ BENTO" },
@@ -9,29 +11,9 @@ const VIEW_OPTIONS = [
   { key: "terminal", label: ">_ TERMINAL" },
 ]
 
-// Las vistas muestran solo las más recientes; las estadísticas y los juegos
-// usan el feed completo.
-const VISIBLE_MOVIES = 20
-
 export default function MovieViews({ movies: allMovies, movieViewMode, username, onViewModeChange }) {
   const movies = allMovies.slice(0, VISIBLE_MOVIES)
-  const gridRef = useRef(null)
-  const [columns, setColumns] = useState(5)
-
-  useEffect(() => {
-    const el = gridRef.current
-    if (!el) return
-    const measure = () => {
-      const width = el.getBoundingClientRect().width
-      if (width > 0) {
-        setColumns(Math.max(2, Math.floor(width / 210)))
-      }
-    }
-    measure()
-    const ro = new ResizeObserver(measure)
-    ro.observe(el)
-    return () => ro.disconnect()
-  }, [movies.length])
+  const [gridRef, columns] = useGridColumns()
 
   const bentoLayout = useMemo(
     () => generateBentoLayout(columns, movies.length),
@@ -76,6 +58,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
               key={key}
               onClick={() => onViewModeChange(key)}
               type="button"
+              aria-pressed={movieViewMode === key}
               style={{
                 background:
                   movieViewMode === key
@@ -138,12 +121,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                 animation: "fadeSlideIn 0.4s ease both",
                 animationDelay: `${i * 40}ms`,
               }}
-              onMouseEnter={(e) =>
-                (e.currentTarget.style.background = "rgba(0,229,255,0.05)")
-              }
-              onMouseLeave={(e) =>
-                (e.currentTarget.style.background = "rgba(255,255,255,0.02)")
-              }>
+>
               <div
                 style={{
                   fontFamily: "var(--font-display)",
@@ -157,6 +135,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
 
               <div
                 style={{
+                  position: "relative",
                   width: "50px",
                   height: "75px",
                   flexShrink: 0,
@@ -165,11 +144,9 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                   overflow: "hidden",
                 }}>
                 {movie.poster ? (
-                  <img
+                  <PosterImage
                     src={movie.poster}
                     alt={movie.title}
-                    loading="lazy"
-                    decoding="async"
                     style={{
                       width: "100%",
                       height: "100%",

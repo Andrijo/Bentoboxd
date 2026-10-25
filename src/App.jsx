@@ -6,6 +6,7 @@ import SearchSection from "./components/SearchSection.jsx"
 import MovieViews from "./components/MovieViews.jsx"
 import DataPanels from "./components/DataPanels.jsx"
 import EmptyLanding from "./components/EmptyLanding.jsx"
+import { BentoSkeleton } from "./components/Skeleton.jsx"
 import { useLetterboxdFeed } from "./hooks/useLetterboxdFeed.js"
 import { useTMDBMetadata } from "./hooks/useTMDBMetadata.js"
 import { parseUsername } from "./services/letterboxd.js"
@@ -125,7 +126,6 @@ export default function App() {
     resetMetadata()
   }, [resetFeed, resetMetadata])
 
-  const loading = feedLoading || metaLoading
   const showGenrePanel = movies.length > 0 || metaLoading
 
   return (
@@ -144,12 +144,24 @@ export default function App() {
           from { opacity: 0; transform: translateY(12px) scale(0.97); }
           to   { opacity: 1; transform: translateY(0) scale(1); }
         }
+        @keyframes shimmer {
+          from { background-position: 200% 0; }
+          to   { background-position: -200% 0; }
+        }
         @keyframes pulse {
           0%, 100% { opacity: 1; }
           50%       { opacity: 0.4; }
         }
         input::placeholder { color: rgba(255,255,255,0.2); }
-        input:focus { outline: none; border-color: rgba(19,63,67,0.5) !important; }
+        input:focus { outline: none; border-color: rgba(0,229,255,0.5) !important; }
+        :focus-visible { outline: 2px solid rgba(0,229,255,0.7); outline-offset: 2px; }
+        input:focus-visible { outline: none; }
+        .rd-skeleton { background: linear-gradient(90deg, rgba(255,255,255,0.03) 25%, rgba(255,255,255,0.08) 50%, rgba(255,255,255,0.03) 75%); background-size: 200% 100%; animation: shimmer 1.6s linear infinite; }
+        .rd-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+        .rd-timeline-row:hover, .rd-timeline-row:focus-visible { background: rgba(0,229,255,0.05) !important; }
+        @media (prefers-reduced-motion: reduce) {
+          *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; animation-delay: 0ms !important; transition-duration: 0.01ms !important; }
+        }
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: #050505; }
         ::-webkit-scrollbar-thumb { background: rgba(0,229,255,0.3); border-radius: 2px; }
@@ -182,30 +194,18 @@ export default function App() {
 
       <SearchSection
         url={url}
-        loading={loading}
+        loading={feedLoading}
         onUrlChange={setUrl}
         onFetch={handleFetch}
       />
 
       {error && (
-        <div className="rd-error-box">
+        <div className="rd-error-box" role="alert">
           ⚠ {error}
         </div>
       )}
 
-      {loading && (
-        <div style={{ padding: "48px 40px", textAlign: "center" }}>
-          <div
-            style={{
-              fontSize: "var(--fs-xs)",
-              letterSpacing: "4px",
-              color: "rgba(0,229,255,0.5)",
-              animation: "pulse 1.2s ease infinite",
-            }}>
-            ◈ Obteniendo películas...
-          </div>
-        </div>
-      )}
+      {feedLoading && <BentoSkeleton />}
 
       {movies.length > 0 && (
         <MovieViews
@@ -229,7 +229,7 @@ export default function App() {
       />
 
       <EmptyLanding
-        loading={loading}
+        loading={feedLoading}
         movies={movies}
         error={error}
         recentProfiles={recentProfiles}

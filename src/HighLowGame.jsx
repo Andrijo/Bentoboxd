@@ -1,4 +1,5 @@
 import { useState, useReducer } from "react"
+import { useEscapeKey } from "./hooks/useEscapeKey.js"
 
 function shuffleArray(arr, seed) {
   const shuffled = [...arr]
@@ -159,6 +160,7 @@ function GameHeader({ category, streak, onClose, onCategoryChange }) {
           onClick={onClose}
           type="button"
           className="rd-hlg-close-btn"
+          autoFocus
           onMouseEnter={(e) => (e.target.style.color = "#fff")}
           onMouseLeave={(e) => (e.target.style.color = "#888")}>
           ✕ Salir
@@ -395,6 +397,7 @@ function GamePlayArea({
 export default function HighLowGame({ movies, onClose }) {
   const [category, setCategory] = useState("rating")
   const [state, dispatch] = useReducer(gameReducer, initialGameState)
+  useEscapeKey(onClose)
 
   const eligible = movies.filter(
     (m) => m.metrics && m.metrics[category] > 0,
@@ -443,7 +446,7 @@ export default function HighLowGame({ movies, onClose }) {
   if (!movieA || !movieB) return null
 
   return (
-    <div className="rd-hlg-container">
+    <div className="rd-hlg-container" role="dialog" aria-modal="true" aria-label="Higher or Lower">
       <GameHeader
         category={category}
         streak={state.streak}
