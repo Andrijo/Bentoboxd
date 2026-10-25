@@ -47,6 +47,27 @@ function tilesCompletely({ columns, rows, sizes }) {
   return occ.every((row) => row.every((cells) => cells === 1))
 }
 
+// Fila superior de cada ficha 2x2, simulando el auto-placement de CSS grid.
+function bigTileRows({ columns, rows, sizes }) {
+  const grid = Array.from({ length: rows }, () => new Array(columns).fill(false))
+  const result = []
+  let cursor = 0
+
+  sizes.forEach((size) => {
+    while (grid[Math.floor(cursor / columns)][cursor % columns]) cursor++
+    const row = Math.floor(cursor / columns)
+    const col = cursor % columns
+    const width = size === 1 ? 1 : 2
+    const height = size === 3 ? 2 : 1
+    for (let y = row; y < row + height; y++) {
+      for (let x = col; x < col + width; x++) grid[y][x] = true
+    }
+    if (size === 3) result.push(row)
+  })
+
+  return result
+}
+
 describe("generateBentoLayout", () => {
   it("devuelve un layout vacío sin películas", () => {
     expect(generateBentoLayout(5, 0)).toEqual({ columns: 5, rows: 0, sizes: [] })
@@ -54,7 +75,7 @@ describe("generateBentoLayout", () => {
 
   it("cubre la cuadrícula por completo (sin huecos ni solapes) para muchos tamaños", () => {
     for (let columns = 2; columns <= 9; columns++) {
-      for (let count = 1; count <= 18; count++) {
+      for (let count = 1; count <= 20; count++) {
         for (let attempt = 0; attempt < 4; attempt++) {
           const layout = generateBentoLayout(columns, count)
 
@@ -70,10 +91,23 @@ describe("generateBentoLayout", () => {
   })
 
   it("produce una mezcla de tamaños en una cuadrícula típica", () => {
-    const layout = generateBentoLayout(6, 15)
-    expect(layout.sizes).toHaveLength(15)
+    const layout = generateBentoLayout(6, 20)
+    expect(layout.sizes).toHaveLength(20)
     expect(layout.sizes.some((size) => size > 1)).toBe(true)
     expect(tilesCompletely(layout)).toBe(true)
+  })
+
+  it("reparte las fichas grandes por toda la altura con 20 películas", () => {
+    for (let columns = 4; columns <= 8; columns++) {
+      for (let attempt = 0; attempt < 10; attempt++) {
+        const layout = generateBentoLayout(columns, 20)
+        const rows = bigTileRows(layout)
+
+        expect(rows.length).toBeGreaterThanOrEqual(3)
+        // Al menos una ficha grande en la mitad inferior, no todas arriba.
+        expect(Math.max(...rows) + 1).toBeGreaterThanOrEqual(layout.rows / 2)
+      }
+    }
   })
 
   it("reduce las columnas cuando hay muy pocas películas para llenar el ancho", () => {

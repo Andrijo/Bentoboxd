@@ -7,6 +7,20 @@ import {
   extractRating,
 } from "../services/letterboxd.js"
 
+/** Máximo de películas leídas del feed (el RSS de Letterboxd trae ~50). */
+export const FEED_LIMIT = 50
+
+const LETTERBOXD_NS = "https://letterboxd.com"
+
+/** Lee un campo `letterboxd:*` del item (con o sin soporte de namespaces). */
+function letterboxdField(item, name) {
+  return (
+    item.getElementsByTagNameNS(LETTERBOXD_NS, name)[0] ||
+    item.getElementsByTagName(`letterboxd:${name}`)[0] ||
+    null
+  )
+}
+
 export function useLetterboxdFeed() {
   const [movies, setMovies] = useState([])
   const [loading, setLoading] = useState(false)
@@ -46,7 +60,10 @@ export function useLetterboxdFeed() {
       if (requestId !== requestIdRef.current) return []
       const parser = new DOMParser()
       const xml = parser.parseFromString(xmlText, "text/xml")
-      const items = Array.from(xml.querySelectorAll("item")).slice(0, 15)
+      // El feed también trae listas y otras entradas sin película: se ignoran.
+      const items = Array.from(xml.querySelectorAll("item"))
+        .filter((item) => letterboxdField(item, "filmTitle")?.textContent)
+        .slice(0, FEED_LIMIT)
 
       if (items.length === 0)
         throw new Error("No se encontraron películas. Verifica el usuario.")
@@ -54,19 +71,12 @@ export function useLetterboxdFeed() {
       const parsed = items.map((item) => {
         const rawTitleNode = item.querySelector("title")?.textContent || ""
 
-        const title =
-          item.querySelector("filmTitle")?.textContent ||
-          rawTitleNode.split(",")[0] ||
-          "Unknown"
+        const title = letterboxdField(item, "filmTitle").textContent
 
         const link = item.querySelector("link")?.textContent || "#"
         const description = item.querySelector("description")?.textContent || ""
 
-        const ratingNode =
-          item.getElementsByTagNameNS(
-            "https://letterboxd.com",
-            "memberRating",
-          )[0] || item.getElementsByTagName("letterboxd:memberRating")[0]
+        const ratingNode = letterboxdField(item, "memberRating")
 
         let movieRating = ratingNode ? parseFloat(ratingNode.textContent) : null
 
@@ -84,11 +94,7 @@ export function useLetterboxdFeed() {
           movieRating = extractRating(description)
         }
 
-        const yearNode =
-          item.getElementsByTagNameNS(
-            "https://letterboxd.com",
-            "filmYear",
-          )[0] || item.getElementsByTagName("letterboxd:filmYear")[0]
+        const yearNode = letterboxdField(item, "filmYear")
 
         return {
           title,

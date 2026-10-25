@@ -9,7 +9,12 @@ const VIEW_OPTIONS = [
   { key: "terminal", label: ">_ TERMINAL" },
 ]
 
-export default function MovieViews({ movies, movieViewMode, username, onViewModeChange }) {
+// Las vistas muestran solo las más recientes; las estadísticas y los juegos
+// usan el feed completo.
+const VISIBLE_MOVIES = 20
+
+export default function MovieViews({ movies: allMovies, movieViewMode, username, onViewModeChange }) {
+  const movies = allMovies.slice(0, VISIBLE_MOVIES)
   const gridRef = useRef(null)
   const [columns, setColumns] = useState(5)
 
@@ -51,7 +56,9 @@ export default function MovieViews({ movies, movieViewMode, username, onViewMode
               color: "#fafafa",
               textTransform: "uppercase",
             }}>
-            @{username} — {movies.length} películas recientes
+            @{username} — {movies.length < allMovies.length
+              ? `${movies.length} de ${allMovies.length}`
+              : movies.length} películas recientes
           </div>
         )}
 

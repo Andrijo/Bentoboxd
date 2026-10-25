@@ -1,6 +1,6 @@
 import { describe, it, expect, vi, afterEach } from "vitest"
 import { renderHook, act } from "@testing-library/react"
-import { useLetterboxdFeed } from "./useLetterboxdFeed.js"
+import { useLetterboxdFeed, FEED_LIMIT } from "./useLetterboxdFeed.js"
 
 const RSS = `<?xml version="1.0" encoding="UTF-8"?>
 <rss xmlns:letterboxd="https://letterboxd.com" version="2.0">
@@ -74,6 +74,62 @@ describe("useLetterboxdFeed", () => {
       rating: null,
       year: "2021",
     })
+  })
+
+  it("ignora las listas y limita el feed a FEED_LIMIT películas", async () => {
+    const listItem = `<item>
+      <title>Mis favoritas</title>
+      <link>https://letterboxd.com/user/list/favs/</link>
+      <guid isPermaLink="false">letterboxd-list-1</guid>
+      <description><![CDATA[<p>Una lista</p>]]></description>
+    </item>`
+    const filmItem = (n) => `<item>
+      <title>Film ${n}, 2020</title>
+      <link>https://letterboxd.com/user/film/film-${n}/</link>
+      <description><![CDATA[<p><strong>Film ${n}</strong><br>rated</p>]]></description>
+      <letterboxd:filmTitle>Film ${n}</letterboxd:filmTitle>
+      <letterboxd:filmYear>2020</letterboxd:filmYear>
+    </item>`
+    const films = Array.from({ length: FEED_LIMIT + 10 }, (_, n) => filmItem(n))
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:letterboxd="https://letterboxd.com" version="2.0"><channel>
+${listItem}${films.join("")}${listItem}
+</channel></rss>`
+
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() => Promise.resolve({ ok: true, text: async () => xml })),
+    )
+
+    const { result } = renderHook(() => useLetterboxdFeed())
+
+    await act(async () => {
+      await result.current.fetchMovies("user")
+    })
+
+    expect(result.current.movies).toHaveLength(FEED_LIMIT)
+    expect(result.current.movies[0].title).toBe("Film 0")
+    expect(result.current.movies.some((m) => m.title === "Mis favoritas")).toBe(false)
+  })
+
+  it("muestra un error si el feed solo trae listas", async () => {
+    const xml = `<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:letterboxd="https://letterboxd.com" version="2.0"><channel>
+<item><title>Mis favoritas</title><link>https://letterboxd.com/user/list/favs/</link></item>
+</channel></rss>`
+
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() => Promise.resolve({ ok: true, text: async () => xml })),
+    )
+
+    const { result } = renderHook(() => useLetterboxdFeed())
+
+    await act(async () => {
+      await result.current.fetchMovies("user")
+    })
+
+    expect(result.current.error).toMatch(/No se encontraron películas/)
   })
 
   it("rechaza un usuario inválido sin hacer la petición", async () => {
