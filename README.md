@@ -59,10 +59,12 @@ npm install
 
 ## Configuración
 
-Crea un archivo `.env` en la raíz del proyecto:
+Copia `.env.example` a `.env` y completa las variables:
 
 ```env
 VITE_TMDB_API_KEY=tu_api_key_de_tmdb
+# Solo producción (ver Despliegue)
+# VITE_RSS_PROXY_URL=/api/rss
 ```
 
 Obtén una API key gratuita en [themoviedb.org](https://www.themoviedb.org/settings/api).
@@ -78,9 +80,26 @@ npm run test       # Ejecutar tests (Vitest, modo watch)
 npm run test:run   # Ejecutar tests una vez (CI)
 ```
 
+## Despliegue (Vercel)
+
+El RSS de Letterboxd **no permite CORS**, así que en producción necesita un proxy. El repo incluye `api/rss.js`, una función serverless lista para Vercel.
+
+1. Importa el repositorio en Vercel (detecta Vite automáticamente).
+2. En **Settings → Environment Variables** define:
+   - `VITE_TMDB_API_KEY` — tu key de TMDB.
+   - `VITE_RSS_PROXY_URL` — **opcional**: en producción se usa `/api/rss` por defecto. Solo cámbialo si usas otro proxy.
+3. Deploy. La app llamará a `/api/rss?user=<usuario>`.
+
+En local no hace falta nada: `npm run dev` usa el proxy de `vite.config.js` (`/rss-proxy`).
+
+> En otro hosting, apunta `VITE_RSS_PROXY_URL` a tu propio proxy. Por defecto se le pasa `?user=<usuario>`; si la URL contiene `{user}`, se usa en modo path-style.
+
 ## Estructura
 
 ```
+api/
+└── rss.js                   # Proxy serverless del RSS (Vercel)
+
 src/
 ├── App.jsx                  # Componente principal
 ├── main.jsx                 # Punto de entrada

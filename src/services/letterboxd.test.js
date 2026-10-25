@@ -1,6 +1,7 @@
 import { describe, it, expect } from "vitest"
 import {
   parseUsername,
+  buildRssUrl,
   extractPoster,
   extractRating,
   extractTitle,
@@ -27,6 +28,37 @@ describe("parseUsername", () => {
     expect(parseUsername("")).toBe("")
     expect(parseUsername(null)).toBe("")
     expect(parseUsername(undefined)).toBe("")
+  })
+})
+
+describe("buildRssUrl", () => {
+  it("usa el proxy de desarrollo cuando no se configura ninguno", () => {
+    // En el entorno de test (no PROD) cae en el proxy de Vite.
+    expect(buildRssUrl("andrijo", "")).toBe("/rss-proxy/andrijo/rss/")
+  })
+
+  it("añade ?user= cuando se configura una URL base", () => {
+    expect(buildRssUrl("andrijo", "https://proxy.example/api/rss")).toBe(
+      "https://proxy.example/api/rss?user=andrijo",
+    )
+  })
+
+  it("no duplica la barra final de la base", () => {
+    expect(buildRssUrl("andrijo", "https://proxy.example/api/rss/")).toBe(
+      "https://proxy.example/api/rss?user=andrijo",
+    )
+  })
+
+  it("sustituye {user} en modo path-style", () => {
+    expect(buildRssUrl("andrijo", "https://proxy.example/{user}/rss/")).toBe(
+      "https://proxy.example/andrijo/rss/",
+    )
+  })
+
+  it("codifica el nombre de usuario", () => {
+    expect(buildRssUrl("a b", "https://proxy.example/api/rss")).toBe(
+      "https://proxy.example/api/rss?user=a%20b",
+    )
   })
 })
 
