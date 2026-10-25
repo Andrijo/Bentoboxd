@@ -64,13 +64,13 @@ export default function RadarChart({ genres }) {
         return (
           <g key={i}>
             <text x={lp.x} y={lp.y - 6} textAnchor="middle" dominantBaseline="middle"
-              fontSize="9" fontFamily="'Space Mono', monospace"
+              fontSize="9" style={{ fontFamily: "var(--font-mono)" }}
               fill={val > 0 ? cfg.color : "rgba(255,255,255,0.2)"} letterSpacing="0.5">
               {cfg.icon} {k}
             </text>
             {val > 0 && (
               <text x={lp.x} y={lp.y + 8} textAnchor="middle" dominantBaseline="middle"
-                fontSize="8" fontFamily="'Space Mono', monospace" fill="rgba(255,255,255,0.4)">
+                fontSize="8" style={{ fontFamily: "var(--font-mono)" }} fill="rgba(255,255,255,0.4)">
                 {val} film{val !== 1 ? "s" : ""}
               </text>
             )}

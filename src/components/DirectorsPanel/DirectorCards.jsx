@@ -15,20 +15,20 @@ export default function DirectorCards({ directors }) {
           animation: "fadeSlideIn 0.4s ease both", animationDelay: `${i * 100}ms`,
         }}>
           <span style={{
-            fontFamily: "'Bebas Neue', sans-serif", fontSize: "1.8rem",
+            fontFamily: "var(--font-display)", fontSize: "var(--fs-xl)",
             color: "rgba(255,255,255,0.15)", lineHeight: 1,
           }}>
             0{i + 1}
           </span>
           <span style={{
-            flex: 1, color: "#DBD5CA", fontSize: "0.85rem",
+            flex: 1, color: "#DBD5CA", fontSize: "var(--fs-sm)",
             textTransform: "uppercase", letterSpacing: "1px",
           }}>
             {name}
           </span>
           <span style={{
-            fontSize: "0.75rem", color: rankColors[i] || rankColors[0],
-            fontFamily: "'Space Mono', monospace", letterSpacing: "1px",
+            fontSize: "var(--fs-xs)", color: rankColors[i] || rankColors[0],
+            fontFamily: "var(--font-mono)", letterSpacing: "1px",
             background: `${rankColors[i] || rankColors[0]}15`,
             padding: "4px 8px", borderRadius: "2px",
           }}>

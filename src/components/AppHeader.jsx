@@ -1,8 +1,8 @@
 const btnBase = {
   padding: "10px 20px",
   borderRadius: "3px",
-  fontFamily: "'Space Mono', monospace",
-  fontSize: "0.5rem",
+  fontFamily: "var(--font-mono)",
+  fontSize: "var(--fs-2xs)",
   letterSpacing: "2px",
   cursor: "pointer",
   textTransform: "uppercase",

@@ -23,7 +23,7 @@ export default function ActorsPanel({ actors, loading }) {
         flexWrap: "wrap", gap: "12px",
       }}>
         <div style={{
-          fontFamily: "'Bebas Neue', sans-serif", fontSize: "2rem",
+          fontFamily: "var(--font-display)", fontSize: "var(--fs-2xl)",
           letterSpacing: "2px", color: "#F0EDE5", lineHeight: 1,
         }}>
           TOP REPARTO
@@ -51,7 +51,7 @@ export default function ActorsPanel({ actors, loading }) {
                     : "1px solid transparent",
                   color: viewMode === key ? "#4ade80" : "rgba(255,255,255,0.3)",
                   padding: "5px 12px", borderRadius: "2px", cursor: "pointer",
-                  fontSize: "0.75rem", fontFamily: "'Space Mono', monospace",
+                  fontSize: "var(--fs-xs)", fontFamily: "var(--font-mono)",
                   letterSpacing: "1.5px", transition: "background 0.2s, border-color 0.2s, color 0.2s",
                 }}>
                 {label}
@@ -65,8 +65,8 @@ export default function ActorsPanel({ actors, loading }) {
         {loading && (
           <div style={{ display: "flex", justifyContent: "center", padding: "40px" }}>
             <div style={{
-              fontSize: "0.75rem", letterSpacing: "4px", color: "rgba(74,222,128,0.5)",
-              animation: "pulse 1.2s ease infinite", fontFamily: "'Space Mono', monospace",
+              fontSize: "var(--fs-xs)", letterSpacing: "4px", color: "rgba(74,222,128,0.5)",
+              animation: "pulse 1.2s ease infinite", fontFamily: "var(--font-mono)",
               textTransform: "uppercase",
             }}>
               Explorando apariciones...
@@ -84,9 +84,9 @@ export default function ActorsPanel({ actors, loading }) {
 
         {!loading && !hasData && (
           <div style={{
-            textAlign: "center", fontSize: "0.75rem",
+            textAlign: "center", fontSize: "var(--fs-xs)",
             color: "rgba(255,255,255,0.2)", marginTop: "20px",
-            fontFamily: "'Space Mono', monospace",
+            fontFamily: "var(--font-mono)",
           }}>
             Sin datos de reparto disponibles
           </div>

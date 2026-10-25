@@ -90,26 +90,26 @@ export default function DonutChart({ genres }) {
               {hoveredSlice.cfg.icon}
             </text>
             <text x={cx} y={cy + 4} textAnchor="middle" fontSize="9" fill={hoveredSlice.cfg.color}
-              fontFamily="'Space Mono', monospace" letterSpacing="0.5">
+              style={{ fontFamily: "var(--font-mono)" }} letterSpacing="0.5">
               {hoveredSlice.k}
             </text>
             <text x={cx} y={cy + 18} textAnchor="middle" fontSize="11" fill="white"
-              fontFamily="'Space Mono', monospace" fontWeight="bold">
+              style={{ fontFamily: "var(--font-mono)" }} fontWeight="bold">
               {hoveredSlice.count} film{hoveredSlice.count !== 1 ? "s" : ""}
             </text>
             <text x={cx} y={cy + 32} textAnchor="middle" fontSize="8" fill="rgba(255,255,255,0.4)"
-              fontFamily="'Space Mono', monospace">
+              style={{ fontFamily: "var(--font-mono)" }}>
               {Math.round(hoveredSlice.fraction * 100)}%
             </text>
           </>
         ) : (
           <>
             <text x={cx} y={cy - 8} textAnchor="middle" fontSize="22" fill="rgba(255,255,255,0.8)"
-              fontFamily="'Bebas Neue', sans-serif" letterSpacing="2">
+              style={{ fontFamily: "var(--font-display)" }} letterSpacing="2">
               {total}
             </text>
             <text x={cx} y={cy + 10} textAnchor="middle" fontSize="7" fill="rgba(255,255,255,0.3)"
-              fontFamily="'Space Mono', monospace" letterSpacing="1">
+              style={{ fontFamily: "var(--font-mono)" }} letterSpacing="1">
               FILMS
             </text>
           </>
@@ -137,7 +137,7 @@ export default function DonutChart({ genres }) {
               }}
             />
             <span style={{
-              fontSize: "0.75rem", fontFamily: "'Space Mono', monospace",
+              fontSize: "var(--fs-xs)", fontFamily: "var(--font-mono)",
               color: hovered === i ? s.cfg.color : "rgba(255,255,255,0.6)",
               transition: "color 0.2s", letterSpacing: "0.5px",
             }}>
@@ -145,7 +145,7 @@ export default function DonutChart({ genres }) {
             </span>
             <span style={{
               marginLeft: "auto", paddingLeft: "12px",
-              fontSize: "0.75rem", fontFamily: "'Space Mono', monospace",
+              fontSize: "var(--fs-xs)", fontFamily: "var(--font-mono)",
               color: "rgba(255,255,255,0.35)",
             }}>
               {s.count}

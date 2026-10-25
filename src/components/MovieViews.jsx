@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect, useMemo } from "react"
 import MovieCard from "./BentoGrid/MovieCard.jsx"
 import StarRating from "./StarRating.jsx"
-import { generateGapFreePattern } from "./BentoGrid/bentoPatterns.js"
+import { generateBentoLayout } from "./BentoGrid/bentoPatterns.js"
 
 const VIEW_OPTIONS = [
   { key: "bento", label: "▦ BENTO" },
@@ -28,8 +28,8 @@ export default function MovieViews({ movies, movieViewMode, username, onViewMode
     return () => ro.disconnect()
   }, [movies.length])
 
-  const dynamicPattern = useMemo(
-    () => generateGapFreePattern(columns, movies.length),
+  const bentoLayout = useMemo(
+    () => generateBentoLayout(columns, movies.length),
     [columns, movies.length],
   )
   return (
@@ -46,7 +46,7 @@ export default function MovieViews({ movies, movieViewMode, username, onViewMode
         {username && (
           <div
             style={{
-              fontSize: "0.6rem",
+              fontSize: "var(--fs-2xs)",
               letterSpacing: "3px",
               color: "#fafafa",
               textTransform: "uppercase",
@@ -85,8 +85,8 @@ export default function MovieViews({ movies, movieViewMode, username, onViewMode
                 padding: "5px 12px",
                 borderRadius: "2px",
                 cursor: "pointer",
-                fontSize: "0.75rem",
-                fontFamily: "'Space Mono', monospace",
+                fontSize: "var(--fs-xs)",
+                fontFamily: "var(--font-mono)",
                 letterSpacing: "1.5px",
                 transition: "background 0.2s, border-color 0.2s, color 0.2s",
               }}>
@@ -101,16 +101,15 @@ export default function MovieViews({ movies, movieViewMode, username, onViewMode
           ref={gridRef}
           style={{
             display: "grid",
-            gridTemplateColumns: `repeat(${columns}, 1fr)`,
+            gridTemplateColumns: `repeat(${bentoLayout.columns}, 1fr)`,
             gridAutoRows: "180px",
             gap: "8px",
-            gridAutoFlow: "dense",
           }}>
           {movies.map((movie, i) => (
             <MovieCard
               key={movie.link}
               movie={movie}
-              size={dynamicPattern[i] || 1}
+              size={bentoLayout.sizes[i] || 1}
               index={i}
             />
           ))}
@@ -140,8 +139,8 @@ export default function MovieViews({ movies, movieViewMode, username, onViewMode
               }>
               <div
                 style={{
-                  fontFamily: "'Bebas Neue', sans-serif",
-                  fontSize: "2rem",
+                  fontFamily: "var(--font-display)",
+                  fontSize: "var(--fs-2xl)",
                   color: "rgba(255,255,255,0.1)",
                   width: "40px",
                   textAlign: "center",
@@ -176,7 +175,7 @@ export default function MovieViews({ movies, movieViewMode, username, onViewMode
                       display: "flex",
                       alignItems: "center",
                       justifyContent: "center",
-                      fontSize: "1.5rem",
+                      fontSize: "var(--fs-lg)",
                     }}>
                     🎬
                   </div>
@@ -186,8 +185,8 @@ export default function MovieViews({ movies, movieViewMode, username, onViewMode
               <div style={{ flex: 1 }}>
                 <div
                   style={{
-                    fontFamily: "'Bebas Neue', sans-serif",
-                    fontSize: "1.8rem",
+                    fontFamily: "var(--font-display)",
+                    fontSize: "var(--fs-xl)",
                     color: "#F0EDE5",
                     letterSpacing: "1px",
                     lineHeight: 1,
@@ -199,9 +198,9 @@ export default function MovieViews({ movies, movieViewMode, username, onViewMode
                   {movie.year && (
                     <span
                       style={{
-                        fontSize: "0.75rem",
+                        fontSize: "var(--fs-xs)",
                         color: "rgba(255,255,255,0.4)",
-                        fontFamily: "'Space Mono', monospace",
+                        fontFamily: "var(--font-mono)",
                       }}>
                       AÑO: {movie.year}
                     </span>
@@ -213,7 +212,7 @@ export default function MovieViews({ movies, movieViewMode, username, onViewMode
               <div
                 style={{
                   color: "#00e5ff",
-                  fontSize: "1.2rem",
+                  fontSize: "var(--fs-md)",
                   padding: "0 10px",
                   opacity: 0.5,
                 }}>
@@ -231,7 +230,7 @@ export default function MovieViews({ movies, movieViewMode, username, onViewMode
           <div
             style={{
               color: "rgba(255,255,255,0.4)",
-              fontSize: "0.65rem",
+              fontSize: "var(--fs-2xs)",
               marginBottom: "16px",
               textTransform: "uppercase",
             }}>
@@ -251,7 +250,7 @@ export default function MovieViews({ movies, movieViewMode, username, onViewMode
                   justifyContent: "space-between",
                   padding: "6px 0",
                   borderBottom: "1px dashed rgba(0,229,255,0.15)",
-                  fontSize: "0.75rem",
+                  fontSize: "var(--fs-xs)",
                   color: "#00e5ff",
                   animation: "fadeSlideIn 0.1s ease both",
                   animationDelay: `${i * 20}ms`,

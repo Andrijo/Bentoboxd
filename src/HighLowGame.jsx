@@ -93,7 +93,7 @@ const labelStyle = (color) => ({
   width: "100%",
   padding: "20px 10px",
   color: color,
-  fontFamily: "'Bebas Neue', sans-serif",
+  fontFamily: "var(--font-display)",
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
@@ -103,7 +103,7 @@ const labelStyle = (color) => ({
 const titleStyle = {
   color: "#ffffff",
   marginTop: "15px",
-  fontSize: "1.1rem",
+  fontSize: "var(--fs-md)",
   fontWeight: "bold",
   maxWidth: "200px",
   whiteSpace: "nowrap",
@@ -122,7 +122,7 @@ const vsStyle = {
   fontWeight: "bold",
   color: "#000",
   boxShadow: "0 0 20px rgba(250,204,21,0.4)",
-  fontFamily: "'Bebas Neue', sans-serif",
+  fontFamily: "var(--font-display)",
 }
 const guessBtn = (bg, col) => ({
   background: bg,
@@ -167,7 +167,7 @@ function GameHeader({ category, streak, onClose, onCategoryChange }) {
         <div style={{ textAlign: "center", flex: 1, padding: "0 20px" }}>
           <div
             style={{
-              fontSize: "1.4rem",
+              fontSize: "var(--fs-lg)",
               fontWeight: "bold",
               color: "#F0EDE5",
               marginBottom: "4px",
@@ -176,7 +176,7 @@ function GameHeader({ category, streak, onClose, onCategoryChange }) {
           </div>
           <div
             style={{
-              fontSize: "0.75rem",
+              fontSize: "var(--fs-xs)",
               color: "rgba(255,255,255,0.5)",
               letterSpacing: "0.5px",
             }}>
@@ -195,8 +195,8 @@ function GameHeader({ category, streak, onClose, onCategoryChange }) {
         <div
           style={{
             color: "#f59e0b",
-            fontSize: "1.8rem",
-            fontFamily: "'Bebas Neue', sans-serif",
+            fontSize: "var(--fs-xl)",
+            fontFamily: "var(--font-display)",
             letterSpacing: "2px",
             width: "100px",
             textAlign: "right",
@@ -232,8 +232,8 @@ function GameHeader({ category, streak, onClose, onCategoryChange }) {
               borderRadius: "4px",
               cursor: "pointer",
               fontWeight: "bold",
-              fontSize: "0.75rem",
-              fontFamily: "'Space Mono', monospace",
+              fontSize: "var(--fs-xs)",
+              fontFamily: "var(--font-mono)",
               transition: "background 0.3s, color 0.3s, border 0.3s, box-shadow 0.3s",
               boxShadow:
                 category === cat.id
@@ -273,7 +273,7 @@ function GamePlayArea({
             style={{
               fontSize: "4rem",
               color: "#ff4444",
-              fontFamily: "'Bebas Neue'",
+              fontFamily: "var(--font-display)",
             }}>
             GAME OVER
           </h2>
@@ -303,7 +303,7 @@ function GamePlayArea({
                 <div style={{ fontSize: "3.5rem", lineHeight: 1 }}>
                   {movieA.metrics[category]}
                 </div>
-                <div style={{ fontSize: "0.8rem", opacity: 0.9 }}>
+                <div style={{ fontSize: "var(--fs-sm)", opacity: 0.9 }}>
                   {CAT_CONFIG[category].unit}
                 </div>
               </div>
@@ -331,7 +331,7 @@ function GamePlayArea({
                 <div style={{ fontSize: "3.5rem", lineHeight: 1 }}>
                   {feedback ? movieB.metrics[category] : "?"}
                 </div>
-                <div style={{ fontSize: "0.8rem", opacity: 0.9 }}>
+                <div style={{ fontSize: "var(--fs-sm)", opacity: 0.9 }}>
                   {CAT_CONFIG[category].unit}
                 </div>
               </div>

@@ -2,7 +2,39 @@ html {
   overscroll-behavior: none;
 }
 
+@font-face {
+  font-family: "Milker";
+  src: url("/fonts/Milker.woff2") format("woff2");
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: "DMSans";
+  src: url("/fonts/DMSans.woff2") format("woff2");
+  font-weight: 600;
+  font-style: normal;
+  font-display: swap;
+  letter-spacing: 0.2rem;
+  size-adjust: 120%;
+}
+
 :root {
+  --font-display: "Milker", sans-serif;
+  --font-mono: "DMSans", monospace;
+
+  /* ── Escala tipográfica ─────────────────────────────────────
+     Usa var(--fs-*) en lugar de tamaños sueltos. */
+  --fs-2xs: 0.65rem; /* micro labels (antes 0.5–0.65) */
+  --fs-xs: 0.75rem; /* cuerpo/labels mono */
+  --fs-sm: 0.85rem; /* secundario (antes 0.8–0.9) */
+  --fs-base: 1rem;
+  --fs-md: 1.25rem; /* énfasis (antes 1.1–1.25) */
+  --fs-lg: 1.5rem; /* subtítulos (antes 1.4–1.5) */
+  --fs-xl: 1.8rem; /* display medio */
+  --fs-2xl: 2rem; /* títulos de panel */
+
   background: linear-gradient(to bottom, #111315, #181818);
 }
 

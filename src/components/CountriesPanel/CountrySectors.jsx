@@ -34,7 +34,7 @@ export default function CountrySectors({ countries }) {
               marginBottom: "8px",
             }}>
               <div style={{
-                fontSize: "1.5rem", fontFamily: "'Bebas Neue', sans-serif",
+                fontSize: "var(--fs-lg)", fontFamily: "var(--font-display)",
                 color: themeColor, lineHeight: 1,
               }}>
                 {count}
@@ -49,7 +49,7 @@ export default function CountrySectors({ countries }) {
             </div>
 
             <div style={{
-              fontSize: "0.65rem", color: "rgba(255,255,255,0.5)",
+              fontSize: "var(--fs-2xs)", color: "rgba(255,255,255,0.5)",
               textTransform: "uppercase", marginTop: "4px",
               whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
             }}>
