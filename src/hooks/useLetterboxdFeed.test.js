@@ -26,6 +26,21 @@ const RSS = `<?xml version="1.0" encoding="UTF-8"?>
 const EMPTY_RSS = `<?xml version="1.0" encoding="UTF-8"?>
 <rss xmlns:letterboxd="https://letterboxd.com" version="2.0"><channel></channel></rss>`
 
+function rssWith(title) {
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<rss xmlns:letterboxd="https://letterboxd.com" version="2.0">
+  <channel>
+    <item>
+      <title>${title}, 2020</title>
+      <link>https://letterboxd.com/user/film/x/</link>
+      <description><![CDATA[<p><strong>${title}</strong><br>rated</p>]]></description>
+      <letterboxd:filmTitle>${title}</letterboxd:filmTitle>
+      <letterboxd:filmYear>2020</letterboxd:filmYear>
+    </item>
+  </channel>
+</rss>`
+}
+
 afterEach(() => {
   vi.unstubAllGlobals()
 })
@@ -112,5 +127,48 @@ describe("useLetterboxdFeed", () => {
     expect(result.current.movies).toEqual([])
     expect(result.current.username).toBeNull()
     expect(result.current.error).toBeNull()
+  })
+
+  it("ignora la respuesta de una búsqueda anterior", async () => {
+    let resolveFirst
+    const firstResponse = new Promise((resolve) => {
+      resolveFirst = () =>
+        resolve({ ok: true, text: async () => rssWith("First Movie") })
+    })
+
+    vi.stubGlobal(
+      "fetch",
+      vi
+        .fn()
+        .mockImplementationOnce(() => firstResponse)
+        .mockImplementationOnce(() =>
+          Promise.resolve({
+            ok: true,
+            text: async () => rssWith("Second Movie"),
+          }),
+        ),
+    )
+
+    const { result } = renderHook(() => useLetterboxdFeed())
+
+    let firstRequest
+    act(() => {
+      firstRequest = result.current.fetchMovies("first")
+    })
+
+    await act(async () => {
+      await result.current.fetchMovies("second")
+    })
+
+    expect(result.current.movies[0].title).toBe("Second Movie")
+
+    // La primera respuesta llega tarde y no debe pisar la segunda.
+    await act(async () => {
+      resolveFirst()
+      await firstRequest
+    })
+
+    expect(result.current.movies[0].title).toBe("Second Movie")
+    expect(result.current.loading).toBe(false)
   })
 })

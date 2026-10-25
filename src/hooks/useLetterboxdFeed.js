@@ -1,4 +1,4 @@
-import { useState, useCallback } from "react"
+import { useState, useCallback, useRef } from "react"
 import {
   parseUsername,
   buildRssUrl,
@@ -11,9 +11,14 @@ export function useLetterboxdFeed() {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [username, setUsername] = useState(null)
+  const requestIdRef = useRef(0)
 
   const fetchMovies = useCallback(async (url) => {
     if (!url?.trim()) return
+
+    // Solo la última búsqueda puede escribir en el estado.
+    const requestId = ++requestIdRef.current
+
     setLoading(true)
     setError(null)
     setMovies([])
@@ -25,11 +30,13 @@ export function useLetterboxdFeed() {
 
       const rssUrl = buildRssUrl(user)
       const res = await fetch(rssUrl)
+      if (requestId !== requestIdRef.current) return []
       if (!res.ok)
         throw new Error(
           "No se pudo obtener el feed. Verifica el usuario o tu conexión.",
         )
       const xmlText = await res.text()
+      if (requestId !== requestIdRef.current) return []
       const parser = new DOMParser()
       const xml = parser.parseFromString(xmlText, "text/xml")
       const items = Array.from(xml.querySelectorAll("item")).slice(0, 15)
@@ -88,14 +95,19 @@ export function useLetterboxdFeed() {
       setMovies(parsed)
       return parsed
     } catch (e) {
-      setError(e.message || "Error inesperado")
+      if (requestId === requestIdRef.current) {
+        setError(e.message || "Error inesperado")
+      }
       return []
     } finally {
-      setLoading(false)
+      if (requestId === requestIdRef.current) {
+        setLoading(false)
+      }
     }
   }, [])
 
   const resetFeed = useCallback(() => {
+    requestIdRef.current += 1
     setMovies([])
     setUsername(null)
     setError(null)
