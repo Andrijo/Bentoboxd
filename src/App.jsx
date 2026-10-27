@@ -171,13 +171,6 @@ export default function App() {
         .rd-hlg-arrow:disabled { opacity: 0.3; }
         .rd-hlg-arrow:disabled path { pointer-events: none; }
         .rd-hlg-vs { position: absolute; left: 8.333%; top: 33.333%; width: 83.333%; aspect-ratio: 1; border-radius: 50%; background: #facc15; color: #000; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 28cqw; box-shadow: 0 0 20px rgba(250,204,21,0.4); }
-        @media (max-width: 640px) {
-          .rd-header-actions { width: 100%; }
-          .rd-search-btn { width: 100%; }
-          .rd-timeline-row { gap: 12px; padding: 10px; }
-          .rd-timeline-index { display: none; }
-          .rd-terminal-box { padding: 16px; }
-        }
         @media (prefers-reduced-motion: reduce) {
           *, *::before, *::after { animation-duration: 0.01ms !important; animation-iteration-count: 1 !important; animation-delay: 0ms !important; transition-duration: 0.01ms !important; }
         }
@@ -190,7 +183,7 @@ export default function App() {
         .rd-page { padding: 32px var(--gutter) 48px; animation: fadeSlideIn 0.3s ease both; }
         .rd-page-notice { padding: 48px 0; text-align: center; font-size: var(--fs-xs); letter-spacing: 2px; color: rgba(255,255,255,0.5); text-transform: uppercase; }
         .rd-hlg { display: flex; flex-direction: column; min-height: 75vh; overflow-x: hidden; }
-        .rd-rank-circle { width: 32px; height: 32px; display: flex; align-items: center; justify-content: center; border-radius: 50%; margin-right: 12px; font-family: var(--font-display); font-size: 1rem; }
+        .rd-rank-circle { width: 32px; height: 32px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%; margin-right: 12px; font-family: var(--font-display); font-size: 1rem; line-height: 1; padding-bottom: 3px; color: rgba(255,255,255,0.5); background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); }
         .rd-no-poster { position: absolute; inset: 0; background: linear-gradient(to top, #0a0a0a 0%, rgba(10,10,10,0.85) 25%, rgba(10,10,10,0.3) 55%, transparent 100%); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.15); font-size: 2rem; }
         .rd-index-badge { position: absolute; top: 8px; right: 8px; z-index: 10; width: 25px; height: 25px; border-radius: 50%; background: rgba(0,0,0,0.7); border: 1px solid rgba(0,229,255,0.3); display: flex; align-items: center; justify-content: center; color: rgba(0,229,255,0.7); font-family: var(--font-mono); font-size: 0.75rem; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
         .rd-country-name { flex: 1; color: #DBD5CA; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 1px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -201,6 +194,13 @@ export default function App() {
         .rd-profile-btn { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.08); color: #DBD5CA; padding: 8px 16px; border-radius: 3px; font-family: var(--font-mono); font-size: 0.75rem; cursor: pointer; transition: all 0.2s; }
         .rd-search-input { flex: 1; min-width: min(260px, 100%); background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.1); border-radius: 3px; padding: 12px 16px; color: #E5E5E5; font-family: var(--font-mono); transition: border 0.2s; }
         .rd-search-btn { padding: 12px 28px; border-radius: 3px; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 2px; text-transform: uppercase; transition: all 0.2s; width: 160px; text-align: center; }
+        @media (max-width: 640px) {
+          .rd-header-actions { width: 100%; }
+          .rd-search-btn { width: 100%; }
+          .rd-timeline-row { gap: 12px; padding: 10px; }
+          .rd-timeline-index { display: none; }
+          .rd-terminal-box { padding: 16px; }
+        }
       `}</style>
 
       <AppHeader

@@ -1,7 +1,5 @@
 import { getFlagUrl, ISO_COUNTRY_NAMES } from "../../utils/formatters.js"
 
-const themeColor = "#ff8c00"
-
 export default function CountryDatalog({ countries }) {
   const topCountryCodes = Object.entries(countries || {})
     .sort((a, b) => b[1] - a[1])
@@ -17,7 +15,7 @@ export default function CountryDatalog({ countries }) {
           <div key={code} style={{
             display: "flex", alignItems: "center", gap: "16px",
             background: "rgba(0,0,0,0.4)", padding: "12px 20px",
-            borderRadius: "4px", borderLeft: `2px solid ${themeColor}`,
+            borderRadius: "4px",
             animation: "fadeSlideIn 0.3s ease both", animationDelay: `${i * 60}ms`,
           }}>
             <div style={{
@@ -43,8 +41,8 @@ export default function CountryDatalog({ countries }) {
               {fullName}
             </span>
             <span style={{
-              fontSize: "var(--fs-xs)", color: themeColor, fontFamily: "var(--font-mono)",
-              letterSpacing: "1px", background: `${themeColor}15`,
+              fontSize: "var(--fs-xs)", color: "rgba(255,255,255,0.5)", fontFamily: "var(--font-mono)",
+              letterSpacing: "1px", background: "rgba(255,255,255,0.05)",
               padding: "4px 8px", borderRadius: "2px",
             }}>
               {count} FILM{count !== 1 ? "S" : ""}

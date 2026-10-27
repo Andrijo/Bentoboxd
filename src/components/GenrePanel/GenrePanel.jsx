@@ -47,22 +47,22 @@ export default function GenrePanel({ genres, movieCount, loadingGenres, genreErr
             border: "1px solid rgba(255,255,255,0.07)",
           }}>
             {[
-              { key: "donut", label: "◉ Pastel" },
-              { key: "radar", label: "⬡ Radar" },
-              { key: "bar", label: "⬡ Barras" },
-              { key: "matrix", label: "⬡ Matriz" },
-              { key: "gauges", label: "⬡ Hub" },
+              { key: "donut", label: "PASTEL" },
+              { key: "radar", label: "RADAR" },
+              { key: "bar", label: "BARRAS" },
+              { key: "matrix", label: "MATRIZ" },
+              { key: "gauges", label: "HUB" },
             ].map(({ key, label }) => (
               <button
                 key={key}
                 onClick={() => setChartType(key)}
                 type="button"
                 style={{
-                  background: chartType === key ? "rgba(0,229,255,0.15)" : "transparent",
+                  background: chartType === key ? "rgba(255,255,255,0.08)" : "transparent",
                   border: chartType === key
-                    ? "1px solid rgba(0,229,255,0.35)"
+                    ? "1px solid rgba(255,255,255,0.2)"
                     : "1px solid transparent",
-                  color: chartType === key ? "#00e5ff" : "rgba(255,255,255,0.3)",
+                  color: chartType === key ? "#F0EDE5" : "rgba(255,255,255,0.3)",
                   padding: "5px 12px", borderRadius: "2px", cursor: "pointer",
                   fontSize: "var(--fs-xs)", fontFamily: "var(--font-mono)",
                   letterSpacing: "1.5px", transition: "background 0.2s, border-color 0.2s, color 0.2s",

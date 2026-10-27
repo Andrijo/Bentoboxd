@@ -5,8 +5,8 @@ const TABS = [
 ]
 
 const tabBase = {
-  padding: "10px 20px",
-  borderRadius: "3px",
+  padding: "8px 16px",
+  borderRadius: 0,
   fontFamily: "var(--font-mono)",
   fontSize: "var(--fs-2xs)",
   letterSpacing: "2px",
@@ -15,6 +15,8 @@ const tabBase = {
   transition: "all 0.2s",
   flex: "1 1 120px",
   textAlign: "center",
+  whiteSpace: "nowrap",
+  lineHeight: 1.2,
 }
 
 export default function AppHeader({ page, showTabs, onNavigate, onReset }) {
