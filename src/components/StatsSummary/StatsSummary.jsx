@@ -3,6 +3,7 @@ import RatingHistogram from "./RatingHistogram.jsx"
 import { Skeleton } from "../Skeleton.jsx"
 import { computeProfileStats } from "../../utils/profileStats.js"
 import { formatMovieCount, formatWatchedDate } from "../../utils/formatters.js"
+import Panel from "../Panel/Panel.jsx"
 
 const TMDB_VERDICT = {
   kinder: "Más generoso que el promedio",
@@ -63,57 +64,45 @@ export default function StatsSummary({ movies, loading }) {
   }
 
   return (
-    <section aria-labelledby="rd-panel-resumen" style={{
-      gridArea: "stats", border: "1px solid rgba(255,255,255,0.07)",
-      borderRadius: "var(--radius-lg)", background: "rgba(255,255,255,0.02)", overflow: "hidden",
-    }}>
-      <div style={{ padding: "16px 24px", borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
-        <h2 id="rd-panel-resumen" className="rd-panel-title">
-          RESUMEN
-        </h2>
-        <div style={{
-          fontSize: "var(--fs-2xs)", color: "rgba(255,255,255,0.55)",
-          letterSpacing: "2px", marginTop: "4px",
-        }}>
-          {formatMovieCount(stats.total)}{period && ` · ${period}`}
-        </div>
+    <Panel
+      id="rd-panel-resumen"
+      area="stats"
+      title="RESUMEN"
+      subtitle={`${formatMovieCount(stats.total)}${period ? ` · ${period}` : ""}`}
+      bodyStyle={{ display: "flex", flexDirection: "column", gap: "24px" }}>
+      <div style={{
+        display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "12px",
+      }}>
+        <StatTile
+          label="Tu promedio"
+          value={stats.average === null ? "—" : formatRating(stats.average)}
+          detail={
+            stats.unratedCount > 0
+              ? `${stats.unratedCount} sin calificar`
+              : `${formatMovieCount(stats.ratedCount)} calificadas`
+          }
+        />
+        {tmdbTile}
+        <StatTile
+          label="Me gusta"
+          value={stats.likedCount}
+          detail={`${Math.round((stats.likedCount / stats.total) * 100)}% de las vistas`}
+        />
+        <StatTile
+          label="Revisiones"
+          value={stats.rewatchCount}
+          detail={stats.rewatchCount === 1 ? "Película vista otra vez" : "Películas vistas otra vez"}
+        />
+        {stats.topDecade !== null && (
+          <StatTile
+            label="Década favorita"
+            value={`${stats.topDecade}s`}
+            detail={formatMovieCount(stats.topDecadeCount)}
+          />
+        )}
       </div>
 
-      <div style={{ padding: "24px", display: "flex", flexDirection: "column", gap: "24px" }}>
-        <div style={{
-          display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "12px",
-        }}>
-          <StatTile
-            label="Tu promedio"
-            value={stats.average === null ? "—" : formatRating(stats.average)}
-            detail={
-              stats.unratedCount > 0
-                ? `${stats.unratedCount} sin calificar`
-                : `${formatMovieCount(stats.ratedCount)} calificadas`
-            }
-          />
-          {tmdbTile}
-          <StatTile
-            label="Me gusta"
-            value={stats.likedCount}
-            detail={`${Math.round((stats.likedCount / stats.total) * 100)}% de las vistas`}
-          />
-          <StatTile
-            label="Revisiones"
-            value={stats.rewatchCount}
-            detail={stats.rewatchCount === 1 ? "Película vista otra vez" : "Películas vistas otra vez"}
-          />
-          {stats.topDecade !== null && (
-            <StatTile
-              label="Década favorita"
-              value={`${stats.topDecade}s`}
-              detail={formatMovieCount(stats.topDecadeCount)}
-            />
-          )}
-        </div>
-
-        {stats.ratedCount > 0 && <RatingHistogram distribution={stats.distribution} />}
-      </div>
-    </section>
+      {stats.ratedCount > 0 && <RatingHistogram distribution={stats.distribution} />}
+    </Panel>
   )
 }
