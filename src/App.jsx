@@ -218,7 +218,7 @@ export default function App() {
         .rd-panel-title { font-family: var(--font-display); font-size: var(--fs-2xl); font-weight: normal; letter-spacing: 2px; color: #F0EDE5; line-height: 1; }
         .rd-bento-panels { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: "stats" "genres" "platforms" "directors" "actors" "countries"; gap: 24px; margin: 0 var(--gutter) 40px; }
         @media (min-width: 900px) {
-          .rd-bento-panels { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-areas: "stats stats" "genres platforms" "directors actors" "countries countries"; }
+          .rd-bento-panels { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-areas: "stats genres" "platforms genres" "directors actors" "countries countries"; }
         }
         .rd-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
         .rd-timeline-row:hover, .rd-timeline-row:focus-visible { background: rgba(0,229,255,0.05) !important; }

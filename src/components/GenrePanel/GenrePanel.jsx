@@ -4,6 +4,7 @@ import RadarChart from "./RadarChart.jsx"
 import BarChart from "./BarChart.jsx"
 import MatrixChart from "./MatrixChart.jsx"
 import GaugesChart from "./GaugesChart.jsx"
+import GenreList from "./GenreList.jsx"
 import { PanelSkeleton } from "../Skeleton.jsx"
 import { formatMovieCount } from "../../utils/formatters.js"
 
@@ -78,7 +79,8 @@ export default function GenrePanel({ genres, movieCount, loadingGenres, genreErr
 
       <div style={{
         flex: 1, padding: "32px 24px", minHeight: "200px",
-        display: "flex", alignItems: "center", justifyContent: "center",
+        display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
+        gap: "32px",
       }}>
         {loadingGenres && <PanelSkeleton variant="chart" label="Clasificando géneros…" />}
 
@@ -100,6 +102,10 @@ export default function GenrePanel({ genres, movieCount, loadingGenres, genreErr
             {chartType === "matrix" && <MatrixChart genres={genres} />}
             {chartType === "gauges" && <GaugesChart genres={genres} />}
           </div>
+        )}
+
+        {!loadingGenres && !genreError && hasData && (
+          <GenreList genres={genres} />
         )}
 
         {!loadingGenres && !genreError && !hasData && (
