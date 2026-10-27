@@ -29,9 +29,12 @@ Nace como un experimento personal para explorar visualización de datos, integra
   - **Actores** — Cuadrícula, espectro o constelación
   - **Países de producción** — Tabla o sectores con banderas
   - **Plataformas de streaming** — Disponibilidad en México
-- **Juegos:**
-  - **Higher or Lower** — Adivina si la siguiente película tiene mayor/menor rating, popularidad o año
-  - **Quiz** — 5 preguntas sobre año de estreno o calificación
+- **Juegos** (páginas propias, enlazables y compatibles con el botón atrás):
+  - **Higher or Lower** (`#higher-lower`) — Adivina si la siguiente película tiene mayor/menor rating, popularidad o año
+  - **Quiz** (`#quiz`) — 5 preguntas sobre año de estreno o calificación
+- **Skeleton loading** mientras cargan el feed y los metadatos de TMDB
+- **Diseño responsive** con layout adaptado a móvil
+- **Accesibilidad** — Etiquetas ARIA, anuncios en vivo para los juegos y enlaces externos señalados para lectores de pantalla
 - **Persistencia** — Últimos 3 perfiles guardados en localStorage
 
 ## Stack
@@ -52,8 +55,8 @@ Nace como un experimento personal para explorar visualización de datos, integra
 ## Instalación
 
 ```bash
-git clone https://github.com/tu-usuario/letterboxd-bento.git
-cd letterboxd-bento
+git clone https://github.com/Andrijo/Bentoboxd.git
+cd Bentoboxd
 npm install
 ```
 
@@ -81,6 +84,12 @@ npm run lint       # Ejecutar ESLint
 npm run test       # Ejecutar tests (Vitest, modo watch)
 npm run test:run   # Ejecutar tests una vez (CI)
 ```
+
+Los tests usan Vitest + Testing Library (jsdom) y viven junto al código que prueban (`*.test.js`/`*.test.jsx`).
+
+## CI
+
+GitHub Actions (`.github/workflows/ci.yml`) ejecuta `lint`, `test:run` y `build` con Node 22 en cada push a `main` y en cada pull request.
 
 ## Despliegue (Vercel)
 
@@ -110,9 +119,20 @@ api/
 
 src/
 ├── App.jsx                  # Componente principal
+├── HighLowGame.jsx          # Página Higher or Lower (#higher-lower)
 ├── main.jsx                 # Punto de entrada
 ├── index.css                # Estilos globales
 ├── components/              # Componentes React
+│   ├── AppHeader.jsx        # Cabecera y navegación
+│   ├── AppFooter.jsx        # Pie con atribución (Letterboxd, TMDB)
+│   ├── SearchSection.jsx    # Búsqueda de usuario
+│   ├── RecentProfiles.jsx   # Perfiles recientes
+│   ├── EmptyLanding.jsx     # Pantalla inicial sin perfil
+│   ├── MovieViews.jsx       # Bento / Timeline / Terminal
+│   ├── DataPanels.jsx       # Contenedor de paneles de análisis
+│   ├── Skeleton.jsx         # Placeholders de carga
+│   ├── PosterImage.jsx      # Póster con carga diferida
+│   ├── StarRating.jsx       # Calificación en estrellas
 │   ├── BentoGrid/           # Cuadrícula bento
 │   ├── GenrePanel/          # Gráficos de géneros
 │   ├── DirectorsPanel/      # Paneles de directores
@@ -123,12 +143,15 @@ src/
 ├── hooks/                   # Custom hooks
 │   ├── useLetterboxdFeed.js # Fetch y parse de RSS
 │   ├── useTMDBMetadata.js   # Fetch de metadatos TMDB
-│   └── useHashRoute.js      # Páginas por hash (#quiz, #higher-lower)
+│   ├── useHashRoute.js      # Páginas por hash (#quiz, #higher-lower)
+│   ├── useGridColumns.js    # Columnas según el ancho disponible
+│   └── useOverscrollColor.js # Color del rebote de overscroll
 ├── services/                # Servicios API
 │   ├── letterboxd.js        # Parseo de RSS
 │   └── tmdb.js              # Cliente TMDB
 ├── constants/               # Constantes y mapeos
 ├── styles/                  # Tokens de diseño
+├── test/setup.js            # Setup de Vitest (jest-dom)
 └── utils/                   # Utilidades
 ```
 
