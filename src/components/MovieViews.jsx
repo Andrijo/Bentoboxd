@@ -6,9 +6,9 @@ import { generateBentoLayout, VISIBLE_MOVIES } from "./BentoGrid/bentoPatterns.j
 import { useGridColumns } from "../hooks/useGridColumns.js"
 
 const VIEW_OPTIONS = [
-  { key: "bento", label: "BENTO" },
-  { key: "timeline", label: "LÍNEA DE TIEMPO" },
-  { key: "terminal", label: "TERMINAL" },
+  { key: "bento", label: "Bento" },
+  { key: "timeline", label: "Línea de tiempo" },
+  { key: "terminal", label: "Terminal" },
 ]
 
 export default function MovieViews({ movies: allMovies, movieViewMode, username, onViewModeChange }) {
@@ -36,7 +36,6 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
               fontSize: "var(--fs-2xs)",
               letterSpacing: "3px",
               color: "#fafafa",
-              textTransform: "uppercase",
             }}>
             @{username} — {movies.length < allMovies.length
               ? `${movies.length} de ${allMovies.length}`
@@ -45,12 +44,14 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
         )}
 
         <div
+          role="group"
+          aria-label="Vista de películas"
           style={{
             display: "flex",
             flexWrap: "wrap",
             gap: "4px",
             background: "rgba(0,0,0,0.3)",
-            borderRadius: "3px",
+            borderRadius: "var(--radius-md)",
             padding: "3px",
             border: "1px solid rgba(255,255,255,0.07)",
           }}>
@@ -72,9 +73,9 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                 color:
                   movieViewMode === key
                     ? "#F0EDE5"
-                    : "rgba(255,255,255,0.3)",
+                    : "rgba(255,255,255,0.55)",
                 padding: "5px 12px",
-                borderRadius: "2px",
+                borderRadius: "var(--radius-sm)",
                 cursor: "pointer",
                 fontSize: "var(--fs-xs)",
                 fontFamily: "var(--font-mono)",
@@ -124,6 +125,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
               }}
 >
               <div
+                aria-hidden="true"
                 className="rd-timeline-index"
                 style={{
                   fontFamily: "var(--font-display)",
@@ -142,13 +144,13 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                   height: "75px",
                   flexShrink: 0,
                   background: "#111",
-                  borderRadius: "2px",
+                  borderRadius: "var(--radius-sm)",
                   overflow: "hidden",
                 }}>
                 {movie.poster ? (
                   <PosterImage
                     src={movie.poster}
-                    alt={movie.title}
+                    alt=""
                     style={{
                       width: "100%",
                       height: "100%",
@@ -157,6 +159,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                   />
                 ) : (
                   <div
+                    aria-hidden="true"
                     style={{
                       width: "100%",
                       height: "100%",
@@ -187,10 +190,10 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                     <span
                       style={{
                         fontSize: "var(--fs-xs)",
-                        color: "rgba(255,255,255,0.4)",
+                        color: "rgba(255,255,255,0.55)",
                         fontFamily: "var(--font-mono)",
                       }}>
-                      AÑO: {movie.year}
+                      Año: {movie.year}
                     </span>
                   )}
                   <StarRating rating={movie.rating} />
@@ -198,6 +201,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
               </div>
 
               <div
+                aria-hidden="true"
                 style={{
                   color: "#00e5ff",
                   fontSize: "var(--fs-md)",
@@ -206,6 +210,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                 }}>
                 ↗
               </div>
+              <span className="rd-sr-only">(se abre en Letterboxd en una pestaña nueva)</span>
             </a>
           ))}
         </div>
@@ -213,20 +218,20 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
 
       {movieViewMode === "terminal" && (
         <div className="rd-terminal-box">
-          <div className="rd-terminal-overlay" />
+          <div className="rd-terminal-overlay" aria-hidden="true" />
 
           <div
+            aria-hidden="true"
             style={{
-              color: "rgba(255,255,255,0.4)",
+              color: "rgba(255,255,255,0.55)",
               fontSize: "var(--fs-2xs)",
               marginBottom: "16px",
-              textTransform: "uppercase",
             }}>
             root@sys:~# ./fetch_logs.sh --user={username} --limit={movies.length}
             <br />
-            [OK] CONNECTED TO LETTERBOXD MAINFRAME...
+            [OK] Connected to Letterboxd mainframe...
             <br />
-            [OK] DOWNLOADING SECURE LOGS...
+            [OK] Downloading secure logs...
           </div>
 
           <div style={{ display: "flex", flexDirection: "column" }}>
@@ -252,17 +257,21 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                   </span>
                 </span>
                 <span style={{ display: "flex", gap: "16px", flexShrink: 0 }}>
-                  <span style={{ color: "rgba(255,255,255,0.4)" }}>
+                  <span style={{ color: "rgba(255,255,255,0.55)" }}>
                     {movie.year || "----"}
                   </span>
                   <span style={{ color: "#4ade80", width: "40px", textAlign: "right" }}>
-                    {movie.rating ? `${movie.rating}★` : "NULL"}
+                    {movie.rating ? (
+                      <span role="img" aria-label={`${movie.rating} de 5 estrellas`}>{movie.rating}★</span>
+                    ) : (
+                      <span aria-label="Sin calificar">NULL</span>
+                    )}
                   </span>
                 </span>
               </div>
             ))}
           </div>
-          <div style={{ color: "#00e5ff", marginTop: "12px", animation: "pulse 1s infinite" }}>
+          <div aria-hidden="true" style={{ color: "#00e5ff", marginTop: "12px", animation: "pulse 1s infinite" }}>
             _
           </div>
         </div>

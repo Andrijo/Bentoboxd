@@ -15,7 +15,7 @@ export default function CountryDatalog({ countries }) {
           <div key={code} style={{
             display: "flex", alignItems: "center", gap: "16px",
             background: "rgba(0,0,0,0.4)", padding: "12px 20px",
-            borderRadius: "4px",
+            borderRadius: "var(--radius-md)",
             animation: "fadeSlideIn 0.3s ease both", animationDelay: `${i * 60}ms`,
           }}>
             <div style={{
@@ -24,11 +24,11 @@ export default function CountryDatalog({ countries }) {
               border: "1px solid rgba(255,255,255,0.05)",
             }}>
               {flagUrl ? (
-                <img src={flagUrl} alt={fullName}
+                <img src={flagUrl} alt=""
                   loading="lazy" decoding="async"
                   style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               ) : (
-                <div style={{
+                <div aria-hidden="true" style={{
                   width: "100%", height: "100%", display: "flex",
                   alignItems: "center", justifyContent: "center", fontSize: "var(--fs-sm)",
                 }}>
@@ -43,9 +43,9 @@ export default function CountryDatalog({ countries }) {
             <span style={{
               fontSize: "var(--fs-xs)", color: "rgba(255,255,255,0.5)", fontFamily: "var(--font-mono)",
               letterSpacing: "1px", background: "rgba(255,255,255,0.05)",
-              padding: "4px 8px", borderRadius: "2px",
+              padding: "4px 8px", borderRadius: "var(--radius-sm)",
             }}>
-              {count} FILM{count !== 1 ? "S" : ""}
+              {count} film{count !== 1 ? "s" : ""}
             </span>
           </div>
         )

@@ -9,10 +9,10 @@ export default function DirectorCards({ directors }) {
         <div key={name} style={{
           display: "flex", alignItems: "center", gap: "16px",
           background: "rgba(0,0,0,0.3)", padding: "12px 20px",
-          borderRadius: "4px",
+          borderRadius: "var(--radius-md)",
           animation: "fadeSlideIn 0.4s ease both", animationDelay: `${i * 100}ms`,
         }}>
-          <span style={{
+          <span aria-hidden="true" style={{
             fontFamily: "var(--font-display)", fontSize: "var(--fs-xl)",
             color: "rgba(255,255,255,0.15)", lineHeight: 1,
           }}>
@@ -20,7 +20,7 @@ export default function DirectorCards({ directors }) {
           </span>
           <span style={{
             flex: 1, color: "#DBD5CA", fontSize: "var(--fs-sm)",
-            textTransform: "uppercase", letterSpacing: "1px",
+            letterSpacing: "1px",
           }}>
             {name}
           </span>
@@ -28,9 +28,9 @@ export default function DirectorCards({ directors }) {
             fontSize: "var(--fs-xs)", color: "rgba(255,255,255,0.5)",
             fontFamily: "var(--font-mono)", letterSpacing: "1px",
             background: "rgba(255,255,255,0.05)",
-            padding: "4px 8px", borderRadius: "2px",
+            padding: "4px 8px", borderRadius: "var(--radius-sm)",
           }}>
-            {count} FILM{count !== 1 ? "S" : ""}
+            {count} film{count !== 1 ? "s" : ""}
           </span>
         </div>
       ))}

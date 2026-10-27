@@ -13,24 +13,24 @@ function shuffleArray(arr, seed) {
 
 const CAT_CONFIG = {
   rating: {
-    label: "PUNTUACIÓN",
-    unit: "ESTRELLAS",
+    label: "Puntuación",
+    unit: "Estrellas",
     color: "#00e5ff",
     title: "Aclamación Mundial",
     desc: "Adivina si la siguiente película tiene una calificación mayor o menor.",
     sub: "Basado en la puntuación promedio mundial de TMDB.",
   },
   popularity: {
-    label: "POPULARIDAD",
-    unit: "PUNTOS",
+    label: "Popularidad",
+    unit: "Puntos",
     color: "#e81cff",
     title: "Fiebre de Taquilla",
     desc: "Adivina qué película es o fue más popular.",
     sub: "Basado en el índice de tendencias actual de TMDB.",
   },
   year: {
-    label: "AÑO",
-    unit: "ESTRENO",
+    label: "Año",
+    unit: "Estreno",
     color: "#4ade80",
     title: "Línea de Tiempo",
     desc: "Adivina qué película se estrenó más recientemente (Higher = Más Nueva).",
@@ -69,7 +69,7 @@ const cardStyle = {
   height: "min(55vh, 46vw)",
   maxHeight: "400px",
   aspectRatio: "2/3",
-  borderRadius: "4px",
+  borderRadius: "var(--radius-lg)",
   overflow: "hidden",
   border: "1px solid rgba(255,255,255,0.1)",
   boxShadow: "0 10px 40px rgba(0,0,0,0.8)",
@@ -142,7 +142,7 @@ function GuessControls({ disabled, onGuess }) {
         </svg>
       </button>
 
-      <div className="rd-hlg-vs">VS</div>
+      <div className="rd-hlg-vs" aria-hidden="true">VS</div>
 
       <button
         onClick={() => onGuess("lower")}
@@ -216,15 +216,18 @@ function GameHeader({ category, streak, onCategoryChange }) {
             flexShrink: 0,
             textAlign: "right",
           }}>
-          STREAK: {streak}
+          Streak: {streak}
         </div>
       </div>
 
-      <div style={{ display: "flex", flexWrap: "wrap", gap: "10px", justifyContent: "center" }}>
+      <div
+        role="group"
+        aria-label="Categoría"
+        style={{ display: "flex", flexWrap: "wrap", gap: "10px", justifyContent: "center" }}>
         {[
-          { id: "rating", label: "RATING", icon: "⭐" },
-          { id: "popularity", label: "POPULARIDAD", icon: "🔥" },
-          { id: "year", label: "AÑO", icon: "📅" },
+          { id: "rating", label: "Rating", icon: "⭐" },
+          { id: "popularity", label: "Popularidad", icon: "🔥" },
+          { id: "year", label: "Año", icon: "📅" },
         ].map((cat) => (
           <button
             key={cat.id}
@@ -232,6 +235,7 @@ function GameHeader({ category, streak, onCategoryChange }) {
               onCategoryChange(cat.id)
             }}
             type="button"
+            aria-pressed={category === cat.id}
             style={{
               background:
                 category === cat.id
@@ -244,7 +248,7 @@ function GameHeader({ category, streak, onCategoryChange }) {
                   ? `1px solid ${CAT_CONFIG[cat.id].color}`
                   : "1px solid rgba(255,255,255,0.1)",
               padding: "8px clamp(12px, 4vw, 24px)",
-              borderRadius: "4px",
+              borderRadius: "var(--radius-md)",
               cursor: "pointer",
               fontWeight: "bold",
               fontSize: "var(--fs-xs)",
@@ -301,11 +305,11 @@ function GamePlayArea({
               color: "#000",
               padding: "15px 30px",
               border: "none",
-              borderRadius: "4px",
+              borderRadius: "var(--radius-md)",
               cursor: "pointer",
               fontWeight: "bold",
             }}>
-            REINTENTAR
+            Reintentar
           </button>
         </div>
       ) : (
@@ -314,7 +318,7 @@ function GamePlayArea({
             <div style={cardStyle}>
               <img
                 src={movieA.poster}
-                alt={movieA.title}
+                alt=""
                 loading="lazy"
                 decoding="async"
                 style={imgStyle}
@@ -339,7 +343,7 @@ function GamePlayArea({
             <div style={cardStyle}>
               <img
                 src={movieB.poster}
-                alt={movieB.title}
+                alt=""
                 loading="lazy"
                 decoding="async"
                 style={{
@@ -353,7 +357,12 @@ function GamePlayArea({
 
               <div style={labelStyle(CAT_CONFIG[category].color)}>
                 <div style={{ fontSize: "clamp(2rem, 9vw, 3.5rem)", lineHeight: 1 }}>
-                  {feedback ? movieB.metrics[category] : "?"}
+                  {feedback ? movieB.metrics[category] : (
+                    <>
+                      <span aria-hidden="true">?</span>
+                      <span className="rd-sr-only">Valor oculto</span>
+                    </>
+                  )}
                 </div>
                 <div style={{ fontSize: "var(--fs-sm)", opacity: 0.9 }}>
                   {CAT_CONFIG[category].unit}
@@ -362,6 +371,7 @@ function GamePlayArea({
 
               {feedback && (
                 <div
+                  aria-hidden="true"
                   style={{
                     position: "absolute",
                     inset: 0,
@@ -438,6 +448,8 @@ export default function HighLowGame({ movies, loading }) {
     if (!movieA || !movieB) return
     const onKey = (e) => {
       if (e.key !== "ArrowUp" && e.key !== "ArrowDown") return
+      // No secuestrar las flechas dentro de campos de texto.
+      if (e.target.closest?.("input, textarea, select")) return
       e.preventDefault()
       handleGuess(e.key === "ArrowUp" ? "higher" : "lower")
     }
@@ -452,6 +464,16 @@ export default function HighLowGame({ movies, loading }) {
 
   return (
     <section className="rd-page rd-hlg" aria-label="Higher or Lower">
+      <p className="rd-sr-only" role="status" aria-live="polite">
+        {state.gameOver
+          ? `Fin del juego. Racha final: ${state.streak}.`
+          : state.feedback === "correct"
+            ? `Correcto. ${movieB?.title}: ${movieB?.metrics[category]}. Racha: ${state.streak}.`
+            : state.feedback === "wrong"
+              ? `Incorrecto. ${movieB?.title}: ${movieB?.metrics[category]}.`
+              : ""}
+      </p>
+
       <GameHeader
         category={category}
         streak={state.streak}

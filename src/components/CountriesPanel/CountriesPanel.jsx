@@ -13,40 +13,38 @@ export default function CountriesPanel({ countries, loading }) {
   const hasData = topCountryCodes.length > 0
 
   return (
-    <div style={{
+    <section aria-labelledby="rd-panel-paises" style={{
       margin: "0 var(--gutter) 40px", border: "1px solid rgba(255,255,255,0.07)",
-      borderRadius: "4px", background: "rgba(255,255,255,0.02)", overflow: "hidden",
+      borderRadius: "var(--radius-lg)", background: "rgba(255,255,255,0.02)", overflow: "hidden",
     }}>
       <div style={{
         padding: "16px 24px", borderBottom: "1px solid rgba(255,255,255,0.06)",
         display: "flex", alignItems: "center", justifyContent: "space-between",
         flexWrap: "wrap", gap: "12px",
       }}>
-        <div style={{
-          fontFamily: "var(--font-display)", fontSize: "var(--fs-2xl)",
-          letterSpacing: "2px", color: "#F0EDE5", lineHeight: 1,
-        }}>
+        <h2 id="rd-panel-paises" className="rd-panel-title">
           TOP PAÍSES
-        </div>
+        </h2>
         {hasData && !loading && (
-          <div style={{
+          <div role="group" aria-label="Vista de países" style={{
             display: "flex", flexWrap: "wrap", gap: "4px", background: "rgba(0,0,0,0.3)",
-            borderRadius: "3px", padding: "3px",
+            borderRadius: "var(--radius-md)", padding: "3px",
             border: "1px solid rgba(255,255,255,0.07)",
           }}>
             {[
-              { key: "list", label: "DATALOG" },
-              { key: "nodes", label: "SECTORES" },
+              { key: "list", label: "Datalog" },
+              { key: "nodes", label: "Sectores" },
             ].map(({ key, label }) => (
               <button
                 key={key}
                 onClick={() => setViewMode(key)}
                 type="button"
+                aria-pressed={viewMode === key}
                 style={{
                   background: viewMode === key ? "rgba(255,255,255,0.08)" : "transparent",
                   border: viewMode === key ? "1px solid rgba(255,255,255,0.2)" : "1px solid transparent",
-                  color: viewMode === key ? "#F0EDE5" : "rgba(255,255,255,0.3)",
-                  padding: "5px 12px", borderRadius: "2px", cursor: "pointer",
+                  color: viewMode === key ? "#F0EDE5" : "rgba(255,255,255,0.55)",
+                  padding: "5px 12px", borderRadius: "var(--radius-sm)", cursor: "pointer",
                   fontSize: "var(--fs-xs)", fontFamily: "var(--font-mono)",
                   letterSpacing: "1.5px", transition: "background 0.2s, border-color 0.2s, color 0.2s",
                 }}>
@@ -67,13 +65,13 @@ export default function CountriesPanel({ countries, loading }) {
         {!loading && !hasData && (
           <div style={{
             textAlign: "center", fontSize: "var(--fs-xs)",
-            color: "rgba(255,255,255,0.2)", marginTop: "20px",
+            color: "rgba(255,255,255,0.55)", marginTop: "20px",
             fontFamily: "var(--font-mono)",
           }}>
             Sin datos de origen disponibles
           </div>
         )}
       </div>
-    </div>
+    </section>
   )
 }

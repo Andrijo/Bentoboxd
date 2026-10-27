@@ -14,7 +14,7 @@ export default function DirectorOrbit({ directors }) {
         <circle cx={cx} cy={cy} r={8} fill="#ffffff" opacity={0.8} />
         <text x={cx} y={cy + 4} textAnchor="middle" fontSize="6"
           style={{ fontFamily: "var(--font-mono)" }} fill="#000" fontWeight="bold">
-          TÚ
+          Tú
         </text>
 
         {topDirectors.map(([name, count], i) => {
@@ -41,7 +41,7 @@ export default function DirectorOrbit({ directors }) {
               <text x={x + (x > cx ? 12 : -12)} y={y + 10}
                 textAnchor={x > cx ? "start" : "end"} fontSize="6"
                 fill={color} style={{ fontFamily: "var(--font-mono)" }}>
-                {count} FILMS
+                {count} films
               </text>
             </g>
           )

@@ -22,7 +22,15 @@ export default function MatrixChart({ genres }) {
       width: "100%", maxWidth: "340px", display: "flex",
       flexDirection: "column", alignItems: "center", gap: "24px",
     }}>
-      <div style={{
+      <ul className="rd-sr-only">
+        {sortedGenres.map((genre) => (
+          <li key={genre}>
+            {genre}: {genres[genre]} ({((genres[genre] / totalNodes) * 100).toFixed(1)}%)
+          </li>
+        ))}
+      </ul>
+
+      <div aria-hidden="true" style={{
         display: "flex", flexWrap: "wrap", gap: "4px",
         justifyContent: "center", alignContent: "flex-start",
       }}>
@@ -58,7 +66,7 @@ export default function MatrixChart({ genres }) {
         })}
       </div>
 
-      <div style={{
+      <div aria-hidden="true" style={{
         height: "50px", display: "flex", flexDirection: "column",
         alignItems: "center", justifyContent: "center",
       }}>
@@ -68,22 +76,22 @@ export default function MatrixChart({ genres }) {
               fontSize: "var(--fs-md)", fontFamily: "var(--font-display)",
               color: GENRE_CONFIG[hoveredGenre].color, letterSpacing: "2px",
             }}>
-              {GENRE_CONFIG[hoveredGenre].icon} {hoveredGenre}
+              {hoveredGenre}
             </div>
             <div style={{
               fontSize: "var(--fs-xs)", fontFamily: "var(--font-mono)",
               color: "rgba(255,255,255,0.5)",
             }}>
-              {genres[hoveredGenre]} NODOS DETECTADOS (
+              {genres[hoveredGenre]} nodos detectados (
               {((genres[hoveredGenre] / totalNodes) * 100).toFixed(1)}%)
             </div>
           </>
         ) : (
           <div style={{
               fontSize: "var(--fs-xs)", fontFamily: "var(--font-mono)",
-              color: "rgba(255,255,255,0.2)", letterSpacing: "2px",
+              color: "rgba(255,255,255,0.55)", letterSpacing: "2px",
           }}>
-            [ PASE EL CURSOR PARA ANALIZAR NODOS ]
+            [ Pase el cursor para analizar nodos ]
           </div>
         )}
       </div>

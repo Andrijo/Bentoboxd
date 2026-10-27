@@ -8,6 +8,8 @@ export default function StarRating({ rating }) {
   }
   return (
     <span
+      role="img"
+      aria-label={`${rating} de 5 estrellas`}
       style={{ color: "#00e5ff", fontSize: "var(--fs-xs)", letterSpacing: "1px" }}>
       {stars.join("")}
     </span>

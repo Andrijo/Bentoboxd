@@ -1,6 +1,11 @@
 export default function SearchSection({ url, loading, onUrlChange, onFetch }) {
   return (
-    <div
+    <form
+      role="search"
+      onSubmit={(e) => {
+        e.preventDefault()
+        onFetch()
+      }}
       style={{
         padding: "32px var(--gutter)",
         display: "flex",
@@ -9,19 +14,23 @@ export default function SearchSection({ url, loading, onUrlChange, onFetch }) {
         flexWrap: "wrap",
         borderBottom: "1px solid rgba(255,255,255,0.04)",
       }}>
+      <label htmlFor="rd-profile-input" className="rd-sr-only">
+        Usuario o URL de perfil de Letterboxd
+      </label>
       <input
+        id="rd-profile-input"
         type="text"
         value={url}
         onChange={(e) => onUrlChange(e.target.value)}
-        onKeyDown={(e) => e.key === "Enter" && onFetch()}
+        autoComplete="off"
+        spellCheck={false}
         placeholder="letterboxd.com/username o solo el username"
         className="rd-search-input"
       />
 
       <button
-        onClick={onFetch}
         disabled={loading}
-        type="button"
+        type="submit"
         className="rd-search-btn"
         style={{
           background: loading
@@ -33,6 +42,6 @@ export default function SearchSection({ url, loading, onUrlChange, onFetch }) {
         }}>
         {loading ? "Cargando..." : "Generar"}
       </button>
-    </div>
+    </form>
   )
 }

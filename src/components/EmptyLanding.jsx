@@ -11,19 +11,18 @@ export default function EmptyLanding({
 
   return (
     <div style={{ padding: "30px var(--gutter)", textAlign: "center" }}>
-      <div style={{ fontSize: "4rem", marginBottom: "16px", opacity: 0.3 }}>
+      <div aria-hidden="true" style={{ fontSize: "4rem", marginBottom: "16px", opacity: 0.3 }}>
         🎞
       </div>
-      <div
+      <p
         style={{
           fontSize: "var(--fs-2xs)",
           letterSpacing: "3px",
-          textTransform: "uppercase",
           color: "#E5E5E5",
           marginBottom: "20px",
         }}>
         Ingresa un usuario de Letterboxd para comenzar
-      </div>
+      </p>
 
       <RecentProfiles profiles={recentProfiles} onSelect={onProfileSelect} />
     </div>

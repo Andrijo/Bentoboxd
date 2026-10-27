@@ -13,9 +13,9 @@ export default function GenrePanel({ genres, movieCount, loadingGenres, genreErr
   const hasData = total > 0
 
   return (
-    <div style={{
+    <section aria-labelledby="rd-panel-generos" style={{
       margin: "0 var(--gutter) 40px", border: "1px solid rgba(255,255,255,0.07)",
-      borderRadius: "4px", background: "rgba(255,255,255,0.02)", overflow: "hidden",
+      borderRadius: "var(--radius-lg)", background: "rgba(255,255,255,0.02)", overflow: "hidden",
     }}>
       <div style={{
         padding: "16px 24px", borderBottom: "1px solid rgba(255,255,255,0.06)",
@@ -23,17 +23,14 @@ export default function GenrePanel({ genres, movieCount, loadingGenres, genreErr
         flexWrap: "wrap", gap: "12px",
       }}>
         <div>
-          <div style={{
-            fontFamily: "var(--font-display)", fontSize: "var(--fs-2xl)",
-            letterSpacing: "2px", color: "#F0EDE5", lineHeight: 1,
-          }}>
+          <h2 id="rd-panel-generos" className="rd-panel-title">
             TOP GÉNEROS
-          </div>
+          </h2>
           {hasData && (
             <div style={{
-              fontSize: "var(--fs-2xs)", color: "rgba(255,255,255,0.25)",
+              fontSize: "var(--fs-2xs)", color: "rgba(255,255,255,0.55)",
               letterSpacing: "2px", marginTop: "4px",
-              fontFamily: "var(--font-mono)", textTransform: "uppercase",
+              fontFamily: "var(--font-mono)",
             }}>
               Clasificado por TMDB — {movieCount ?? total} películas · {total} géneros
             </div>
@@ -41,29 +38,30 @@ export default function GenrePanel({ genres, movieCount, loadingGenres, genreErr
         </div>
 
         {hasData && (
-          <div style={{
+          <div role="group" aria-label="Tipo de gráfico" style={{
             display: "flex", flexWrap: "wrap", gap: "4px", background: "rgba(0,0,0,0.3)",
-            borderRadius: "3px", padding: "3px",
+            borderRadius: "var(--radius-md)", padding: "3px",
             border: "1px solid rgba(255,255,255,0.07)",
           }}>
             {[
-              { key: "donut", label: "PASTEL" },
-              { key: "radar", label: "RADAR" },
-              { key: "bar", label: "BARRAS" },
-              { key: "matrix", label: "MATRIZ" },
-              { key: "gauges", label: "HUB" },
+              { key: "donut", label: "Pastel" },
+              { key: "radar", label: "Radar" },
+              { key: "bar", label: "Barras" },
+              { key: "matrix", label: "Matriz" },
+              { key: "gauges", label: "Hub" },
             ].map(({ key, label }) => (
               <button
                 key={key}
                 onClick={() => setChartType(key)}
                 type="button"
+                aria-pressed={chartType === key}
                 style={{
                   background: chartType === key ? "rgba(255,255,255,0.08)" : "transparent",
                   border: chartType === key
                     ? "1px solid rgba(255,255,255,0.2)"
                     : "1px solid transparent",
-                  color: chartType === key ? "#F0EDE5" : "rgba(255,255,255,0.3)",
-                  padding: "5px 12px", borderRadius: "2px", cursor: "pointer",
+                  color: chartType === key ? "#F0EDE5" : "rgba(255,255,255,0.55)",
+                  padding: "5px 12px", borderRadius: "var(--radius-sm)", cursor: "pointer",
                   fontSize: "var(--fs-xs)", fontFamily: "var(--font-mono)",
                   letterSpacing: "1.5px", transition: "background 0.2s, border-color 0.2s, color 0.2s",
                 }}>
@@ -102,13 +100,13 @@ export default function GenrePanel({ genres, movieCount, loadingGenres, genreErr
 
         {!loadingGenres && !genreError && !hasData && (
           <div style={{
-            fontSize: "var(--fs-xs)", color: "rgba(255,255,255,0.2)",
+            fontSize: "var(--fs-xs)", color: "rgba(255,255,255,0.55)",
             letterSpacing: "2px", fontFamily: "var(--font-mono)",
           }}>
             Sin datos de géneros disponibles
           </div>
         )}
       </div>
-    </div>
+    </section>
   )
 }
