@@ -4,6 +4,7 @@ import StarRating from "./StarRating.jsx"
 import PosterImage from "./PosterImage.jsx"
 import { generateBentoLayout, VISIBLE_MOVIES } from "./BentoGrid/bentoPatterns.js"
 import { useGridColumns } from "../hooks/useGridColumns.js"
+import { formatWatchedDate } from "../utils/formatters.js"
 
 const VIEW_OPTIONS = [
   { key: "bento", label: "Bento" },
@@ -194,11 +195,33 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                         color: "rgba(255,255,255,0.55)",
                         fontFamily: "var(--font-mono)",
                       }}>
-                      Año: {movie.year}
+                      {movie.year}
                     </span>
                   )}
                   <StarRating rating={movie.rating} />
+                  {movie.liked && (
+                    <span role="img" aria-label="Me gusta" style={{ color: "#ff8000", fontSize: "var(--fs-xs)" }}>
+                      ♥
+                    </span>
+                  )}
+                  {movie.rewatch && (
+                    <span style={{
+                      fontSize: "var(--fs-2xs)", letterSpacing: "1px",
+                      color: "rgba(0,229,255,0.8)", border: "1px solid rgba(0,229,255,0.3)",
+                      borderRadius: "var(--radius-sm)", padding: "1px 6px",
+                    }}>
+                      Revisión
+                    </span>
+                  )}
                 </div>
+                {formatWatchedDate(movie.watchedDate) && (
+                  <div style={{
+                    marginTop: "4px", fontSize: "var(--fs-xs)",
+                    color: "rgba(255,255,255,0.5)", fontFamily: "var(--font-mono)",
+                  }}>
+                    Vista el {formatWatchedDate(movie.watchedDate)}
+                  </div>
+                )}
               </div>
 
               <div

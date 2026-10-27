@@ -95,6 +95,7 @@ export function useLetterboxdFeed() {
         }
 
         const yearNode = letterboxdField(item, "filmYear")
+        const field = (name) => letterboxdField(item, name)?.textContent?.trim() || null
 
         return {
           title,
@@ -102,6 +103,9 @@ export function useLetterboxdFeed() {
           poster: extractPoster(description),
           rating: movieRating,
           year: yearNode ? yearNode.textContent : null,
+          watchedDate: field("watchedDate"),
+          liked: field("memberLike") === "Yes",
+          rewatch: field("rewatch") === "Yes",
         }
       })
 

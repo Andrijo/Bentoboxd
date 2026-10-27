@@ -22,10 +22,10 @@ const CAT_CONFIG = {
   },
   popularity: {
     label: "Popularidad",
-    unit: "Puntos",
+    unit: "Índice TMDB",
     color: "#e81cff",
-    title: "Fiebre de Taquilla",
-    desc: "Adivina qué película es o fue más popular.",
+    title: "En Tendencia",
+    desc: "Adivina qué película es más popular hoy en TMDB.",
     sub: "Basado en el índice de tendencias actual de TMDB.",
   },
   year: {
@@ -216,7 +216,7 @@ function GameHeader({ category, streak, onCategoryChange }) {
             flexShrink: 0,
             textAlign: "right",
           }}>
-          Streak: {streak}
+          Racha: {streak}
         </div>
       </div>
 

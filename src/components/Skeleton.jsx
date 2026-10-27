@@ -1,12 +1,6 @@
 import { useMemo } from "react"
-import { generateBentoLayout, VISIBLE_MOVIES } from "./BentoGrid/bentoPatterns.js"
+import { generateBentoLayout, TILE_SPANS, VISIBLE_MOVIES } from "./BentoGrid/bentoPatterns.js"
 import { useGridColumns } from "../hooks/useGridColumns.js"
-
-const SIZES = {
-  1: { gridColumn: "span 1", gridRow: "span 1" },
-  2: { gridColumn: "span 2", gridRow: "span 1" },
-  3: { gridColumn: "span 2", gridRow: "span 2" },
-}
 
 export function Skeleton({ width = "100%", height = "12px", radius = "4px", style }) {
   return (
@@ -53,7 +47,7 @@ export function BentoSkeleton() {
           <Skeleton
             key={i}
             height="100%"
-            style={SIZES[layout.sizes[i] || 1]}
+            style={TILE_SPANS[layout.sizes[i] || 1]}
           />
         ))}
       </div>

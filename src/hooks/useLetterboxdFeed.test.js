@@ -12,6 +12,9 @@ const RSS = `<?xml version="1.0" encoding="UTF-8"?>
       <letterboxd:filmTitle>Inception</letterboxd:filmTitle>
       <letterboxd:filmYear>2010</letterboxd:filmYear>
       <letterboxd:memberRating>4.5</letterboxd:memberRating>
+      <letterboxd:watchedDate>2024-05-12</letterboxd:watchedDate>
+      <letterboxd:rewatch>Yes</letterboxd:rewatch>
+      <letterboxd:memberLike>Yes</letterboxd:memberLike>
     </item>
     <item>
       <title>Dune, 2021</title>
@@ -68,11 +71,17 @@ describe("useLetterboxdFeed", () => {
       poster: "https://a.ltrbxd.com/inception.jpg",
       rating: 4.5,
       year: "2010",
+      watchedDate: "2024-05-12",
+      liked: true,
+      rewatch: true,
     })
     expect(result.current.movies[1]).toMatchObject({
       title: "Dune",
       rating: null,
       year: "2021",
+      watchedDate: null,
+      liked: false,
+      rewatch: false,
     })
   })
 

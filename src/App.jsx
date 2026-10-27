@@ -13,9 +13,11 @@ import { useTMDBMetadata } from "./hooks/useTMDBMetadata.js"
 import { useHashRoute } from "./hooks/useHashRoute.js"
 import { useOverscrollColor } from "./hooks/useOverscrollColor.js"
 import { parseUsername } from "./services/letterboxd.js"
+import { readProfileParam, writeProfileParam } from "./utils/profileUrl.js"
 
 export default function App() {
-  const [url, setUrl] = useState("")
+  // Con un enlace compartido (?user=) el buscador arranca con ese usuario.
+  const [url, setUrl] = useState(() => readProfileParam() || "")
   const [movieViewMode, setMovieViewMode] = useState("bento")
   const [recentProfiles, setRecentProfiles] = useState(() => {
     try {
@@ -84,6 +86,8 @@ export default function App() {
       setRecentProfiles((prev) =>
         [user, ...prev.filter((p) => p !== user)].slice(0, 3),
       )
+      // También solo entonces va a la URL, para poder compartirla o recargar.
+      writeProfileParam(user)
 
       const metadata = await fetchMetadata(
         parsed.map((m) => ({ title: m.title, year: m.year })),
@@ -121,13 +125,56 @@ export default function App() {
     [url, fetchFeed, fetchMetadata, resetMetadata, setMovies],
   )
 
-  const resetToStart = useCallback(() => {
+  const clearProfile = useCallback(() => {
     requestIdRef.current += 1
     setUrl("")
-    navigate("profile")
     resetFeed()
     resetMetadata()
-  }, [navigate, resetFeed, resetMetadata])
+  }, [resetFeed, resetMetadata])
+
+  const resetToStart = useCallback(() => {
+    navigate("profile")
+    // navigate conserva el query; aquí el usuario sobra.
+    writeProfileParam(null, { replace: true })
+    clearProfile()
+  }, [navigate, clearProfile])
+
+  // Los efectos de abajo siempre usan la última versión sin re-suscribirse.
+  const handleFetchRef = useRef(handleFetch)
+  const usernameRef = useRef(username)
+  useEffect(() => {
+    handleFetchRef.current = handleFetch
+    usernameRef.current = username
+  })
+
+  // Carga el perfil de la URL (enlace compartido o recarga, incluso en #quiz).
+  useEffect(() => {
+    const user = readProfileParam()
+    if (user) handleFetchRef.current(user)
+  }, [])
+
+  // Atrás/adelante entre perfiles: solo cambia algo si cambió el usuario,
+  // no al moverse entre pestañas del mismo perfil.
+  useEffect(() => {
+    const sync = () => {
+      const user = readProfileParam()
+      if (user === usernameRef.current) return
+      if (!user) {
+        clearProfile()
+        return
+      }
+      setUrl(user)
+      handleFetchRef.current(user)
+    }
+    window.addEventListener("popstate", sync)
+    return () => window.removeEventListener("popstate", sync)
+  }, [clearProfile])
+
+  useEffect(() => {
+    document.title = username && movies.length > 0
+      ? `@${username} — Bentoboxd`
+      : "Bentoboxd — Tu Letterboxd en un dashboard"
+  }, [username, movies.length])
 
   const showGenrePanel = movies.length > 0 || metaLoading
   // Sin feed cargado (p. ej. al recargar en #quiz) solo existe el perfil.
@@ -188,7 +235,9 @@ export default function App() {
         ::-webkit-scrollbar { width: 4px; }
         ::-webkit-scrollbar-track { background: #050505; }
         ::-webkit-scrollbar-thumb { background: rgba(0,229,255,0.3); border-radius: 2px; }
-        .rd-error-box { margin: 24px var(--gutter); padding: 14px 20px; border: 1px solid rgba(255,80,80,0.3); border-radius: var(--radius-md); background: rgba(255,80,80,0.05); color: rgba(255,80,80,0.8); font-size: 0.75rem; letter-spacing: 1px; }
+        .rd-error-box { margin: 24px var(--gutter); padding: 14px 20px; border: 1px solid rgba(255,80,80,0.3); border-radius: var(--radius-md); background: rgba(255,80,80,0.05); color: rgba(255,80,80,0.8); font-size: 0.75rem; letter-spacing: 1px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 12px; }
+        .rd-error-retry { background: none; border: 1px solid rgba(255,80,80,0.4); border-radius: var(--radius-sm); color: inherit; padding: 6px 14px; font-size: var(--fs-xs); letter-spacing: 1px; cursor: pointer; transition: background 0.2s; }
+        .rd-error-retry:hover { background: rgba(255,80,80,0.1); }
         .rd-header-bar { padding: clamp(24px, 6vw, 48px) var(--gutter) 32px; border-bottom: 1px solid rgba(255,255,255,0.06); position: relative; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
         .rd-header-title { font-family: var(--font-display); letter-spacing: 2px; line-height: 1; margin: 0; cursor: pointer; background: linear-gradient(135deg, #f8f9fa 0%, rgba(255,255,255,0.5) 100%); -webkit-background-clip: text; -webkit-text-fill-color: transparent; }
         .rd-page { padding: 32px var(--gutter) 48px; animation: fadeSlideIn 0.3s ease both; }
@@ -207,13 +256,16 @@ export default function App() {
         .rd-search-btn { padding: 12px 28px; border-radius: var(--radius-md); font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 2px; transition: all 0.2s; width: 160px; text-align: center; }
         @media (max-width: 640px) {
           .rd-header-actions { width: 100%; }
+          /* Las 3 pestañas en una fila aun a 360px ("Higher or Lower" es la más larga). */
+          .rd-tab { padding: 8px 10px !important; letter-spacing: 1px !important; flex-basis: auto !important; }
           .rd-search-btn { width: 100%; }
           .rd-timeline-row { gap: 12px; padding: 10px; }
           .rd-timeline-index { display: none; }
           .rd-terminal-box { padding: 16px; }
-          /* Selectores: caja a todo el ancho y 3 opciones por fila que la llenan. */
-          .rd-segmented { display: grid !important; grid-template-columns: repeat(3, 1fr); width: 100%; margin: 0 auto; }
-          .rd-segmented > button { width: 100%; text-align: center; justify-content: center; }
+          /* Selectores: caja a todo el ancho, hasta 3 opciones por fila; las de
+             una fila incompleta se estiran para no dejar celdas vacías. */
+          .rd-segmented { display: flex !important; width: 100%; margin: 0 auto; }
+          .rd-segmented > button { flex: 1 1 30%; text-align: center; justify-content: center; }
         }
       `}</style>
 
@@ -247,7 +299,10 @@ export default function App() {
 
         {error && (
           <div className="rd-error-box" role="alert">
-            ⚠ {error}
+            <span>⚠ {error}</span>
+            <button type="button" className="rd-error-retry" onClick={() => handleFetch(url)}>
+              Reintentar
+            </button>
           </div>
         )}
 

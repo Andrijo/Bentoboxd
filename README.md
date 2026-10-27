@@ -20,7 +20,7 @@ Nace como un experimento personal para explorar visualización de datos, integra
 
 - **Feed RSS de Letterboxd** — Ingresa un nombre de usuario o URL y obtén sus últimas 50 películas vistas (las listas del feed se ignoran). Las vistas muestran las 20 más recientes; las estadísticas y los juegos usan las 50
 - **3 modos de visualización:**
-  - **Bento** — Cuadrícula dinámica con 10 patrones aleatorios
+  - **Bento** — Cuadrícula dinámica sin huecos con tarjetas 1x1, 2x1, 1x2 y 2x2
   - **Timeline** — Línea de tiempo cronológica con pósters y calificaciones
   - **Terminal** — Listado estilo terminal retro
 - **Paneles de análisis:**
@@ -35,6 +35,7 @@ Nace como un experimento personal para explorar visualización de datos, integra
 - **Skeleton loading** mientras cargan el feed y los metadatos de TMDB
 - **Diseño responsive** con layout adaptado a móvil
 - **Accesibilidad** — Etiquetas ARIA, anuncios en vivo para los juegos y enlaces externos señalados para lectores de pantalla
+- **Enlaces compartibles** — El perfil va en la URL (`?user=<usuario>`, combinable con `#quiz` o `#higher-lower`): se puede compartir, recargar y navegar con atrás/adelante entre perfiles
 - **Persistencia** — Últimos 3 perfiles guardados en localStorage
 
 ## Stack

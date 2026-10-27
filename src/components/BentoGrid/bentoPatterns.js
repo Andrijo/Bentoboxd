@@ -1,10 +1,11 @@
 // Generación de layouts tipo "bento" que cubren el rectángulo de la cuadrícula
 // por completo (sin celdas vacías).
 //
-// Tamaños de tarjeta (ver MovieCard.SIZES):
+// Tamaños de tarjeta (ver TILE_SPANS):
 //   1 -> 1x1   (1 columna, 1 fila)
 //   2 -> 2x1   (2 columnas, 1 fila)
 //   3 -> 2x2   (2 columnas, 2 filas)
+//   4 -> 1x2   (1 columna, 2 filas: la proporción del póster)
 //
 // El algoritmo busca, por backtracking, un conjunto de `count` fichas cuyo
 // número de filas elegimos para lograr una densidad agradable, de modo que el
@@ -18,9 +19,17 @@ const MAX_SEARCH_NODES = 50000
 // usan el feed completo.
 export const VISIBLE_MOVIES = 20
 
+/** Spans de CSS grid de cada tamaño (MovieCard y el skeleton). */
+export const TILE_SPANS = {
+  1: { gridColumn: "span 1", gridRow: "span 1" },
+  2: { gridColumn: "span 2", gridRow: "span 1" },
+  3: { gridColumn: "span 2", gridRow: "span 2" },
+  4: { gridColumn: "span 1", gridRow: "span 2" },
+}
+
 function tileSize(size) {
-  const width = size === 1 ? 1 : 2
-  const height = size === 3 ? 2 : 1
+  const width = size === 2 || size === 3 ? 2 : 1
+  const height = size === 3 || size === 4 ? 2 : 1
   return { width, height, area: width * height }
 }
 
@@ -50,7 +59,7 @@ function solve(columns, rows, count, budget) {
     if (!cell) return remaining === 0
     const [row, col] = cell
 
-    for (const size of shuffle([1, 2, 3])) {
+    for (const size of shuffle([1, 2, 3, 4])) {
       const { width, height, area } = tileSize(size)
       if (col + width > columns || row + height > rows) continue
 
@@ -84,12 +93,16 @@ function solve(columns, rows, count, budget) {
   return step(count, columns * rows) ? sizes.slice() : null
 }
 
-// Ordena las cantidades de filas posibles según lo cerca que estén de una
-// densidad objetivo (≈1.6 celdas por ficha), para que el layout no quede plano.
+// Celdas por ficha buscadas. Con menos (p. ej. 1.6) el área solo alcanza para
+// unas pocas fichas grandes y el resto tiene que ser 1x1.
+const TARGET_DENSITY = 2.2
+
+// Ordena las cantidades de filas posibles según lo cerca que estén de
+// TARGET_DENSITY, para que el layout no quede plano.
 function rankedRows(count, columns) {
   const minRows = Math.max(1, Math.ceil(count / columns))
   const maxRows = Math.max(1, Math.floor((4 * count) / columns))
-  const target = Math.round((1.6 * count) / columns)
+  const target = Math.round((TARGET_DENSITY * count) / columns)
 
   const rows = []
   for (let r = minRows; r <= maxRows; r++) rows.push(r)
@@ -116,32 +129,34 @@ function tileRows(columns, rows, sizes) {
 }
 
 // Puntúa qué tan "bento" se ve un layout: fichas grandes repartidas por toda
-// la altura (no amontonadas arriba) y pocas fichas anchas 2x1.
+// la altura (no amontonadas arriba), pocas 1x1 y pocas fichas anchas 2x1.
 function scoreLayout(columns, rows, sizes) {
   const positions = tileRows(columns, rows, sizes)
-  const rowsWithBig = new Set()
-  let big = 0
-  let wide = 0
+  // Filas que toca alguna ficha de 2 de alto (2x2 o 1x2): rompen la retícula.
+  const rowsWithTall = new Set()
+  const counts = { 1: 0, 2: 0, 3: 0, 4: 0 }
 
   sizes.forEach((size, i) => {
-    if (size === 3) {
-      big++
-      rowsWithBig.add(positions[i])
-      rowsWithBig.add(positions[i] + 1)
-    } else if (size === 2) {
-      wide++
+    counts[size]++
+    if (size === 3 || size === 4) {
+      rowsWithTall.add(positions[i])
+      rowsWithTall.add(positions[i] + 1)
     }
   })
 
-  // Una ficha grande por cada ~6 películas, y suficientes para tocar cada par
-  // de filas.
-  const targetBig = Math.max(1, Math.round(sizes.length / 6), Math.ceil(rows / 2))
-  const rowsWithoutBig = rows - rowsWithBig.size
+  // Mezcla buscada (≈2.2 celdas por ficha, ver TARGET_DENSITY): una 2x2 por
+  // cada ~5 películas, a lo sumo ~30% de 1x1 y ~35% de 1x2.
+  const targetBig = Math.max(1, Math.round(sizes.length / 5))
+  const maxSmall = Math.round(sizes.length * 0.3)
+  const maxTall = Math.round(sizes.length * 0.35)
+  const rowsWithoutTall = rows - rowsWithTall.size
 
   return (
-    -3 * Math.abs(big - targetBig) -
-    2 * rowsWithoutBig -
-    Math.max(0, wide - big)
+    -3 * Math.abs(counts[3] - targetBig) -
+    2 * rowsWithoutTall -
+    2 * Math.max(0, counts[1] - maxSmall) -
+    2 * Math.max(0, counts[4] - maxTall) -
+    Math.max(0, counts[2] - counts[3] - counts[4])
   )
 }
 

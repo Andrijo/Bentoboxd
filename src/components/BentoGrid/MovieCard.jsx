@@ -1,12 +1,7 @@
 import { useState } from "react"
 import StarRating from "../StarRating.jsx"
 import PosterImage from "../PosterImage.jsx"
-
-const SIZES = {
-  1: { gridColumn: "span 1", gridRow: "span 1" },
-  2: { gridColumn: "span 2", gridRow: "span 1" },
-  3: { gridColumn: "span 2", gridRow: "span 2" },
-}
+import { TILE_SPANS } from "./bentoPatterns.js"
 
 export default function MovieCard({ movie, size, index }) {
   const [hovered, setHovered] = useState(false)
@@ -22,7 +17,7 @@ export default function MovieCard({ movie, size, index }) {
       onBlur={() => setHovered(false)}
       className="rd-movie-card"
       style={{
-        ...SIZES[size],
+        ...TILE_SPANS[size],
         border: hovered
           ? "1px solid rgba(0,229,255,0.5)"
           : "1px solid rgba(255,255,255,0.06)",
@@ -85,7 +80,7 @@ export default function MovieCard({ movie, size, index }) {
         <div
           style={{
             fontFamily: "var(--font-display)",
-            fontSize: size === 3 ? "var(--fs-xl)" : size === 2 ? "var(--fs-md)" : "var(--fs-base)",
+            fontSize: size === 3 ? "var(--fs-xl)" : size === 1 ? "var(--fs-base)" : "var(--fs-md)",
             color: "#F0EDE5",
             lineHeight: 1.1,
             letterSpacing: "0.5px",
