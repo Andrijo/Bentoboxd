@@ -26,7 +26,7 @@ export default function CountriesPanel({ countries, loading }) {
           TOP PAÍSES
         </h2>
         {hasData && !loading && (
-          <div role="group" aria-label="Vista de países" style={{
+          <div role="group" className="rd-segmented" aria-label="Vista de países" style={{
             display: "flex", flexWrap: "wrap", gap: "4px", background: "rgba(0,0,0,0.3)",
             borderRadius: "var(--radius-md)", padding: "3px",
             border: "1px solid rgba(255,255,255,0.07)",

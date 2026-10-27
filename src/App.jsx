@@ -211,6 +211,9 @@ export default function App() {
           .rd-timeline-row { gap: 12px; padding: 10px; }
           .rd-timeline-index { display: none; }
           .rd-terminal-box { padding: 16px; }
+          /* Selectores: caja a todo el ancho y 3 opciones por fila que la llenan. */
+          .rd-segmented { display: grid !important; grid-template-columns: repeat(3, 1fr); width: 100%; margin: 0 auto; }
+          .rd-segmented > button { width: 100%; text-align: center; justify-content: center; }
         }
       `}</style>
 

@@ -222,6 +222,7 @@ function GameHeader({ category, streak, onCategoryChange }) {
 
       <div
         role="group"
+        className="rd-segmented"
         aria-label="Categoría"
         style={{ display: "flex", flexWrap: "wrap", gap: "10px", justifyContent: "center" }}>
         {[

@@ -45,6 +45,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
 
         <div
           role="group"
+          className="rd-segmented"
           aria-label="Vista de películas"
           style={{
             display: "flex",

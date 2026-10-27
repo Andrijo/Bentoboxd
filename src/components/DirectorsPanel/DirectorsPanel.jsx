@@ -28,7 +28,7 @@ export default function DirectorsPanel({ directors, loading }) {
         </h2>
 
         {hasData && !loading && (
-          <div role="group" aria-label="Vista de directores" style={{
+          <div role="group" className="rd-segmented" aria-label="Vista de directores" style={{
             display: "flex", flexWrap: "wrap", gap: "4px", background: "rgba(0,0,0,0.3)",
             borderRadius: "var(--radius-md)", padding: "3px",
             border: "1px solid rgba(255,255,255,0.07)",
