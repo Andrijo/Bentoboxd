@@ -1,7 +1,7 @@
 const TABS = [
   { page: "profile", label: "Perfil", color: "219,213,202" },
   { page: "quiz", label: "Quiz", color: "0,229,255" },
-  { page: "higher-lower", label: "High or Low", color: "250,204,21" },
+  { page: "higher-lower", label: "Higher or Lower", color: "250,204,21" },
 ]
 
 const tabBase = {
@@ -68,6 +68,7 @@ export default function AppHeader({ page, showTabs, onNavigate, onReset }) {
                 onClick={() => onNavigate(tab)}
                 type="button"
                 aria-current={active ? "page" : undefined}
+                className="rd-tab"
                 style={{
                   ...tabBase,
                   background: `rgba(${color},${active ? 0.15 : 0.03})`,

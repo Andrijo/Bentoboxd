@@ -1,3 +1,5 @@
+import { formatMovieCount } from "../../utils/formatters.js"
+
 export default function DirectorCards({ directors }) {
   const topDirectors = Object.entries(directors || {})
     .sort((a, b) => b[1] - a[1])
@@ -30,7 +32,7 @@ export default function DirectorCards({ directors }) {
             background: "rgba(255,255,255,0.05)",
             padding: "4px 8px", borderRadius: "var(--radius-sm)",
           }}>
-            {count} film{count !== 1 ? "s" : ""}
+            {formatMovieCount(count)}
           </span>
         </div>
       ))}

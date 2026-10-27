@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { PanelSkeleton } from "../Skeleton.jsx"
+import { formatMovieCount } from "../../utils/formatters.js"
 
 export default function PlatformsPanel({ platformsData, movies, loading }) {
   const [selectedPlatform, setSelectedPlatform] = useState(null)
@@ -21,13 +22,23 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
         padding: "16px 24px", borderBottom: "1px solid rgba(255,255,255,0.06)",
         display: "flex", justifyContent: "space-between", alignItems: "center",
       }}>
-        <h2 id="rd-panel-streaming" className="rd-panel-title">
-          STREAMING
-        </h2>
+        <div>
+          <h2 id="rd-panel-streaming" className="rd-panel-title">
+            STREAMING
+          </h2>
+          {/* tmdb.js solo lee watch/providers de MX y de tipo flatrate. */}
+          <div style={{
+            fontSize: "var(--fs-2xs)", color: "rgba(255,255,255,0.55)",
+            letterSpacing: "2px", marginTop: "4px",
+          }}>
+            Disponible por suscripción en México
+          </div>
+        </div>
         {selectedPlatform && (
           <button onClick={() => setSelectedPlatform(null)} type="button" style={{
             background: "none", border: "1px solid rgba(255,255,255,0.2)", color: "#DBD5CA",
             fontSize: "var(--fs-xs)", padding: "4px 10px", cursor: "pointer",
+            borderRadius: "var(--radius-sm)",
           }}>
             <span aria-hidden="true">✕</span> Quitar filtro
           </button>
@@ -47,7 +58,7 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
                 <button key={name}
                   type="button"
                   aria-pressed={selectedPlatform === name}
-                  onClick={() => setSelectedPlatform(name)}
+                  onClick={() => setSelectedPlatform((p) => (p === name ? null : name))}
                   style={{
                     font: "inherit", color: "inherit", textAlign: "left",
                     display: "flex", alignItems: "center", gap: "12px",
@@ -63,7 +74,7 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
                     <div style={{ fontSize: "var(--fs-xs)", color: "#DBD5CA", fontWeight: "bold", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
                       {name}
                     </div>
-                    <div style={{ fontSize: "var(--fs-xs)", color: "rgba(255,255,255,0.5)" }}>{count} items</div>
+                    <div style={{ fontSize: "var(--fs-xs)", color: "rgba(255,255,255,0.5)" }}>{formatMovieCount(count)}</div>
                   </div>
                 </button>
               ))}
@@ -78,7 +89,7 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
                   fontSize: "var(--fs-xs)", color: "rgba(255,255,255,0.5)", letterSpacing: "2px",
                   marginBottom: "12px", borderBottom: "1px solid rgba(255,255,255,0.08)", paddingBottom: "8px",
                 }}>
-                  Mostrando archivos en: {selectedPlatform}
+                  Películas en {selectedPlatform}
                 </div>
                 <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                   {filteredMovies.map((m) => (

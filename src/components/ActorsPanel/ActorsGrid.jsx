@@ -1,3 +1,5 @@
+import { formatMovieCount } from "../../utils/formatters.js"
+
 export default function ActorsGrid({ actors }) {
   const topActors = Object.entries(actors || {})
     .sort((a, b) => b[1] - a[1])
@@ -28,7 +30,7 @@ export default function ActorsGrid({ actors }) {
                 {name}
               </div>
               <div style={{ fontSize: "var(--fs-xs)", color: "rgba(255,255,255,0.55)" }}>
-                {count} créditos detectados
+                {formatMovieCount(count)}
               </div>
             </div>
           </div>

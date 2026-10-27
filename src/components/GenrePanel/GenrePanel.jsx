@@ -5,12 +5,15 @@ import BarChart from "./BarChart.jsx"
 import MatrixChart from "./MatrixChart.jsx"
 import GaugesChart from "./GaugesChart.jsx"
 import { PanelSkeleton } from "../Skeleton.jsx"
+import { formatMovieCount } from "../../utils/formatters.js"
 
 export default function GenrePanel({ genres, movieCount, loadingGenres, genreError }) {
   const [chartType, setChartType] = useState("donut")
 
   const total = Object.values(genres || {}).reduce((a, b) => a + b, 0)
   const hasData = total > 0
+  // `total` suma etiquetas (una película tiene varias); aquí van los géneros distintos.
+  const genreCount = Object.values(genres || {}).filter((n) => n > 0).length
 
   return (
     <section aria-labelledby="rd-panel-generos" style={{
@@ -32,7 +35,7 @@ export default function GenrePanel({ genres, movieCount, loadingGenres, genreErr
               letterSpacing: "2px", marginTop: "4px",
               fontFamily: "var(--font-mono)",
             }}>
-              Clasificado por TMDB — {movieCount ?? total} películas · {total} géneros
+              Clasificado por TMDB — {formatMovieCount(movieCount)} · {genreCount} género{genreCount === 1 ? "" : "s"}
             </div>
           )}
         </div>
@@ -44,11 +47,11 @@ export default function GenrePanel({ genres, movieCount, loadingGenres, genreErr
             border: "1px solid rgba(255,255,255,0.07)",
           }}>
             {[
-              { key: "donut", label: "Pastel" },
+              { key: "donut", label: "Dona" },
               { key: "radar", label: "Radar" },
               { key: "bar", label: "Barras" },
               { key: "matrix", label: "Matriz" },
-              { key: "gauges", label: "Hub" },
+              { key: "gauges", label: "Medidores" },
             ].map(({ key, label }) => (
               <button
                 key={key}
