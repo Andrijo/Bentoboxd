@@ -14,6 +14,7 @@ export default function GenrePanel({ genres, movieCount, loadingGenres, genreErr
   const total = Object.values(genres || {}).reduce((a, b) => a + b, 0)
   const hasData = total > 0
   // `total` suma etiquetas (una película tiene varias); aquí van los géneros distintos.
+  const showList = chartType !== "donut" && chartType !== "bar"
   const genreCount = Object.values(genres || {}).filter((n) => n > 0).length
 
   return (
@@ -104,7 +105,7 @@ export default function GenrePanel({ genres, movieCount, loadingGenres, genreErr
           </div>
         )}
 
-        {!loadingGenres && !genreError && hasData && (
+        {!loadingGenres && !genreError && hasData && showList && (
           <GenreList genres={genres} />
         )}
 
