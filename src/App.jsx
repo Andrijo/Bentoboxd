@@ -216,6 +216,10 @@ export default function App() {
         .rd-skip-link:focus { position: absolute; left: var(--gutter); top: 12px; z-index: 100; padding: 10px 16px; border-radius: var(--radius-md); background: #00e5ff; color: #000; font-size: var(--fs-xs); letter-spacing: 1px; text-decoration: none; }
         .rd-footer { margin-top: 24px; padding: 32px var(--gutter) 40px; border-top: 1px solid rgba(255,255,255,0.06); display: flex; flex-direction: column; gap: 10px; font-size: var(--fs-xs); line-height: 1.6; color: rgba(255,255,255,0.6); }
         .rd-panel-title { font-family: var(--font-display); font-size: var(--fs-2xl); font-weight: normal; letter-spacing: 2px; color: #F0EDE5; line-height: 1; }
+        .rd-bento-panels { display: grid; grid-template-columns: minmax(0, 1fr); grid-template-areas: "stats" "genres" "platforms" "directors" "actors" "countries"; gap: 24px; margin: 0 var(--gutter) 40px; }
+        @media (min-width: 900px) {
+          .rd-bento-panels { grid-template-columns: repeat(2, minmax(0, 1fr)); grid-template-areas: "stats genres" "platforms genres" "directors actors" "countries countries"; }
+        }
         .rd-sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
         .rd-timeline-row:hover, .rd-timeline-row:focus-visible { background: rgba(0,229,255,0.05) !important; }
         .rd-hlg-controls { position: relative; flex-shrink: 0; width: clamp(64px, 18vw, 88px); aspect-ratio: 60 / 150; container-type: inline-size; }

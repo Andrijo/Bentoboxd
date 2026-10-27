@@ -15,7 +15,7 @@ export default function DirectorsPanel({ directors, loading }) {
 
   return (
     <section aria-labelledby="rd-panel-directores" style={{
-      margin: "0 var(--gutter) 40px", border: "1px solid rgba(255,255,255,0.07)",
+      gridArea: "directors", border: "1px solid rgba(255,255,255,0.07)",
       borderRadius: "var(--radius-lg)", background: "rgba(255,255,255,0.02)", overflow: "hidden",
     }}>
       <div style={{
