@@ -3,8 +3,6 @@ import CountryDatalog from "./CountryDatalog.jsx"
 import CountrySectors from "./CountrySectors.jsx"
 import { PanelSkeleton } from "../Skeleton.jsx"
 
-const themeColor = "#ff8c00"
-
 export default function CountriesPanel({ countries, loading }) {
   const [viewMode, setViewMode] = useState("list")
 
@@ -37,17 +35,17 @@ export default function CountriesPanel({ countries, loading }) {
             border: "1px solid rgba(255,255,255,0.07)",
           }}>
             {[
-              { key: "list", label: "≡ DATALOG" },
-              { key: "nodes", label: "◰ SECTORES" },
+              { key: "list", label: "DATALOG" },
+              { key: "nodes", label: "SECTORES" },
             ].map(({ key, label }) => (
               <button
                 key={key}
                 onClick={() => setViewMode(key)}
                 type="button"
                 style={{
-                  background: viewMode === key ? `${themeColor}20` : "transparent",
-                  border: viewMode === key ? `1px solid ${themeColor}50` : "1px solid transparent",
-                  color: viewMode === key ? themeColor : "rgba(255,255,255,0.3)",
+                  background: viewMode === key ? "rgba(255,255,255,0.08)" : "transparent",
+                  border: viewMode === key ? "1px solid rgba(255,255,255,0.2)" : "1px solid transparent",
+                  color: viewMode === key ? "#F0EDE5" : "rgba(255,255,255,0.3)",
                   padding: "5px 12px", borderRadius: "2px", cursor: "pointer",
                   fontSize: "var(--fs-xs)", fontFamily: "var(--font-mono)",
                   letterSpacing: "1.5px", transition: "background 0.2s, border-color 0.2s, color 0.2s",

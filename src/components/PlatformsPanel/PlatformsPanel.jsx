@@ -1,8 +1,6 @@
 import { useState } from "react"
 import { PanelSkeleton } from "../Skeleton.jsx"
 
-const themeColor = "#e81cff"
-
 export default function PlatformsPanel({ platformsData, movies, loading }) {
   const [selectedPlatform, setSelectedPlatform] = useState(null)
   const { counts, logos } = platformsData || { counts: {}, logos: {} }
@@ -28,7 +26,7 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
         </div>
         {selectedPlatform && (
           <button onClick={() => setSelectedPlatform(null)} type="button" style={{
-            background: "none", border: `1px solid ${themeColor}`, color: themeColor,
+            background: "none", border: "1px solid rgba(255,255,255,0.2)", color: "#DBD5CA",
             fontSize: "var(--fs-xs)", padding: "4px 10px", cursor: "pointer", textTransform: "uppercase",
           }}>
             ✕ Quitar filtro
@@ -59,19 +57,19 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
                   }}
                   style={{
                     display: "flex", alignItems: "center", gap: "12px",
-                    background: selectedPlatform === name ? `${themeColor}15` : "rgba(0,0,0,0.4)",
+                    background: selectedPlatform === name ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.4)",
                     padding: "10px", borderRadius: "4px",
-                    border: `1px solid ${selectedPlatform === name ? themeColor : "rgba(255,255,255,0.05)"}`,
+                    border: `1px solid ${selectedPlatform === name ? "rgba(255,255,255,0.3)" : "rgba(255,255,255,0.05)"}`,
                     cursor: "pointer", transition: "background 0.2s, border-color 0.2s",
                   }}>
                   <img src={logos[name]} alt={name}
                     loading="lazy" decoding="async"
-                    style={{ width: "30px", height: "30px", borderRadius: "4px", border: `1px solid ${themeColor}30` }} />
+                    style={{ width: "30px", height: "30px", borderRadius: "4px", border: "1px solid rgba(255,255,255,0.1)" }} />
                   <div style={{ overflow: "hidden" }}>
                     <div style={{ fontSize: "var(--fs-xs)", color: "#DBD5CA", fontWeight: "bold", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
                       {name}
                     </div>
-                    <div style={{ fontSize: "var(--fs-xs)", color: themeColor }}>{count} ITEMS</div>
+                    <div style={{ fontSize: "var(--fs-xs)", color: "rgba(255,255,255,0.5)" }}>{count} ITEMS</div>
                   </div>
                 </div>
               ))}
@@ -79,12 +77,12 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
 
             {selectedPlatform && (
               <div style={{
-                background: "rgba(0,0,0,0.3)", border: `1px solid ${themeColor}30`,
+                background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.08)",
                 padding: "16px", borderRadius: "4px", animation: "fadeSlideIn 0.3s ease both",
               }}>
                 <div style={{
-                  fontSize: "var(--fs-xs)", color: themeColor, letterSpacing: "2px",
-                  marginBottom: "12px", borderBottom: `1px solid ${themeColor}20`, paddingBottom: "8px",
+                  fontSize: "var(--fs-xs)", color: "rgba(255,255,255,0.5)", letterSpacing: "2px",
+                  marginBottom: "12px", borderBottom: "1px solid rgba(255,255,255,0.08)", paddingBottom: "8px",
                 }}>
                   MOSTRANDO ARCHIVOS EN: {selectedPlatform.toUpperCase()}
                 </div>

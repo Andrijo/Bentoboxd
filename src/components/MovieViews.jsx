@@ -6,9 +6,9 @@ import { generateBentoLayout, VISIBLE_MOVIES } from "./BentoGrid/bentoPatterns.j
 import { useGridColumns } from "../hooks/useGridColumns.js"
 
 const VIEW_OPTIONS = [
-  { key: "bento", label: "▦ BENTO" },
-  { key: "timeline", label: "▤ LÍNEA DE TIEMPO" },
-  { key: "terminal", label: ">_ TERMINAL" },
+  { key: "bento", label: "BENTO" },
+  { key: "timeline", label: "LÍNEA DE TIEMPO" },
+  { key: "terminal", label: "TERMINAL" },
 ]
 
 export default function MovieViews({ movies: allMovies, movieViewMode, username, onViewModeChange }) {
@@ -63,15 +63,15 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
               style={{
                 background:
                   movieViewMode === key
-                    ? "rgba(0,229,255,0.15)"
+                    ? "rgba(255,255,255,0.08)"
                     : "transparent",
                 border:
                   movieViewMode === key
-                    ? "1px solid rgba(0,229,255,0.35)"
+                    ? "1px solid rgba(255,255,255,0.2)"
                     : "1px solid transparent",
                 color:
                   movieViewMode === key
-                    ? "#00e5ff"
+                    ? "#F0EDE5"
                     : "rgba(255,255,255,0.3)",
                 padding: "5px 12px",
                 borderRadius: "2px",
