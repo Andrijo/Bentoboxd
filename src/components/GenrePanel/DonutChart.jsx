@@ -1,4 +1,5 @@
 import { useState } from "react"
+import { formatMovieCount } from "../../utils/formatters.js"
 import { GENRE_KEYS, GENRE_CONFIG } from "../../constants/genres.js"
 
 const polarToCartesian = (cx, cy, r, angleDeg) => {
@@ -94,7 +95,7 @@ export default function DonutChart({ genres }) {
             </text>
             <text x={cx} y={cy + 4} textAnchor="middle" fontSize="11" fill="white"
               style={{ fontFamily: "var(--font-mono)" }} fontWeight="bold">
-              {hoveredSlice.count} film{hoveredSlice.count !== 1 ? "s" : ""}
+              {formatMovieCount(hoveredSlice.count)}
             </text>
             <text x={cx} y={cy + 18} textAnchor="middle" fontSize="8" fill="rgba(255,255,255,0.55)"
               style={{ fontFamily: "var(--font-mono)" }}>

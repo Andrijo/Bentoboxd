@@ -1,4 +1,4 @@
-import { getFlagUrl, ISO_COUNTRY_NAMES } from "../../utils/formatters.js"
+import { getFlagUrl, ISO_COUNTRY_NAMES, formatMovieCount } from "../../utils/formatters.js"
 
 export default function CountryDatalog({ countries }) {
   const topCountryCodes = Object.entries(countries || {})
@@ -45,7 +45,7 @@ export default function CountryDatalog({ countries }) {
               letterSpacing: "1px", background: "rgba(255,255,255,0.05)",
               padding: "4px 8px", borderRadius: "var(--radius-sm)",
             }}>
-              {count} film{count !== 1 ? "s" : ""}
+              {formatMovieCount(count)}
             </span>
           </div>
         )

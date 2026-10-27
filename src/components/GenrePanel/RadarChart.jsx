@@ -1,3 +1,4 @@
+import { formatMovieCount } from "../../utils/formatters.js"
 import { GENRE_KEYS, GENRE_CONFIG } from "../../constants/genres.js"
 
 const levels = [0.25, 0.5, 0.75, 1.0]
@@ -75,7 +76,7 @@ export default function RadarChart({ genres }) {
             {val > 0 && (
               <text x={lp.x} y={lp.y + 8} textAnchor="middle" dominantBaseline="middle"
                 fontSize="8" style={{ fontFamily: "var(--font-mono)" }} fill="rgba(255,255,255,0.4)">
-                {val} film{val !== 1 ? "s" : ""}
+                {formatMovieCount(val)}
               </text>
             )}
           </g>

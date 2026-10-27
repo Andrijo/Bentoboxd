@@ -32,7 +32,7 @@ export default function CountriesPanel({ countries, loading }) {
             border: "1px solid rgba(255,255,255,0.07)",
           }}>
             {[
-              { key: "list", label: "Datalog" },
+              { key: "list", label: "Lista" },
               { key: "nodes", label: "Sectores" },
             ].map(({ key, label }) => (
               <button
