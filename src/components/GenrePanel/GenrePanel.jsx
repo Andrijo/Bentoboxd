@@ -19,6 +19,7 @@ export default function GenrePanel({ genres, movieCount, loadingGenres, genreErr
     <section aria-labelledby="rd-panel-generos" style={{
       gridArea: "genres", border: "1px solid rgba(255,255,255,0.07)",
       borderRadius: "var(--radius-lg)", background: "rgba(255,255,255,0.02)", overflow: "hidden",
+      display: "flex", flexDirection: "column",
     }}>
       <div style={{
         padding: "16px 24px", borderBottom: "1px solid rgba(255,255,255,0.06)",
@@ -76,7 +77,7 @@ export default function GenrePanel({ genres, movieCount, loadingGenres, genreErr
       </div>
 
       <div style={{
-        padding: "32px 24px", minHeight: "200px",
+        flex: 1, padding: "32px 24px", minHeight: "200px",
         display: "flex", alignItems: "center", justifyContent: "center",
       }}>
         {loadingGenres && <PanelSkeleton variant="chart" label="Clasificando géneros…" />}
