@@ -126,6 +126,23 @@ describe("generateBentoLayout", () => {
     }
   })
 
+  it("en móvil (compact) cubre sin huecos, sin 1x2 y con pocas 2x2", () => {
+    for (let count = 1; count <= 20; count++) {
+      for (let attempt = 0; attempt < 4; attempt++) {
+        const layout = generateBentoLayout(3, count, { compact: true })
+        expect(layout.sizes).toHaveLength(count)
+        expect(layout.sizes).not.toContain(4)
+        expect(tilesCompletely(layout)).toBe(true)
+      }
+    }
+
+    for (let attempt = 0; attempt < 10; attempt++) {
+      const { sizes, rows } = generateBentoLayout(3, 20, { compact: true })
+      expect(sizes.filter((size) => size === 3).length).toBeLessThanOrEqual(5)
+      expect(rows).toBeLessThanOrEqual(12)
+    }
+  })
+
   it("reduce las columnas cuando hay muy pocas películas para llenar el ancho", () => {
     const layout = generateBentoLayout(8, 2)
     expect(layout.sizes).toHaveLength(2)
