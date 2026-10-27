@@ -1,15 +1,6 @@
 import { useState, useReducer, useEffect } from "react"
-
-function shuffleArray(arr, seed) {
-  const shuffled = [...arr]
-  let s = seed
-  for (let i = shuffled.length - 1; i > 0; i--) {
-    s = (s * 16807 + 0) % 2147483647
-    const j = Math.floor(((s - 1) / 2147483646) * (i + 1))
-    ;[shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]]
-  }
-  return shuffled
-}
+import { seededRandom, randomSeed } from "./utils/shuffle.js"
+import { buildDeck, isCorrectGuess } from "./utils/highLowDeck.js"
 
 const CAT_CONFIG = {
   rating: {
@@ -57,7 +48,7 @@ function gameReducer(state, action) {
     case "GAME_OVER":
       return { ...state, gameOver: true }
     case "RESTART":
-      return { ...initialGameState, deckSeed: state.deckSeed + 1 }
+      return { ...initialGameState, deckSeed: action.seed }
     default:
       return state
   }
@@ -398,12 +389,13 @@ function GamePlayArea({
 
 export default function HighLowGame({ movies, loading }) {
   const [category, setCategory] = useState("rating")
-  const [state, dispatch] = useReducer(gameReducer, initialGameState)
+  // La semilla se sortea por partida: mismo orden en cada render, otro al reiniciar.
+  const [state, dispatch] = useReducer(gameReducer, undefined, () => ({
+    ...initialGameState,
+    deckSeed: randomSeed(),
+  }))
 
-  const eligible = movies.filter(
-    (m) => m.metrics && m.metrics[category] > 0,
-  )
-  const gameDeck = shuffleArray(eligible, state.deckSeed)
+  const gameDeck = buildDeck(movies, category, seededRandom(state.deckSeed))
 
   const movieA = gameDeck[state.currentIndex]
   const movieB = gameDeck[state.currentIndex + 1]
@@ -411,19 +403,11 @@ export default function HighLowGame({ movies, loading }) {
   const handleGuess = (guess) => {
     if (state.feedback || state.gameOver) return
 
-    const valA = movieA.metrics[category]
-    const valB = movieB.metrics[category]
-
-    let isCorrect = false
-    if (category === "year") {
-      isCorrect =
-        (guess === "higher" && valB >= valA) ||
-        (guess === "lower" && valB < valA)
-    } else {
-      isCorrect =
-        (guess === "higher" && valB >= valA) ||
-        (guess === "lower" && valB < valA)
-    }
+    const isCorrect = isCorrectGuess(
+      guess,
+      movieA.metrics[category],
+      movieB.metrics[category],
+    )
 
     if (isCorrect) {
       dispatch({ type: "CORRECT" })
@@ -441,7 +425,7 @@ export default function HighLowGame({ movies, loading }) {
   }
 
   const restart = () => {
-    dispatch({ type: "RESTART" })
+    dispatch({ type: "RESTART", seed: randomSeed() })
   }
 
   // Atajos: ↑ higher, ↓ lower.
@@ -480,7 +464,7 @@ export default function HighLowGame({ movies, loading }) {
         streak={state.streak}
         onCategoryChange={(id) => {
           setCategory(id)
-          dispatch({ type: "RESTART" })
+          dispatch({ type: "RESTART", seed: randomSeed() })
         }}
       />
 
