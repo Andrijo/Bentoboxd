@@ -39,6 +39,8 @@ export default function DonutChart({ genres }) {
         justifyContent: "center",
       }}>
       <svg
+        role="img"
+        aria-label={`Gráfico de pastel: ${slices.map((s) => `${s.k} ${s.count}`).join(", ")}`}
         viewBox="0 0 360 360"
         style={{ width: "100%", maxWidth: "300px", overflow: "visible" }}>
         <defs>
@@ -86,18 +88,15 @@ export default function DonutChart({ genres }) {
 
         {hoveredSlice ? (
           <>
-            <text x={cx} y={cy - 16} textAnchor="middle" fontSize="22" fill={hoveredSlice.cfg.color}>
-              {hoveredSlice.cfg.icon}
-            </text>
-            <text x={cx} y={cy + 4} textAnchor="middle" fontSize="9" fill={hoveredSlice.cfg.color}
+            <text x={cx} y={cy - 10} textAnchor="middle" fontSize="9" fill={hoveredSlice.cfg.color}
               style={{ fontFamily: "var(--font-mono)" }} letterSpacing="0.5">
               {hoveredSlice.k}
             </text>
-            <text x={cx} y={cy + 18} textAnchor="middle" fontSize="11" fill="white"
+            <text x={cx} y={cy + 4} textAnchor="middle" fontSize="11" fill="white"
               style={{ fontFamily: "var(--font-mono)" }} fontWeight="bold">
               {hoveredSlice.count} film{hoveredSlice.count !== 1 ? "s" : ""}
             </text>
-            <text x={cx} y={cy + 32} textAnchor="middle" fontSize="8" fill="rgba(255,255,255,0.4)"
+            <text x={cx} y={cy + 18} textAnchor="middle" fontSize="8" fill="rgba(255,255,255,0.55)"
               style={{ fontFamily: "var(--font-mono)" }}>
               {Math.round(hoveredSlice.fraction * 100)}%
             </text>
@@ -108,17 +107,17 @@ export default function DonutChart({ genres }) {
               style={{ fontFamily: "var(--font-display)" }} letterSpacing="2">
               {total}
             </text>
-            <text x={cx} y={cy + 10} textAnchor="middle" fontSize="7" fill="rgba(255,255,255,0.3)"
+            <text x={cx} y={cy + 10} textAnchor="middle" fontSize="7" fill="rgba(255,255,255,0.55)"
               style={{ fontFamily: "var(--font-mono)" }} letterSpacing="1">
-              FILMS
+              Films
             </text>
           </>
         )}
       </svg>
 
-      <div style={{ display: "flex", flexDirection: "column", gap: "8px" }}>
+      <ul style={{ display: "flex", flexDirection: "column", gap: "8px", listStyle: "none" }}>
         {slices.map((s, i) => (
-          <div
+          <li
             key={s.k}
             onMouseEnter={() => setHovered(i)}
             onMouseLeave={() => setHovered(null)}
@@ -129,6 +128,7 @@ export default function DonutChart({ genres }) {
               transition: "opacity 0.2s",
             }}>
             <div
+              aria-hidden="true"
               style={{
                 width: "8px", height: "8px", borderRadius: "2px",
                 background: s.cfg.color, flexShrink: 0,
@@ -141,18 +141,18 @@ export default function DonutChart({ genres }) {
               color: hovered === i ? s.cfg.color : "rgba(255,255,255,0.6)",
               transition: "color 0.2s", letterSpacing: "0.5px",
             }}>
-              {s.cfg.icon} {s.k}
+              {s.k}
             </span>
             <span style={{
               marginLeft: "auto", paddingLeft: "12px",
               fontSize: "var(--fs-xs)", fontFamily: "var(--font-mono)",
-              color: "rgba(255,255,255,0.35)",
+              color: "rgba(255,255,255,0.55)",
             }}>
               {s.count}
             </span>
-          </div>
+          </li>
         ))}
-      </div>
+      </ul>
     </div>
   )
 }

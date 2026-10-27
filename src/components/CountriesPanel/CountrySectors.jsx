@@ -21,7 +21,7 @@ export default function CountrySectors({ countries }) {
         return (
           <div key={code} style={{
             background: "rgba(255,255,255,0.02)", border: "1px solid rgba(255,255,255,0.05)",
-            padding: "16px", borderRadius: "4px", position: "relative", overflow: "hidden",
+            padding: "16px", borderRadius: "var(--radius-md)", position: "relative", overflow: "hidden",
             animation: "fadeSlideIn 0.4s ease both", animationDelay: `${i * 50}ms`,
           }}>
             <div style={{
@@ -43,7 +43,7 @@ export default function CountrySectors({ countries }) {
                 width: "30px", height: "20px", borderRadius: "2px",
                 overflow: "hidden", border: "1px solid rgba(255,255,255,0.05)",
               }}>
-                <img src={flagUrl} alt={fullName}
+                <img src={flagUrl} alt=""
                   loading="lazy" decoding="async"
                   style={{ width: "100%", height: "100%", objectFit: "cover" }} />
               </div>
@@ -51,7 +51,7 @@ export default function CountrySectors({ countries }) {
 
             <div style={{
               fontSize: "var(--fs-2xs)", color: "rgba(255,255,255,0.5)",
-              textTransform: "uppercase", marginTop: "4px",
+              marginTop: "4px",
               whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
             }}>
               {fullName}

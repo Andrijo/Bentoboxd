@@ -1,9 +1,14 @@
 /* Único fondo de la app: fijo al viewport para que el degradado sea
    el mismo en páginas cortas, largas y en pantallas anchas. */
 html {
-  overscroll-behavior: none;
   min-height: 100%;
-  background: #181818 linear-gradient(to bottom, #111312, #181818) fixed;
+  background: #111312 linear-gradient(to bottom, #111312, #181818) fixed;
+}
+
+/* Color del hueco del rebote: el del extremo del degradado más cercano
+   (ver useOverscrollColor). */
+html[data-edge="bottom"] {
+  background-color: #181818;
 }
 
 @font-face {
@@ -25,6 +30,9 @@ html {
 }
 
 :root {
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
   --font-display: "Milker", sans-serif;
   --font-mono: "DMSans", monospace;
 
@@ -63,7 +71,7 @@ input {
 .rd-movie-card {
   position: relative;
   overflow: hidden;
-  border-radius: 4px;
+  border-radius: var(--radius-md);
   display: block;
   text-decoration: none;
   background: #0a0a0a;

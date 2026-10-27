@@ -53,15 +53,15 @@ export default function GaugesChart({ genres }) {
             <div style={{ textAlign: "center" }}>
               <div style={{
                 fontSize: "var(--fs-2xs)", fontFamily: "var(--font-mono)",
-                color: cfg.color, letterSpacing: "1px", textTransform: "uppercase",
+                color: cfg.color, letterSpacing: "1px",
               }}>
-                {cfg.icon} {k}
+                {k}
               </div>
               <div style={{
-                fontSize: "var(--fs-xs)", color: "rgba(255,255,255,0.3)",
+                fontSize: "var(--fs-xs)", color: "rgba(255,255,255,0.55)",
                 fontFamily: "var(--font-mono)", marginTop: "2px",
               }}>
-                {Math.round(percent * 100)}% DEL MÁXIMO
+                {Math.round(percent * 100)}% del máximo
               </div>
             </div>
           </div>

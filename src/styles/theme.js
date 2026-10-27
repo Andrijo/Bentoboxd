@@ -65,7 +65,6 @@ export const loadingTextStyle = (color = colors.accent) => ({
   color: `${color}80`,
   animation: "pulse 1.2s ease infinite",
   fontFamily: fonts.mono,
-  textTransform: "uppercase",
 })
 
 export const emptyTextStyle = {

@@ -36,7 +36,7 @@ export default function MovieCard({ movie, size, index }) {
       {movie.poster ? (
         <PosterImage
           src={movie.poster}
-          alt={movie.title}
+          alt=""
           style={{
             position: "absolute",
             inset: 0,
@@ -50,7 +50,7 @@ export default function MovieCard({ movie, size, index }) {
           }}
         />
       ) : (
-        <div className="rd-no-poster">🎬</div>
+        <div className="rd-no-poster" aria-hidden="true">🎬</div>
       )}
 
       <div
@@ -106,7 +106,7 @@ export default function MovieCard({ movie, size, index }) {
             <span
               style={{
                 fontSize: "var(--fs-xs)",
-                color: "rgba(255,255,255,0.4)",
+                color: "rgba(255,255,255,0.55)",
                 fontFamily: "var(--font-mono)",
               }}>
               {movie.year}
@@ -115,22 +115,24 @@ export default function MovieCard({ movie, size, index }) {
           <StarRating rating={movie.rating} />
         </div>
 
+        <span className="rd-sr-only">(se abre en Letterboxd en una pestaña nueva)</span>
+
         {hovered && size >= 2 && (
           <div
+            aria-hidden="true"
             style={{
               marginTop: "5px",
               fontSize: "var(--fs-xs)",
               color: "rgba(0,229,255,0.6)",
               fontFamily: "var(--font-mono)",
               letterSpacing: "1px",
-              textTransform: "uppercase",
             }}>
             Ver en Letterboxd →
           </div>
         )}
       </div>
 
-      <div className="rd-index-badge">{String(index + 1).padStart(2, "0")}</div>
+      <div className="rd-index-badge" aria-hidden="true">{String(index + 1).padStart(2, "0")}</div>
     </a>
   )
 }

@@ -23,7 +23,7 @@ export default function BarChart({ genres }) {
               color: "rgba(255,255,255,0.7)", textAlign: "right",
               letterSpacing: "0.5px", whiteSpace: "nowrap",
             }}>
-              {cfg.icon} {k}
+              {k}
             </div>
 
             <div style={{

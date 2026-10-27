@@ -46,7 +46,7 @@ export default function ActorsSpectrum({ actors }) {
               color: "rgba(255,255,255,0.5)", writingMode: "vertical-rl",
               transform: "rotate(180deg)", height: "60px", letterSpacing: "1px",
             }}>
-              {name.toUpperCase()}
+              {name}
             </div>
           </div>
         )

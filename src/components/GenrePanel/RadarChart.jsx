@@ -27,7 +27,11 @@ export default function RadarChart({ genres }) {
     dataPoints.map((p, i) => `${i === 0 ? "M" : "L"}${p.x},${p.y}`).join(" ") + " Z"
 
   return (
-    <svg viewBox="0 0 400 400" style={{ width: "100%", maxWidth: "400px" }}>
+    <svg
+      role="img"
+      aria-label={`Gráfico de radar: ${keys.map((k) => `${k} ${genres[k] || 0}`).join(", ")}`}
+      viewBox="0 0 400 400"
+      style={{ width: "100%", maxWidth: "400px" }}>
       {levels.map((frac, li) => (
         <polygon key={li} points={gridPolygon(frac)} fill="none"
           stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
@@ -66,7 +70,7 @@ export default function RadarChart({ genres }) {
             <text x={lp.x} y={lp.y - 6} textAnchor="middle" dominantBaseline="middle"
               fontSize="9" style={{ fontFamily: "var(--font-mono)" }}
               fill={val > 0 ? cfg.color : "rgba(255,255,255,0.2)"} letterSpacing="0.5">
-              {cfg.icon} {k}
+              {k}
             </text>
             {val > 0 && (
               <text x={lp.x} y={lp.y + 8} textAnchor="middle" dominantBaseline="middle"

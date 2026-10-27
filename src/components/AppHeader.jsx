@@ -6,12 +6,11 @@ const TABS = [
 
 const tabBase = {
   padding: "8px 16px",
-  borderRadius: 0,
+  borderRadius: "var(--radius-md)",
   fontFamily: "var(--font-mono)",
   fontSize: "var(--fs-2xs)",
   letterSpacing: "2px",
   cursor: "pointer",
-  textTransform: "uppercase",
   transition: "all 0.2s",
   flex: "1 1 120px",
   textAlign: "center",
@@ -21,8 +20,9 @@ const tabBase = {
 
 export default function AppHeader({ page, showTabs, onNavigate, onReset }) {
   return (
-    <div className="rd-header-bar">
+    <header className="rd-header-bar">
       <div
+        aria-hidden="true"
         style={{
           position: "absolute",
           top: 0,
@@ -42,6 +42,7 @@ export default function AppHeader({ page, showTabs, onNavigate, onReset }) {
         <button
           onClick={onReset}
           type="button"
+          aria-label="Bentoboxd, volver al inicio"
           style={{
             background: "none",
             border: "none",
@@ -79,6 +80,6 @@ export default function AppHeader({ page, showTabs, onNavigate, onReset }) {
           })}
         </nav>
       )}
-    </div>
+    </header>
   )
 }
