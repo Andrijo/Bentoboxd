@@ -1,4 +1,4 @@
-import { getFlagUrl, ISO_COUNTRY_NAMES, formatMovieCount } from "../../utils/formatters.js"
+import { getFlagUrl, countryName, formatMovieCount } from "../../utils/formatters.js"
 
 export default function CountryDatalog({ countries }) {
   const topCountryCodes = Object.entries(countries || {})
@@ -9,7 +9,7 @@ export default function CountryDatalog({ countries }) {
     <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
       {topCountryCodes.map(([code, count], i) => {
         const flagUrl = getFlagUrl(code)
-        const fullName = ISO_COUNTRY_NAMES[code] || `Código: ${code}`
+        const fullName = countryName(code)
 
         return (
           <div key={code} style={{
