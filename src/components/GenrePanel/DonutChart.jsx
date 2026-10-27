@@ -115,45 +115,6 @@ export default function DonutChart({ genres }) {
           </>
         )}
       </svg>
-
-      <ul style={{ display: "flex", flexDirection: "column", gap: "8px", listStyle: "none" }}>
-        {slices.map((s, i) => (
-          <li
-            key={s.k}
-            onMouseEnter={() => setHovered(i)}
-            onMouseLeave={() => setHovered(null)}
-            style={{
-              display: "flex", alignItems: "center", gap: "10px",
-              cursor: "pointer",
-              opacity: hovered === null ? 1 : hovered === i ? 1 : 0.4,
-              transition: "opacity 0.2s",
-            }}>
-            <div
-              aria-hidden="true"
-              style={{
-                width: "8px", height: "8px", borderRadius: "2px",
-                background: s.cfg.color, flexShrink: 0,
-                boxShadow: hovered === i ? `0 0 8px ${s.cfg.glow}` : "none",
-                transition: "box-shadow 0.2s",
-              }}
-            />
-            <span style={{
-              fontSize: "var(--fs-xs)", fontFamily: "var(--font-mono)",
-              color: hovered === i ? s.cfg.color : "rgba(255,255,255,0.6)",
-              transition: "color 0.2s", letterSpacing: "0.5px",
-            }}>
-              {s.k}
-            </span>
-            <span style={{
-              marginLeft: "auto", paddingLeft: "12px",
-              fontSize: "var(--fs-xs)", fontFamily: "var(--font-mono)",
-              color: "rgba(255,255,255,0.55)",
-            }}>
-              {s.count}
-            </span>
-          </li>
-        ))}
-      </ul>
     </div>
   )
 }

@@ -19,13 +19,13 @@ export default function DataPanels({
   if (!showGenrePanel) return null
 
   return (
-    <>
+    <div className="rd-bento-panels">
       <StatsSummary movies={movies} loading={loadingGenres} />
       <PlatformsPanel platformsData={platforms} movies={movies} loading={loadingGenres} />
       <GenrePanel genres={genres} movieCount={movies.length} loadingGenres={loadingGenres} genreError={genreError} />
       <DirectorsPanel directors={directors} movie={movies[0]} loading={loadingGenres} />
       <ActorsPanel actors={actors} loading={loadingGenres} />
       <CountriesPanel countries={countries} loading={loadingGenres} />
-    </>
+    </div>
   )
 }

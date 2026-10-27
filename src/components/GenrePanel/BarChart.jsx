@@ -7,7 +7,7 @@ export default function BarChart({ genres }) {
   const maxCount = Math.max(...sortedGenres.map((k) => genres[k]), 1)
 
   return (
-    <div style={{
+    <div aria-hidden="true" style={{
       width: "100%", maxWidth: "400px", display: "flex",
       flexDirection: "column", gap: "12px", padding: "10px 0",
     }}>
@@ -18,14 +18,6 @@ export default function BarChart({ genres }) {
 
         return (
           <div key={k} style={{ display: "flex", alignItems: "center", gap: "14px" }}>
-            <div style={{
-              width: "90px", fontSize: "var(--fs-xs)", fontFamily: "var(--font-mono)",
-              color: "rgba(255,255,255,0.7)", textAlign: "right",
-              letterSpacing: "0.5px", whiteSpace: "nowrap",
-            }}>
-              {k}
-            </div>
-
             <div style={{
               flex: 1, height: "12px", background: "rgba(255,255,255,0.03)",
               border: "1px solid rgba(255,255,255,0.08)", borderRadius: "2px",
