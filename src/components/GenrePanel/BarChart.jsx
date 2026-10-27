@@ -17,7 +17,7 @@ export default function BarChart({ genres }) {
         const widthPct = (count / maxCount) * 100
 
         return (
-          <div key={k} style={{ display: "flex", alignItems: "center" }}>
+          <div key={k} style={{ display: "flex", alignItems: "center", gap: "14px" }}>
             <div style={{
               flex: 1, height: "12px", background: "rgba(255,255,255,0.03)",
               border: "1px solid rgba(255,255,255,0.08)", borderRadius: "2px",
@@ -37,6 +37,13 @@ export default function BarChart({ genres }) {
                   width: "4px", background: "#fff", opacity: 0.5,
                 }} />
               </div>
+            </div>
+
+            <div style={{
+              width: "25px", fontSize: "var(--fs-sm)", fontFamily: "var(--font-display)",
+              color: cfg.color, letterSpacing: "1px",
+            }}>
+              {count}
             </div>
           </div>
         )
