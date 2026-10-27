@@ -48,6 +48,13 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
       <div style={{ padding: "24px" }}>
         {loading ? (
           <PanelSkeleton variant="tiles" label="Buscando plataformas…" />
+        ) : topPlatforms.length === 0 ? (
+          <div style={{
+            textAlign: "center", fontSize: "var(--fs-xs)",
+            color: "rgba(255,255,255,0.55)", fontFamily: "var(--font-mono)",
+          }}>
+            Ninguna de tus películas está en streaming por suscripción en México
+          </div>
         ) : (
           <>
             <div style={{

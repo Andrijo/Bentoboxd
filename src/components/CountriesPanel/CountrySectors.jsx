@@ -1,4 +1,4 @@
-import { getFlagUrl, ISO_COUNTRY_NAMES } from "../../utils/formatters.js"
+import { getFlagUrl, countryName } from "../../utils/formatters.js"
 
 const themeColor = "#ff8c00"
 
@@ -16,7 +16,7 @@ export default function CountrySectors({ countries }) {
       {topCountryCodes.map(([code, count], i) => {
         const pct = (count / max) * 100
         const flagUrl = getFlagUrl(code)
-        const fullName = ISO_COUNTRY_NAMES[code] || code
+        const fullName = countryName(code)
 
         return (
           <div key={code} style={{
