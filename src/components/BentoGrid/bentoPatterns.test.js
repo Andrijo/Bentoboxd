@@ -1,6 +1,12 @@
 import { describe, it, expect } from "vitest"
 import { generateBentoLayout } from "./bentoPatterns.js"
 
+// Ancho y alto en celdas de cada tamaño (1x1, 2x1, 2x2, 1x2).
+const dims = (size) => ({
+  w: size === 2 || size === 3 ? 2 : 1,
+  h: size === 3 || size === 4 ? 2 : 1,
+})
+
 // Replica la colocación "sparse" de grid-auto-flow:row a partir de la secuencia
 // de tamaños y comprueba que se cubra el rectángulo sin huecos ni solapes.
 function tilesCompletely({ columns, rows, sizes }) {
@@ -11,8 +17,7 @@ function tilesCompletely({ columns, rows, sizes }) {
   let curCol = 0
 
   for (const size of sizes) {
-    const w = size === 1 ? 1 : 2
-    const h = size === 3 ? 2 : 1
+    const { w, h } = dims(size)
     let placed = false
 
     for (let r = curRow; r < rows && !placed; r++) {
@@ -57,8 +62,7 @@ function bigTileRows({ columns, rows, sizes }) {
     while (grid[Math.floor(cursor / columns)][cursor % columns]) cursor++
     const row = Math.floor(cursor / columns)
     const col = cursor % columns
-    const width = size === 1 ? 1 : 2
-    const height = size === 3 ? 2 : 1
+    const { w: width, h: height } = dims(size)
     for (let y = row; y < row + height; y++) {
       for (let x = col; x < col + width; x++) grid[y][x] = true
     }
@@ -83,7 +87,7 @@ describe("generateBentoLayout", () => {
           expect(layout.columns).toBeGreaterThanOrEqual(1)
           expect(layout.columns).toBeLessThanOrEqual(columns)
           expect(layout.rows).toBeGreaterThanOrEqual(1)
-          layout.sizes.forEach((size) => expect([1, 2, 3]).toContain(size))
+          layout.sizes.forEach((size) => expect([1, 2, 3, 4]).toContain(size))
           expect(tilesCompletely(layout)).toBe(true)
         }
       }
@@ -106,6 +110,18 @@ describe("generateBentoLayout", () => {
         expect(rows.length).toBeGreaterThanOrEqual(3)
         // Al menos una ficha grande en la mitad inferior, no todas arriba.
         expect(Math.max(...rows) + 1).toBeGreaterThanOrEqual(layout.rows / 2)
+      }
+    }
+  })
+
+  it("no llena la cuadrícula de 1x1 con 20 películas", () => {
+    for (let columns = 2; columns <= 8; columns++) {
+      for (let attempt = 0; attempt < 10; attempt++) {
+        const { sizes } = generateBentoLayout(columns, 20)
+        const small = sizes.filter((size) => size === 1).length
+        expect(small).toBeLessThanOrEqual(7)
+        // Las verticales tampoco deben dominar.
+        expect(sizes.filter((size) => size === 4).length).toBeLessThanOrEqual(10)
       }
     }
   })
