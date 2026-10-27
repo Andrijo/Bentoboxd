@@ -13,9 +13,11 @@ import { useTMDBMetadata } from "./hooks/useTMDBMetadata.js"
 import { useHashRoute } from "./hooks/useHashRoute.js"
 import { useOverscrollColor } from "./hooks/useOverscrollColor.js"
 import { parseUsername } from "./services/letterboxd.js"
+import { readProfileParam, writeProfileParam } from "./utils/profileUrl.js"
 
 export default function App() {
-  const [url, setUrl] = useState("")
+  // Con un enlace compartido (?user=) el buscador arranca con ese usuario.
+  const [url, setUrl] = useState(() => readProfileParam() || "")
   const [movieViewMode, setMovieViewMode] = useState("bento")
   const [recentProfiles, setRecentProfiles] = useState(() => {
     try {
@@ -84,6 +86,8 @@ export default function App() {
       setRecentProfiles((prev) =>
         [user, ...prev.filter((p) => p !== user)].slice(0, 3),
       )
+      // También solo entonces va a la URL, para poder compartirla o recargar.
+      writeProfileParam(user)
 
       const metadata = await fetchMetadata(
         parsed.map((m) => ({ title: m.title, year: m.year })),
@@ -121,13 +125,56 @@ export default function App() {
     [url, fetchFeed, fetchMetadata, resetMetadata, setMovies],
   )
 
-  const resetToStart = useCallback(() => {
+  const clearProfile = useCallback(() => {
     requestIdRef.current += 1
     setUrl("")
-    navigate("profile")
     resetFeed()
     resetMetadata()
-  }, [navigate, resetFeed, resetMetadata])
+  }, [resetFeed, resetMetadata])
+
+  const resetToStart = useCallback(() => {
+    navigate("profile")
+    // navigate conserva el query; aquí el usuario sobra.
+    writeProfileParam(null, { replace: true })
+    clearProfile()
+  }, [navigate, clearProfile])
+
+  // Los efectos de abajo siempre usan la última versión sin re-suscribirse.
+  const handleFetchRef = useRef(handleFetch)
+  const usernameRef = useRef(username)
+  useEffect(() => {
+    handleFetchRef.current = handleFetch
+    usernameRef.current = username
+  })
+
+  // Carga el perfil de la URL (enlace compartido o recarga, incluso en #quiz).
+  useEffect(() => {
+    const user = readProfileParam()
+    if (user) handleFetchRef.current(user)
+  }, [])
+
+  // Atrás/adelante entre perfiles: solo cambia algo si cambió el usuario,
+  // no al moverse entre pestañas del mismo perfil.
+  useEffect(() => {
+    const sync = () => {
+      const user = readProfileParam()
+      if (user === usernameRef.current) return
+      if (!user) {
+        clearProfile()
+        return
+      }
+      setUrl(user)
+      handleFetchRef.current(user)
+    }
+    window.addEventListener("popstate", sync)
+    return () => window.removeEventListener("popstate", sync)
+  }, [clearProfile])
+
+  useEffect(() => {
+    document.title = username && movies.length > 0
+      ? `@${username} — Bentoboxd`
+      : "Bentoboxd — Tu Letterboxd en un dashboard"
+  }, [username, movies.length])
 
   const showGenrePanel = movies.length > 0 || metaLoading
   // Sin feed cargado (p. ej. al recargar en #quiz) solo existe el perfil.
