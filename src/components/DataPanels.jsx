@@ -1,3 +1,4 @@
+import StatsSummary from "./StatsSummary/StatsSummary.jsx"
 import PlatformsPanel from "./PlatformsPanel/PlatformsPanel.jsx"
 import GenrePanel from "./GenrePanel/GenrePanel.jsx"
 import DirectorsPanel from "./DirectorsPanel/DirectorsPanel.jsx"
@@ -19,6 +20,7 @@ export default function DataPanels({
 
   return (
     <>
+      <StatsSummary movies={movies} loading={loadingGenres} />
       <PlatformsPanel platformsData={platforms} movies={movies} loading={loadingGenres} />
       <GenrePanel genres={genres} movieCount={movies.length} loadingGenres={loadingGenres} genreError={genreError} />
       <DirectorsPanel directors={directors} movie={movies[0]} loading={loadingGenres} />

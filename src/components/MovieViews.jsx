@@ -3,7 +3,7 @@ import MovieCard from "./BentoGrid/MovieCard.jsx"
 import StarRating from "./StarRating.jsx"
 import PosterImage from "./PosterImage.jsx"
 import { generateBentoLayout, VISIBLE_MOVIES } from "./BentoGrid/bentoPatterns.js"
-import { useGridColumns } from "../hooks/useGridColumns.js"
+import { useGridColumns, rowHeight } from "../hooks/useGridColumns.js"
 import { formatWatchedDate } from "../utils/formatters.js"
 
 const VIEW_OPTIONS = [
@@ -14,11 +14,11 @@ const VIEW_OPTIONS = [
 
 export default function MovieViews({ movies: allMovies, movieViewMode, username, onViewModeChange }) {
   const movies = allMovies.slice(0, VISIBLE_MOVIES)
-  const [gridRef, columns] = useGridColumns()
+  const [gridRef, columns, compact] = useGridColumns()
 
   const bentoLayout = useMemo(
-    () => generateBentoLayout(columns, movies.length),
-    [columns, movies.length],
+    () => generateBentoLayout(columns, movies.length, { compact }),
+    [columns, movies.length, compact],
   )
   return (
     <div style={{ padding: "32px var(--gutter)" }}>
@@ -96,7 +96,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
           style={{
             display: "grid",
             gridTemplateColumns: `repeat(${bentoLayout.columns}, 1fr)`,
-            gridAutoRows: "180px",
+            gridAutoRows: rowHeight(compact),
             gap: "8px",
           }}>
           {movies.map((movie, i) => (

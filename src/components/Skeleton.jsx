@@ -1,6 +1,6 @@
 import { useMemo } from "react"
 import { generateBentoLayout, TILE_SPANS, VISIBLE_MOVIES } from "./BentoGrid/bentoPatterns.js"
-import { useGridColumns } from "../hooks/useGridColumns.js"
+import { useGridColumns, rowHeight } from "../hooks/useGridColumns.js"
 
 export function Skeleton({ width = "100%", height = "12px", radius = "4px", style }) {
   return (
@@ -14,10 +14,10 @@ export function Skeleton({ width = "100%", height = "12px", radius = "4px", styl
 
 /** Misma forma que el bento real, para que no salte el layout al cargar. */
 export function BentoSkeleton() {
-  const [gridRef, columns] = useGridColumns()
+  const [gridRef, columns, compact] = useGridColumns()
   const layout = useMemo(
-    () => generateBentoLayout(columns, VISIBLE_MOVIES),
-    [columns],
+    () => generateBentoLayout(columns, VISIBLE_MOVIES, { compact }),
+    [columns, compact],
   )
 
   return (
@@ -40,7 +40,7 @@ export function BentoSkeleton() {
         style={{
           display: "grid",
           gridTemplateColumns: `repeat(${layout.columns}, 1fr)`,
-          gridAutoRows: "180px",
+          gridAutoRows: rowHeight(compact),
           gap: "8px",
         }}>
         {Array.from({ length: VISIBLE_MOVIES }, (_, i) => (
