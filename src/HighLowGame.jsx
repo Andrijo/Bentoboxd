@@ -131,7 +131,7 @@ function GuessControls({ disabled, onGuess }) {
         title="Higher (↑)"
         className="rd-hlg-arrow rd-hlg-arrow-up">
         <svg viewBox="0 0 60 50.51" aria-hidden="true">
-          <path d={ARROW_PATH} fill="#facc15" />
+          <path d={ARROW_PATH} />
         </svg>
       </button>
 
@@ -145,7 +145,7 @@ function GuessControls({ disabled, onGuess }) {
         title="Lower (↓)"
         className="rd-hlg-arrow rd-hlg-arrow-down">
         <svg viewBox="0 0 60 50.51" aria-hidden="true">
-          <path d={ARROW_PATH} fill="#22c55e" />
+          <path d={ARROW_PATH} />
         </svg>
       </button>
     </div>
