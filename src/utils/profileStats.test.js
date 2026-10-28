@@ -60,6 +60,62 @@ describe("computeProfileStats", () => {
     ).toBe("same")
   })
 
+  it("suma la duración de las películas que la tienen", () => {
+    const stats = computeProfileStats([
+      movie({ metrics: { runtime: 148 } }),
+      movie({ metrics: { runtime: 92 } }),
+      movie({ metrics: { runtime: 0 } }),
+      movie({}),
+    ])
+    expect(stats.runtimeMinutes).toBe(240)
+    expect(stats.runtimeCount).toBe(2)
+  })
+
+  it("calcula el ritmo semanal y el día favorito con las películas fechadas", () => {
+    const stats = computeProfileStats([
+      movie({ watchedDate: "2026-10-12" }),
+      movie({ watchedDate: "2026-10-17" }),
+      movie({ watchedDate: "2026-10-24" }),
+      movie({ watchedDate: "2026-10-24" }),
+      movie({}),
+    ])
+    // 12 → 24 de octubre: 13 días, 4 películas fechadas.
+    expect(stats.datedCount).toBe(4)
+    expect(stats.spanDays).toBe(13)
+    expect(stats.perWeek).toBeCloseTo(4 / (13 / 7))
+    expect(stats.topWeekday).toBe(6)
+    expect(stats.topWeekdayCount).toBe(3)
+  })
+
+  it("no infla el ritmo cuando todo ocurre en pocos días", () => {
+    const stats = computeProfileStats([
+      movie({ watchedDate: "2026-10-25" }),
+      movie({ watchedDate: "2026-10-26" }),
+    ])
+    expect(stats.spanDays).toBe(2)
+    expect(stats.perWeek).toBe(2)
+  })
+
+  it("desempata el día favorito con el primero de la semana", () => {
+    const stats = computeProfileStats([
+      movie({ watchedDate: "2026-10-25" }),
+      movie({ watchedDate: "2026-10-26" }),
+    ])
+    // Domingo y lunes empatan en 1: gana el lunes.
+    expect(stats.topWeekday).toBe(1)
+  })
+
+  it("deja el ritmo vacío si ninguna película tiene fecha", () => {
+    const stats = computeProfileStats([movie({}), movie({})])
+    expect(stats).toMatchObject({
+      datedCount: 0,
+      spanDays: 0,
+      perWeek: null,
+      topWeekday: null,
+      topWeekdayCount: 0,
+    })
+  })
+
   it("cuenta me gusta, revisiones, década y rango de fechas", () => {
     const stats = computeProfileStats([
       movie({ year: "1999", liked: true, watchedDate: "2026-03-12" }),

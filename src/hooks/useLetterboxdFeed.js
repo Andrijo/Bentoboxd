@@ -50,11 +50,20 @@ export function useLetterboxdFeed() {
       setUsername(user)
 
       const rssUrl = buildRssUrl(user)
-      const res = await fetch(rssUrl)
+      let res
+      try {
+        res = await fetch(rssUrl)
+      } catch {
+        throw new Error("Sin conexión. Revisa tu internet e inténtalo de nuevo.")
+      }
       if (requestId !== requestIdRef.current) return []
+      if (res.status === 404)
+        throw new Error(
+          `No encontramos a @${user} en Letterboxd. Revisa el nombre o que el perfil sea público.`,
+        )
       if (!res.ok)
         throw new Error(
-          "No se pudo obtener el feed. Verifica el usuario o tu conexión.",
+          "Letterboxd no responde en este momento. Inténtalo de nuevo en unos minutos.",
         )
       const xmlText = await res.text()
       if (requestId !== requestIdRef.current) return []

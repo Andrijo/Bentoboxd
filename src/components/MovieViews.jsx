@@ -1,5 +1,6 @@
 import { useMemo } from "react"
 import MovieCard from "./BentoGrid/MovieCard.jsx"
+import SegmentedControl from "./Panel/SegmentedControl.jsx"
 import StarRating from "./StarRating.jsx"
 import PosterImage from "./PosterImage.jsx"
 import { generateBentoLayout, VISIBLE_MOVIES } from "./BentoGrid/bentoPatterns.js"
@@ -44,50 +45,12 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
           </div>
         )}
 
-        <div
-          role="group"
-          className="rd-segmented"
-          aria-label="Vista de películas"
-          style={{
-            display: "flex",
-            flexWrap: "wrap",
-            gap: "4px",
-            background: "rgba(0,0,0,0.3)",
-            borderRadius: "var(--radius-md)",
-            padding: "3px",
-            border: "1px solid rgba(255,255,255,0.07)",
-          }}>
-          {VIEW_OPTIONS.map(({ key, label }) => (
-            <button
-              key={key}
-              onClick={() => onViewModeChange(key)}
-              type="button"
-              aria-pressed={movieViewMode === key}
-              style={{
-                background:
-                  movieViewMode === key
-                    ? "rgba(255,255,255,0.08)"
-                    : "transparent",
-                border:
-                  movieViewMode === key
-                    ? "1px solid rgba(255,255,255,0.2)"
-                    : "1px solid transparent",
-                color:
-                  movieViewMode === key
-                    ? "#F0EDE5"
-                    : "rgba(255,255,255,0.55)",
-                padding: "5px 12px",
-                borderRadius: "var(--radius-sm)",
-                cursor: "pointer",
-                fontSize: "var(--fs-xs)",
-                fontFamily: "var(--font-mono)",
-                letterSpacing: "1.5px",
-                transition: "background 0.2s, border-color 0.2s, color 0.2s",
-              }}>
-              {label}
-            </button>
-          ))}
-        </div>
+        <SegmentedControl
+          label="Vista de películas"
+          options={VIEW_OPTIONS}
+          value={movieViewMode}
+          onChange={onViewModeChange}
+        />
       </div>
 
       {movieViewMode === "bento" && (
@@ -180,7 +143,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                   style={{
                     fontFamily: "var(--font-display)",
                     fontSize: "clamp(1.1rem, 4vw, 1.8rem)",
-                    color: "#F0EDE5",
+                    color: "var(--c-text-bright)",
                     letterSpacing: "1px",
                     lineHeight: 1,
                     marginBottom: "4px",
@@ -192,7 +155,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                     <span
                       style={{
                         fontSize: "var(--fs-xs)",
-                        color: "rgba(255,255,255,0.55)",
+                        color: "var(--c-text-muted)",
                         fontFamily: "var(--font-mono)",
                       }}>
                       {movie.year}
@@ -217,7 +180,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                 {formatWatchedDate(movie.watchedDate) && (
                   <div style={{
                     marginTop: "4px", fontSize: "var(--fs-xs)",
-                    color: "rgba(255,255,255,0.5)", fontFamily: "var(--font-mono)",
+                    color: "var(--c-text-muted)", fontFamily: "var(--font-mono)",
                   }}>
                     Vista el {formatWatchedDate(movie.watchedDate)}
                   </div>
@@ -227,7 +190,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
               <div
                 aria-hidden="true"
                 style={{
-                  color: "#00e5ff",
+                  color: "var(--c-accent)",
                   fontSize: "var(--fs-md)",
                   padding: "0 10px",
                   opacity: 0.5,
@@ -247,7 +210,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
           <div
             aria-hidden="true"
             style={{
-              color: "rgba(255,255,255,0.55)",
+              color: "var(--c-text-muted)",
               fontSize: "var(--fs-2xs)",
               marginBottom: "16px",
             }}>
@@ -260,15 +223,20 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
 
           <div style={{ display: "flex", flexDirection: "column" }}>
             {movies.map((movie, i) => (
-              <div
+              <a
                 key={movie.link}
+                href={movie.link}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="rd-terminal-row"
                 style={{
                   display: "flex",
                   justifyContent: "space-between",
+                  textDecoration: "none",
                   padding: "6px 0",
                   borderBottom: "1px dashed rgba(0,229,255,0.15)",
                   fontSize: "var(--fs-xs)",
-                  color: "#00e5ff",
+                  color: "var(--c-accent)",
                   animation: "fadeSlideIn 0.1s ease both",
                   animationDelay: `${i * 20}ms`,
                 }}>
@@ -276,12 +244,12 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                   <span style={{ color: "#facc15" }}>
                     [{String(i + 1).padStart(2, "0")}]
                   </span>
-                  <span style={{ textOverflow: "ellipsis", overflow: "hidden", color: "#DBD5CA" }}>
+                  <span style={{ textOverflow: "ellipsis", overflow: "hidden", color: "var(--c-text)" }}>
                     {movie.title}
                   </span>
                 </span>
                 <span style={{ display: "flex", gap: "16px", flexShrink: 0 }}>
-                  <span style={{ color: "rgba(255,255,255,0.55)" }}>
+                  <span style={{ color: "var(--c-text-muted)" }}>
                     {movie.year || "----"}
                   </span>
                   <span style={{ color: "#4ade80", width: "40px", textAlign: "right" }}>
@@ -292,10 +260,11 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                     )}
                   </span>
                 </span>
-              </div>
+                <span className="rd-sr-only">(se abre en Letterboxd en una pestaña nueva)</span>
+              </a>
             ))}
           </div>
-          <div aria-hidden="true" style={{ color: "#00e5ff", marginTop: "12px", animation: "pulse 1s infinite" }}>
+          <div aria-hidden="true" style={{ color: "var(--c-accent)", marginTop: "12px", animation: "pulse 1s infinite" }}>
             _
           </div>
         </div>

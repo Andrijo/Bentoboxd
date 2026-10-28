@@ -50,7 +50,7 @@ export default function CountrySectors({ countries }) {
             </div>
 
             <div style={{
-              fontSize: "var(--fs-2xs)", color: "rgba(255,255,255,0.5)",
+              fontSize: "var(--fs-2xs)", color: "var(--c-text-muted)",
               marginTop: "4px",
               whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
             }}>

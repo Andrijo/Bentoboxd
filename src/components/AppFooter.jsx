@@ -21,7 +21,7 @@ export default function AppFooter() {
           fontFamily: "var(--font-display)",
           fontSize: "var(--fs-md)",
           letterSpacing: "2px",
-          color: "#F0EDE5",
+          color: "var(--c-text-bright)",
         }}>
         BENTOBOXD
       </p>

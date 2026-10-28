@@ -15,7 +15,7 @@ export default function RatingHistogram({ distribution }) {
   return (
     <figure style={{ margin: 0 }}>
       <figcaption style={{
-        fontSize: "var(--fs-xs)", color: "rgba(255,255,255,0.55)",
+        fontSize: "var(--fs-xs)", color: "var(--c-text-muted)",
         letterSpacing: "1px", marginBottom: "12px",
       }}>
         Tus calificaciones · la más frecuente es {mode.rating}★
@@ -42,7 +42,7 @@ export default function RatingHistogram({ distribution }) {
                 }}>
                 {(isMode || isActive) && d.count > 0 && (
                   <span style={{
-                    fontSize: "var(--fs-xs)", color: "#F0EDE5", marginBottom: "4px",
+                    fontSize: "var(--fs-xs)", color: "var(--c-text-bright)", marginBottom: "4px",
                   }}>
                     {d.count}
                   </span>
@@ -51,7 +51,7 @@ export default function RatingHistogram({ distribution }) {
                   width: "100%", maxWidth: "48px",
                   height: d.count ? `${Math.max(4, (d.count / max) * (CHART_HEIGHT - 24))}px` : 0,
                   borderRadius: "4px 4px 0 0",
-                  background: isMode || isActive ? "#00e5ff" : "rgba(0,229,255,0.35)",
+                  background: isMode || isActive ? "var(--c-accent)" : "rgba(0,229,255,0.35)",
                   transition: "background 0.15s",
                 }} />
                 {isActive && (
@@ -60,7 +60,7 @@ export default function RatingHistogram({ distribution }) {
                     marginBottom: "-8px", whiteSpace: "nowrap", pointerEvents: "none", zIndex: 2,
                     background: "#121212", border: "1px solid rgba(255,255,255,0.15)",
                     borderRadius: "var(--radius-sm)", padding: "4px 8px",
-                    fontSize: "var(--fs-xs)", color: "#F0EDE5",
+                    fontSize: "var(--fs-xs)", color: "var(--c-text-bright)",
                   }}>
                     {d.rating}★ · {formatMovieCount(d.count)}
                   </div>
@@ -75,7 +75,7 @@ export default function RatingHistogram({ distribution }) {
           {distribution.map((d) => (
             <span key={d.rating} style={{
               flex: 1, textAlign: "center",
-              fontSize: "var(--fs-xs)", color: "rgba(255,255,255,0.5)",
+              fontSize: "var(--fs-xs)", color: "var(--c-text-muted)",
             }}>
               {Number.isInteger(d.rating) ? `${d.rating}★` : ""}
             </span>

@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import { countryName, formatMovieCount, formatWatchedDate } from "./formatters.js"
+import { countryName, formatDuration, formatMovieCount, formatWatchedDate, weekdayName } from "./formatters.js"
 
 describe("formatMovieCount", () => {
   it("usa singular solo para 1", () => {
@@ -31,5 +31,22 @@ describe("countryName", () => {
 
   it("devuelve el código si no es un código de región válido", () => {
     expect(countryName("NOPE")).toBe("NOPE")
+  })
+})
+
+describe("formatDuration", () => {
+  it("combina horas y minutos y omite lo que sobra", () => {
+    expect(formatDuration(125)).toBe("2 h 5 min")
+    expect(formatDuration(120)).toBe("2 h")
+    expect(formatDuration(45)).toBe("45 min")
+    expect(formatDuration(0)).toBe("0 min")
+  })
+})
+
+describe("weekdayName", () => {
+  it("nombra el día en español con inicial mayúscula", () => {
+    expect(weekdayName(0)).toBe("Domingo")
+    expect(weekdayName(1)).toBe("Lunes")
+    expect(weekdayName(6)).toBe("Sábado")
   })
 })

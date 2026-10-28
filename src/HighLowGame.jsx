@@ -6,7 +6,7 @@ const CAT_CONFIG = {
   rating: {
     label: "Puntuación",
     unit: "Estrellas",
-    color: "#00e5ff",
+    color: "var(--c-accent)",
     title: "Aclamación Mundial",
     desc: "Adivina si la siguiente película tiene una calificación mayor o menor.",
     sub: "Basado en la puntuación promedio mundial de TMDB.",
@@ -28,6 +28,10 @@ const CAT_CONFIG = {
     sub: "Basado en la fecha de estreno oficial en cines.",
   },
 }
+
+// El índice de popularidad de TMDB llega con muchos decimales.
+const formatMetric = (category, value) =>
+  category === "popularity" ? Math.round(value * 10) / 10 : value
 
 const initialGameState = {
   streak: 0,
@@ -174,7 +178,7 @@ function GameHeader({ category, streak, onCategoryChange }) {
               fontWeight: "normal",
               letterSpacing: "2px",
               lineHeight: 1,
-              color: "#F0EDE5",
+              color: "var(--c-text-bright)",
               marginBottom: "8px",
             }}>
             HIGHER OR LOWER
@@ -182,7 +186,7 @@ function GameHeader({ category, streak, onCategoryChange }) {
           <div
             style={{
               fontSize: "var(--fs-xs)",
-              color: "rgba(255,255,255,0.5)",
+              color: "var(--c-text-muted)",
               letterSpacing: "0.5px",
             }}>
             {CAT_CONFIG[category].desc}
@@ -217,9 +221,9 @@ function GameHeader({ category, streak, onCategoryChange }) {
         aria-label="Categoría"
         style={{ display: "flex", flexWrap: "wrap", gap: "10px", justifyContent: "center" }}>
         {[
-          { id: "rating", label: "Rating", icon: "⭐" },
-          { id: "popularity", label: "Popularidad", icon: "🔥" },
-          { id: "year", label: "Año", icon: "📅" },
+          { id: "rating", label: "Rating" },
+          { id: "popularity", label: "Popularidad" },
+          { id: "year", label: "Año" },
         ].map((cat) => (
           <button
             key={cat.id}
@@ -234,7 +238,7 @@ function GameHeader({ category, streak, onCategoryChange }) {
                   ? CAT_CONFIG[cat.id].color
                   : "rgba(255,255,255,0.05)",
               color:
-                category === cat.id ? "#000" : "rgba(255,255,255,0.5)",
+                category === cat.id ? "#000" : "var(--c-text-muted)",
               border:
                 category === cat.id
                   ? `1px solid ${CAT_CONFIG[cat.id].color}`
@@ -319,7 +323,7 @@ function GamePlayArea({
 
               <div style={labelStyle(CAT_CONFIG[category].color)}>
                 <div style={{ fontSize: "clamp(2rem, 9vw, 3.5rem)", lineHeight: 1 }}>
-                  {movieA.metrics[category]}
+                  {formatMetric(category, movieA.metrics[category])}
                 </div>
                 <div style={{ fontSize: "var(--fs-sm)", opacity: 0.9 }}>
                   {CAT_CONFIG[category].unit}
@@ -349,7 +353,7 @@ function GamePlayArea({
 
               <div style={labelStyle(CAT_CONFIG[category].color)}>
                 <div style={{ fontSize: "clamp(2rem, 9vw, 3.5rem)", lineHeight: 1 }}>
-                  {feedback ? movieB.metrics[category] : (
+                  {feedback ? formatMetric(category, movieB.metrics[category]) : (
                     <>
                       <span aria-hidden="true">?</span>
                       <span className="rd-sr-only">Valor oculto</span>
@@ -453,9 +457,9 @@ export default function HighLowGame({ movies, loading }) {
         {state.gameOver
           ? `Fin del juego. Racha final: ${state.streak}.`
           : state.feedback === "correct"
-            ? `Correcto. ${movieB?.title}: ${movieB?.metrics[category]}. Racha: ${state.streak}.`
+            ? `Correcto. ${movieB?.title}: ${formatMetric(category, movieB?.metrics[category])}. Racha: ${state.streak}.`
             : state.feedback === "wrong"
-              ? `Incorrecto. ${movieB?.title}: ${movieB?.metrics[category]}.`
+              ? `Incorrecto. ${movieB?.title}: ${formatMetric(category, movieB?.metrics[category])}.`
               : ""}
       </p>
 

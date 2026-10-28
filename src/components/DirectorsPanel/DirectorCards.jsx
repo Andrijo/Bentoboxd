@@ -10,7 +10,7 @@ export default function DirectorCards({ directors }) {
       {topDirectors.map(([name, count], i) => (
         <div key={name} style={{
           display: "flex", alignItems: "center", gap: "16px",
-          background: "rgba(0,0,0,0.3)", padding: "12px 20px",
+          background: "var(--c-inset)", padding: "12px 20px",
           borderRadius: "var(--radius-md)",
           animation: "fadeSlideIn 0.4s ease both", animationDelay: `${i * 100}ms`,
         }}>
@@ -21,13 +21,13 @@ export default function DirectorCards({ directors }) {
             0{i + 1}
           </span>
           <span style={{
-            flex: 1, color: "#DBD5CA", fontSize: "var(--fs-sm)",
+            flex: 1, color: "var(--c-text)", fontSize: "var(--fs-sm)",
             letterSpacing: "1px",
           }}>
             {name}
           </span>
           <span style={{
-            fontSize: "var(--fs-xs)", color: "rgba(255,255,255,0.5)",
+            fontSize: "var(--fs-xs)", color: "var(--c-text-muted)",
             fontFamily: "var(--font-mono)", letterSpacing: "1px",
             background: "rgba(255,255,255,0.05)",
             padding: "4px 8px", borderRadius: "var(--radius-sm)",

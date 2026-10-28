@@ -9,7 +9,7 @@ export default function RecentProfiles({ profiles, onSelect }) {
           fontWeight: "inherit",
           fontSize: "var(--fs-2xs)",
           letterSpacing: "3px",
-          color: "rgba(255,255,255,0.55)",
+          color: "var(--c-text-muted)",
           textTransform: "uppercase",
           marginBottom: "16px",
         }}>
@@ -24,23 +24,7 @@ export default function RecentProfiles({ profiles, onSelect }) {
             key={profile}
             onClick={() => onSelect(profile)}
             type="button"
-            className="rd-profile-btn"
-            onMouseEnter={(e) => {
-              e.currentTarget.style.borderColor = "rgba(0,229,255,0.3)"
-              e.currentTarget.style.background = "rgba(0,229,255,0.05)"
-            }}
-            onFocus={(e) => {
-              e.currentTarget.style.borderColor = "rgba(0,229,255,0.3)"
-              e.currentTarget.style.background = "rgba(0,229,255,0.05)"
-            }}
-            onBlur={(e) => {
-              e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"
-              e.currentTarget.style.background = "rgba(255,255,255,0.03)"
-            }}
-            onMouseLeave={(e) => {
-              e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"
-              e.currentTarget.style.background = "rgba(255,255,255,0.03)"
-            }}>
+            className="rd-profile-btn">
             @{profile}
           </button>
         ))}

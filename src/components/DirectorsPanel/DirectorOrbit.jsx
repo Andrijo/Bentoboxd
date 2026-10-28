@@ -35,7 +35,7 @@ export default function DirectorOrbit({ directors }) {
                 opacity={0.8} filter={`drop-shadow(0 0 5px ${color})`} />
               <text x={x + (x > cx ? 12 : -12)} y={y}
                 textAnchor={x > cx ? "start" : "end"} dominantBaseline="middle"
-                fontSize="8" fill="#F0EDE5" style={{ fontFamily: "var(--font-mono)" }} letterSpacing="0.5">
+                fontSize="8" fill="var(--c-text-bright)" style={{ fontFamily: "var(--font-mono)" }} letterSpacing="0.5">
                 {name}
               </text>
               <text x={x + (x > cx ? 12 : -12)} y={y + 10}

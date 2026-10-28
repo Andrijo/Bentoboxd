@@ -3,7 +3,7 @@ import { generateQuestions } from "./quizQuestions.js"
 
 const actionBtn = {
   background: "rgba(0,229,255,0.1)", border: "1px solid #00e5ff",
-  color: "#00e5ff", padding: "10px 20px", cursor: "pointer",
+  color: "var(--c-accent)", padding: "10px 20px", cursor: "pointer",
   fontFamily: "var(--font-mono)",
 }
 
@@ -81,11 +81,11 @@ export default function Quiz({ movies, onBack }) {
             <h2 ref={resultRef} tabIndex={-1} style={{
               outline: "none",
               fontFamily: "var(--font-display)", fontSize: "clamp(2rem, 9vw, 3rem)",
-              color: "#00e5ff", margin: 0,
+              color: "var(--c-accent)", margin: 0,
             }}>
               TEST COMPLETADO
             </h2>
-            <div style={{ fontSize: "var(--fs-base)", color: "#DBD5CA", margin: "20px 0" }}>
+            <div style={{ fontSize: "var(--fs-base)", color: "var(--c-text)", margin: "20px 0" }}>
               Puntuación:{" "}
               <span style={{ color: "#facc15", fontWeight: "bold" }}>
                 {score}
@@ -98,7 +98,7 @@ export default function Quiz({ movies, onBack }) {
               </button>
               <button onClick={onBack} type="button" style={{
                 ...actionBtn, background: "transparent",
-                borderColor: "rgba(255,255,255,0.2)", color: "#DBD5CA",
+                borderColor: "rgba(255,255,255,0.2)", color: "var(--c-text)",
               }}>
                 Volver al perfil
               </button>
@@ -109,7 +109,7 @@ export default function Quiz({ movies, onBack }) {
             <div style={{
               padding: "20px", borderBottom: "1px solid rgba(255,255,255,0.05)",
               display: "flex", justifyContent: "space-between",
-              color: "#00e5ff", fontSize: "var(--fs-xs)",
+              color: "var(--c-accent)", fontSize: "var(--fs-xs)",
             }}>
               <span aria-hidden="true">SYSTEM.TRIVIA_MODULE</span>
               <span>Pregunta {currentQ + 1} / {questions.length}</span>
@@ -119,7 +119,7 @@ export default function Quiz({ movies, onBack }) {
               <div style={{ textAlign: "center", marginBottom: "20px" }}>
                 <h2 id="rd-quiz-question" ref={questionRef} tabIndex={-1} style={{
                   outline: "none",
-                  fontSize: "var(--fs-md)", color: "#F0EDE5", fontWeight: "inherit",
+                  fontSize: "var(--fs-md)", color: "var(--c-text-bright)", fontWeight: "inherit",
                   marginBottom: "20px", lineHeight: "1.4",
                 }}>
                   {current.qText}
@@ -130,7 +130,7 @@ export default function Quiz({ movies, onBack }) {
                 {current.options.map((opt) => {
                   let bgColor = "rgba(255,255,255,0.03)"
                   let borderColor = "rgba(255,255,255,0.1)"
-                  let textColor = "#DBD5CA"
+                  let textColor = "var(--c-text)"
 
                   if (selected) {
                     if (opt === current.correct) {

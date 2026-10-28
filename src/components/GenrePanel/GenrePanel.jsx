@@ -6,6 +6,7 @@ import MatrixChart from "./MatrixChart.jsx"
 import GaugesChart from "./GaugesChart.jsx"
 import GenreList from "./GenreList.jsx"
 import { PanelSkeleton } from "../Skeleton.jsx"
+import PanelError from "../Panel/PanelError.jsx"
 import Panel from "../Panel/Panel.jsx"
 import SegmentedControl from "../Panel/SegmentedControl.jsx"
 import { formatMovieCount } from "../../utils/formatters.js"
@@ -42,15 +43,7 @@ export default function GenrePanel({ genres, movieCount, loadingGenres, genreErr
       }}>
       {loadingGenres && <PanelSkeleton variant="chart" label="Clasificando géneros…" />}
 
-      {genreError && !loadingGenres && (
-        <div style={{
-          fontSize: "var(--fs-2xs)", color: "rgba(255,80,80,0.7)",
-          letterSpacing: "1px", fontFamily: "var(--font-mono)",
-          textAlign: "center",
-        }}>
-          ⚠ {genreError}
-        </div>
-      )}
+      {genreError && !loadingGenres && <PanelError message={genreError} />}
 
       {!loadingGenres && !genreError && hasData && (
         <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
@@ -68,7 +61,7 @@ export default function GenrePanel({ genres, movieCount, loadingGenres, genreErr
 
       {!loadingGenres && !genreError && !hasData && (
         <div style={{
-          fontSize: "var(--fs-xs)", color: "rgba(255,255,255,0.55)",
+          fontSize: "var(--fs-xs)", color: "var(--c-text-muted)",
           letterSpacing: "2px", fontFamily: "var(--font-mono)",
         }}>
           Sin datos de géneros disponibles

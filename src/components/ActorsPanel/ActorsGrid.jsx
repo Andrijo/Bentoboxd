@@ -13,7 +13,7 @@ export default function ActorsGrid({ actors }) {
         return (
           <div key={name} style={{
             display: "flex", alignItems: "center",
-            background: "rgba(0,0,0,0.4)", border: "1px solid rgba(255,255,255,0.05)",
+            background: "var(--c-inset-strong)", border: "1px solid rgba(255,255,255,0.05)",
             padding: "12px 16px",
             borderRadius: "var(--radius-md)", animation: "fadeSlideIn 0.3s ease both",
             animationDelay: `${i * 50}ms`,
@@ -24,12 +24,12 @@ export default function ActorsGrid({ actors }) {
             <div style={{ flex: 1, overflow: "hidden" }}>
               <div style={{
                 fontSize: "var(--fs-xs)", fontWeight: "bold",
-                color: "#DBD5CA", whiteSpace: "nowrap", overflow: "hidden",
+                color: "var(--c-text)", whiteSpace: "nowrap", overflow: "hidden",
                 textOverflow: "ellipsis",
               }}>
                 {name}
               </div>
-              <div style={{ fontSize: "var(--fs-xs)", color: "rgba(255,255,255,0.55)" }}>
+              <div style={{ fontSize: "var(--fs-xs)", color: "var(--c-text-muted)" }}>
                 {formatMovieCount(count)}
               </div>
             </div>

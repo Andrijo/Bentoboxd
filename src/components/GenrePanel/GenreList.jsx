@@ -17,7 +17,7 @@ export default function GenreList({ genres }) {
         return (
           <li key={k} style={{
             display: "flex", alignItems: "center", gap: "12px",
-            background: "rgba(0,0,0,0.4)", border: "1px solid rgba(255,255,255,0.05)",
+            background: "var(--c-inset-strong)", border: "1px solid rgba(255,255,255,0.05)",
             borderRadius: "var(--radius-md)", padding: "8px 14px",
             animation: "fadeSlideIn 0.3s ease both", animationDelay: `${i * 40}ms`,
           }}>
@@ -26,14 +26,14 @@ export default function GenreList({ genres }) {
               background: color, boxShadow: `0 0 8px ${color}`,
             }} />
             <span style={{
-              flex: 1, fontSize: "var(--fs-xs)", fontWeight: "bold", color: "#DBD5CA",
+              flex: 1, fontSize: "var(--fs-xs)", fontWeight: "bold", color: "var(--c-text)",
               whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
             }}>
               {k}
             </span>
             <span style={{
               fontSize: "var(--fs-xs)", fontFamily: "var(--font-mono)",
-              color: "rgba(255,255,255,0.55)",
+              color: "var(--c-text-muted)",
             }}>
               {Math.round((count / total) * 100)}%
             </span>

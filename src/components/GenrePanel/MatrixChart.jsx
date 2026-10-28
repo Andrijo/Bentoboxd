@@ -80,7 +80,7 @@ export default function MatrixChart({ genres }) {
             </div>
             <div style={{
               fontSize: "var(--fs-xs)", fontFamily: "var(--font-mono)",
-              color: "rgba(255,255,255,0.5)",
+              color: "var(--c-text-muted)",
             }}>
               {genres[hoveredGenre]} nodos detectados (
               {((genres[hoveredGenre] / totalNodes) * 100).toFixed(1)}%)
@@ -89,7 +89,7 @@ export default function MatrixChart({ genres }) {
         ) : (
           <div style={{
               fontSize: "var(--fs-xs)", fontFamily: "var(--font-mono)",
-              color: "rgba(255,255,255,0.55)", letterSpacing: "2px",
+              color: "var(--c-text-muted)", letterSpacing: "2px",
           }}>
             [ Pase el cursor para analizar nodos ]
           </div>

@@ -24,6 +24,9 @@ Nace como un experimento personal para explorar visualización de datos, integra
   - **Timeline** — Línea de tiempo cronológica con pósters y calificaciones
   - **Terminal** — Listado estilo terminal retro
 - **Paneles de análisis:**
+  - **Resumen** — Promedio, comparación con TMDB, me gusta, revisiones, década favorita, tiempo viendo, ritmo semanal y día favorito
+  - **Opiniones impopulares** — Las películas donde más te alejas del promedio de TMDB, a favor y en contra
+  - **Mejor calificados por ti** — Géneros y directores con el mejor promedio de tus calificaciones (mínimo 2 películas)
   - **Géneros** — 5 tipos de gráfico (Donut, Radar, Barras, Matriz, Gauges)
   - **Directores** — Vista de tarjetas, holograma u órbita
   - **Actores** — Cuadrícula, espectro o constelación
@@ -140,6 +143,8 @@ src/
 │   ├── ActorsPanel/         # Paneles de actores
 │   ├── CountriesPanel/      # Paneles de países
 │   ├── PlatformsPanel/      # Plataformas de streaming
+│   ├── TopRatedPanel/       # Mejor calificados por ti
+│   ├── OpinionsPanel/       # Opiniones impopulares (vs TMDB)
 │   └── Quiz/                # Página de quiz (#quiz)
 ├── hooks/                   # Custom hooks
 │   ├── useLetterboxdFeed.js # Fetch y parse de RSS
@@ -151,7 +156,6 @@ src/
 │   ├── letterboxd.js        # Parseo de RSS
 │   └── tmdb.js              # Cliente TMDB
 ├── constants/               # Constantes y mapeos
-├── styles/                  # Tokens de diseño
 ├── test/setup.js            # Setup de Vitest (jest-dom)
 └── utils/                   # Utilidades
 ```
