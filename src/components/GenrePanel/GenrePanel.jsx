@@ -32,7 +32,7 @@ export default function GenrePanel({ genres, movieCount, loadingGenres, genreErr
       id="rd-panel-generos"
       area="genres"
       title="TOP GÉNEROS"
-      subtitle={hasData && `Clasificado por TMDB — ${formatMovieCount(movieCount)} · ${genreCount} género${genreCount === 1 ? "" : "s"}`}
+      subtitle={hasData && `${formatMovieCount(movieCount)} · ${genreCount} género${genreCount === 1 ? "" : "s"}`}
       actions={hasData && (
         <SegmentedControl label="Tipo de gráfico" options={CHART_OPTIONS} value={chartType} onChange={setChartType} />
       )}
