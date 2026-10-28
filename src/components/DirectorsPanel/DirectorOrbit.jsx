@@ -1,3 +1,5 @@
+import { formatMovieCount } from "../../utils/formatters.js"
+
 const rankColors = ["var(--ramp-1)", "var(--ramp-3)", "var(--ramp-5)", "var(--ramp-7)", "var(--ramp-9)"]
 const radii = [40, 70, 100, 130, 160]
 
@@ -41,7 +43,7 @@ export default function DirectorOrbit({ directors }) {
               <text x={x + (x > cx ? 12 : -12)} y={y + 10}
                 textAnchor={x > cx ? "start" : "end"} fontSize="6"
                 fill={color} style={{ fontFamily: "var(--font-mono)" }}>
-                {count} films
+                {formatMovieCount(count)}
               </text>
             </g>
           )

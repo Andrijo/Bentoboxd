@@ -5,8 +5,8 @@ import Panel from "../Panel/Panel.jsx"
 import { computeDivergences } from "../../utils/divergences.js"
 
 const GROUPS = [
-  { key: "above", title: "Les diste más que TMDB", sign: "+" },
-  { key: "below", title: "Les diste menos que TMDB", sign: "−" },
+  { key: "above", title: "Te gustaron más que a la mayoría", sign: "+" },
+  { key: "below", title: "Te gustaron menos que a la mayoría", sign: "−" },
 ]
 
 const formatRating = (value) => Number(value.toFixed(1))
@@ -44,7 +44,7 @@ function OpinionRow({ movie, diff, sign }) {
             display: "block", marginTop: "4px", fontSize: "var(--fs-xs)",
             color: "var(--c-text-muted)",
           }}>
-            Tú {formatRating(movie.rating)} · TMDB {formatRating(movie.metrics.rating)}
+            Tú {formatRating(movie.rating)} · Media {formatRating(movie.metrics.rating)}
           </span>
         </span>
 
@@ -69,8 +69,8 @@ export default function OpinionsPanel({ movies, loading }) {
       id="rd-panel-opiniones"
       area="opinions"
       title="OPINIONES IMPOPULARES"
-      subtitle={!loading && compared > 0 && "Donde más te alejas del promedio de TMDB"}>
-      {loading && <PanelSkeleton variant="rows" label="Comparando con TMDB…" />}
+      subtitle={!loading && compared > 0 && "Donde más te alejas de la media del público (TMDB)"}>
+      {loading && <PanelSkeleton variant="rows" label="Comparando con el público…" />}
 
       {!loading && hasData && (
         <div style={{
@@ -100,8 +100,8 @@ export default function OpinionsPanel({ movies, loading }) {
           marginTop: "20px", fontFamily: "var(--font-mono)",
         }}>
           {compared > 0
-            ? "Tus calificaciones van en línea con las de TMDB: ninguna se aleja media estrella o más."
-            : "Califica algunas películas para compararlas con TMDB."}
+            ? "Tus calificaciones van en línea con las del público: ninguna se aleja media estrella o más."
+            : "Califica algunas películas para compararlas con las del público."}
         </div>
       )}
     </Panel>

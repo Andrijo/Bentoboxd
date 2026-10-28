@@ -47,7 +47,7 @@ export default function StatsSummary({ movies, loading }) {
   if (loading) {
     tmdbTile = (
       <StatTile
-        label="Contra TMDB"
+        label="Contra el consenso"
         value={<Skeleton width="64px" height="1.4rem" />}
         detail="Comparando…"
       />
@@ -56,7 +56,7 @@ export default function StatsSummary({ movies, loading }) {
     const sign = stats.tmdbDiff > 0 ? "+" : stats.tmdbDiff < 0 ? "−" : ""
     tmdbTile = (
       <StatTile
-        label="Contra TMDB"
+        label="Contra el consenso"
         value={`${sign}${formatRating(Math.abs(stats.tmdbDiff))}`}
         detail={`${TMDB_VERDICT[stats.tmdbVerdict]} (${formatMovieCount(stats.tmdbCompared)})`}
       />

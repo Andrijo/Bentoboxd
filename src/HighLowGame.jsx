@@ -4,25 +4,19 @@ import { buildDeck, isCorrectGuess } from "./utils/highLowDeck.js"
 
 const CAT_CONFIG = {
   rating: {
-    label: "Puntuación",
     unit: "Estrellas",
-    title: "Aclamación Mundial",
     desc: "Adivina si la siguiente película tiene una calificación mayor o menor.",
-    sub: "Basado en la puntuación promedio mundial de TMDB.",
+    sub: "Según la calificación media del público.",
   },
   popularity: {
-    label: "Popularidad",
-    unit: "Índice TMDB",
-    title: "En Tendencia",
-    desc: "Adivina qué película es más popular hoy en TMDB.",
-    sub: "Basado en el índice de tendencias actual de TMDB.",
+    unit: "Popularidad",
+    desc: "Adivina qué película es más popular hoy.",
+    sub: "Según la actividad reciente del público; cambia día a día.",
   },
   year: {
-    label: "Año",
     unit: "Estreno",
-    title: "Línea de Tiempo",
     desc: "Adivina qué película se estrenó más recientemente (Higher = más nueva).",
-    sub: "Basado en la fecha de estreno oficial en cines.",
+    sub: "Según la fecha de estreno oficial en cines.",
   },
 }
 
@@ -449,7 +443,7 @@ export default function HighLowGame({ movies, loading }) {
 
   // Las métricas vienen de TMDB; sin ellas no hay con qué comparar.
   const notice = loading
-    ? "Cargando datos de TMDB…"
+    ? "Cargando datos de las películas…"
     : "No hay suficientes películas con datos para esta categoría."
 
   return (
