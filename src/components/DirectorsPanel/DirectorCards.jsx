@@ -16,7 +16,7 @@ export default function DirectorCards({ directors }) {
         }}>
           <span aria-hidden="true" style={{
             fontFamily: "var(--font-display)", fontSize: "var(--fs-xl)",
-            color: "rgba(255,255,255,0.15)", lineHeight: 1,
+            color: "rgb(var(--fg-rgb) / 0.15)", lineHeight: 1,
           }}>
             0{i + 1}
           </span>
@@ -29,7 +29,7 @@ export default function DirectorCards({ directors }) {
           <span style={{
             fontSize: "var(--fs-xs)", color: "var(--c-text-muted)",
             fontFamily: "var(--font-mono)", letterSpacing: "1px",
-            background: "rgba(255,255,255,0.05)",
+            background: "rgb(var(--fg-rgb) / 0.05)",
             padding: "4px 8px", borderRadius: "var(--radius-sm)",
           }}>
             {formatMovieCount(count)}

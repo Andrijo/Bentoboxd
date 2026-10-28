@@ -38,7 +38,7 @@ export default function ActorsSpectrum({ actors }) {
             }}>
               <div style={{
                 position: "absolute", top: 0, left: 0, right: 0,
-                height: "2px", background: "#fff",
+                height: "2px", background: "var(--c-text-bright)",
               }} />
             </div>
             <div style={{

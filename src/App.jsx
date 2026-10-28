@@ -12,6 +12,7 @@ import { useLetterboxdFeed } from "./hooks/useLetterboxdFeed.js"
 import { useTMDBMetadata } from "./hooks/useTMDBMetadata.js"
 import { useHashRoute } from "./hooks/useHashRoute.js"
 import { useOverscrollColor } from "./hooks/useOverscrollColor.js"
+import { useTheme } from "./hooks/useTheme.js"
 import { parseUsername } from "./services/letterboxd.js"
 import { readProfileParam, writeProfileParam } from "./utils/profileUrl.js"
 
@@ -32,6 +33,7 @@ export default function App() {
   const requestIdRef = useRef(0)
   const mainRef = useRef(null)
   useOverscrollColor()
+  const [theme, toggleTheme] = useTheme()
 
   const {
     movies,
@@ -206,8 +208,10 @@ export default function App() {
       <AppHeader
         page={page}
         showTabs={hasMovies}
+        theme={theme}
         onNavigate={navigate}
         onReset={resetToStart}
+        onToggleTheme={toggleTheme}
       />
 
       <main ref={mainRef} id="contenido" tabIndex={-1} style={{ outline: "none", flex: 1 }}>

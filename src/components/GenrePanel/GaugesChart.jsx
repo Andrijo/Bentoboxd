@@ -35,8 +35,8 @@ export default function GaugesChart({ genres }) {
                 </filter>
               </defs>
 
-              <circle cx="50" cy="50" r={r} fill="none" stroke="rgba(255,255,255,0.05)" strokeWidth="6" />
-              <circle cx="50" cy="50" r={r - 12} fill="none" stroke="rgba(255,255,255,0.08)" strokeWidth="1" strokeDasharray="2 4" />
+              <circle cx="50" cy="50" r={r} fill="none" stroke="rgb(var(--fg-rgb) / 0.05)" strokeWidth="6" />
+              <circle cx="50" cy="50" r={r - 12} fill="none" stroke="rgb(var(--fg-rgb) / 0.08)" strokeWidth="1" strokeDasharray="2 4" />
 
               <circle cx="50" cy="50" r={r} fill="none" stroke={cfg.color} strokeWidth="6"
                 strokeLinecap="round" strokeDasharray={circ} strokeDashoffset={dashOffset}

@@ -6,7 +6,6 @@ const CAT_CONFIG = {
   rating: {
     label: "Puntuación",
     unit: "Estrellas",
-    color: "var(--c-accent)",
     title: "Aclamación Mundial",
     desc: "Adivina si la siguiente película tiene una calificación mayor o menor.",
     sub: "Basado en la puntuación promedio mundial de TMDB.",
@@ -14,7 +13,6 @@ const CAT_CONFIG = {
   popularity: {
     label: "Popularidad",
     unit: "Índice TMDB",
-    color: "#e81cff",
     title: "En Tendencia",
     desc: "Adivina qué película es más popular hoy en TMDB.",
     sub: "Basado en el índice de tendencias actual de TMDB.",
@@ -22,7 +20,6 @@ const CAT_CONFIG = {
   year: {
     label: "Año",
     unit: "Estreno",
-    color: "#4ade80",
     title: "Línea de Tiempo",
     desc: "Adivina qué película se estrenó más recientemente (Higher = más nueva).",
     sub: "Basado en la fecha de estreno oficial en cines.",
@@ -66,8 +63,7 @@ const cardStyle = {
   aspectRatio: "2/3",
   borderRadius: "var(--radius-lg)",
   overflow: "hidden",
-  border: "1px solid rgba(255,255,255,0.1)",
-  boxShadow: "0 10px 40px rgba(0,0,0,0.8)",
+  border: "1px solid rgb(var(--fg-rgb) / 0.1)",
 }
 const imgStyle = {
   width: "100%",
@@ -83,24 +79,24 @@ const darkOverlayStyle = {
   pointerEvents: "none",
   zIndex: 1,
 }
-const labelStyle = (color) => ({
+const labelStyle = {
   position: "absolute",
   bottom: 0,
   width: "100%",
   padding: "20px 10px",
-  color: color,
+  color: "#f6f4ee",
   fontFamily: "var(--font-display)",
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
   textShadow: "0px 4px 20px rgba(0,0,0,1), 0px 2px 5px rgba(0,0,0,1)",
   zIndex: 2,
-})
+}
 // width 0 + minWidth 100%: el título toma el ancho de la carta sin
 // ensancharla; hasta 2 líneas centradas antes de recortar con "…".
 // minHeight reserva las 2 líneas para que ambas cartas queden alineadas.
 const titleStyle = {
-  color: "#ffffff",
+  color: "var(--c-text-bright)",
   marginTop: "15px",
   fontSize: "clamp(0.85rem, 3vw, 1.25rem)",
   fontWeight: "bold",
@@ -114,7 +110,6 @@ const titleStyle = {
   WebkitBoxOrient: "vertical",
   WebkitLineClamp: 2,
   overflow: "hidden",
-  textShadow: "0 2px 8px rgba(0,0,0,0.8)",
 }
 // Controles en un lienzo de 60×150 (ver .rd-hlg-controls): el círculo VS
 // está en (30,75) con r=25 y la base de cada flecha es un arco concéntrico
@@ -133,11 +128,19 @@ function GuessControls({ disabled, onGuess }) {
         title="Higher (↑)"
         className="rd-hlg-arrow rd-hlg-arrow-up">
         <svg viewBox="0 0 60 50.51" aria-hidden="true">
-          <path d={ARROW_PATH} fill="#facc15" />
+          <path d={ARROW_PATH} />
         </svg>
       </button>
 
-      <div className="rd-hlg-vs" aria-hidden="true">VS</div>
+      <div className="rd-hlg-vs" aria-hidden="true">
+        <svg viewBox="0 0 100 100">
+          <mask id="rd-hlg-vs-mask">
+            <rect width="100" height="100" fill="#fff" />
+            <text x="50" y="50" textAnchor="middle" dominantBaseline="central" fill="#000">VS</text>
+          </mask>
+          <circle cx="50" cy="50" r="50" fill="#333333" mask="url(#rd-hlg-vs-mask)" />
+        </svg>
+      </div>
 
       <button
         onClick={() => onGuess("lower")}
@@ -147,7 +150,7 @@ function GuessControls({ disabled, onGuess }) {
         title="Lower (↓)"
         className="rd-hlg-arrow rd-hlg-arrow-down">
         <svg viewBox="0 0 60 50.51" aria-hidden="true">
-          <path d={ARROW_PATH} fill="#22c55e" />
+          <path d={ARROW_PATH} />
         </svg>
       </button>
     </div>
@@ -162,7 +165,7 @@ function GameHeader({ category, streak, onCategoryChange }) {
         flexDirection: "column",
         gap: "15px",
         paddingBottom: "20px",
-        borderBottom: "1px solid rgba(255,255,255,0.06)",
+        borderBottom: "1px solid rgb(var(--fg-rgb) / 0.06)",
       }}>
       <div
         style={{
@@ -193,7 +196,7 @@ function GameHeader({ category, streak, onCategoryChange }) {
             <br />
             <span
               style={{
-                color: CAT_CONFIG[category].color,
+                color: "var(--c-text)",
                 transition: "color 0.3s",
               }}>
               {CAT_CONFIG[category].sub}
@@ -203,7 +206,7 @@ function GameHeader({ category, streak, onCategoryChange }) {
 
         <div
           style={{
-            color: "#f59e0b",
+            color: "var(--c-text-bright)",
             fontSize: "clamp(1.1rem, 4vw, 1.8rem)",
             fontFamily: "var(--font-display)",
             letterSpacing: "2px",
@@ -235,14 +238,14 @@ function GameHeader({ category, streak, onCategoryChange }) {
             style={{
               background:
                 category === cat.id
-                  ? CAT_CONFIG[cat.id].color
-                  : "rgba(255,255,255,0.05)",
+                  ? "var(--c-text-bright)"
+                  : "rgb(var(--fg-rgb) / 0.05)",
               color:
-                category === cat.id ? "#000" : "var(--c-text-muted)",
+                category === cat.id ? "var(--c-on-text)" : "var(--c-text-muted)",
               border:
                 category === cat.id
-                  ? `1px solid ${CAT_CONFIG[cat.id].color}`
-                  : "1px solid rgba(255,255,255,0.1)",
+                  ? "1px solid var(--c-text-bright)"
+                  : "1px solid rgb(var(--fg-rgb) / 0.1)",
               padding: "8px clamp(12px, 4vw, 24px)",
               borderRadius: "var(--radius-md)",
               cursor: "pointer",
@@ -250,10 +253,6 @@ function GameHeader({ category, streak, onCategoryChange }) {
               fontSize: "var(--fs-xs)",
               fontFamily: "var(--font-mono)",
               transition: "background 0.3s, color 0.3s, border 0.3s, box-shadow 0.3s",
-              boxShadow:
-                category === cat.id
-                  ? `0 0 15px ${CAT_CONFIG[cat.id].color}40`
-                  : "none",
             }}>
             {cat.label}
           </button>
@@ -288,8 +287,9 @@ function GamePlayArea({
           <h2
             style={{
               fontSize: "clamp(2.5rem, 12vw, 4rem)",
-              color: "#ff4444",
+              color: "var(--c-text-bright)",
               fontFamily: "var(--font-display)",
+              marginBottom: "16px",
             }}>
             GAME OVER
           </h2>
@@ -297,13 +297,15 @@ function GamePlayArea({
             onClick={onRestart}
             type="button"
             style={{
-              background: "#facc15",
-              color: "#000",
-              padding: "15px 30px",
-              border: "none",
+              background: "var(--c-text-bright)",
+              color: "var(--c-on-text)",
+              padding: "10px 28px",
+              border: "1px solid var(--c-text-bright)",
               borderRadius: "var(--radius-md)",
               cursor: "pointer",
               fontWeight: "bold",
+              fontSize: "var(--fs-xs)",
+              fontFamily: "var(--font-mono)",
             }}>
             Reintentar
           </button>
@@ -321,7 +323,7 @@ function GamePlayArea({
               />
               <div style={darkOverlayStyle} />
 
-              <div style={labelStyle(CAT_CONFIG[category].color)}>
+              <div style={labelStyle}>
                 <div style={{ fontSize: "clamp(2rem, 9vw, 3.5rem)", lineHeight: 1 }}>
                   {formatMetric(category, movieA.metrics[category])}
                 </div>
@@ -351,7 +353,7 @@ function GamePlayArea({
               />
               <div style={darkOverlayStyle} />
 
-              <div style={labelStyle(CAT_CONFIG[category].color)}>
+              <div style={labelStyle}>
                 <div style={{ fontSize: "clamp(2rem, 9vw, 3.5rem)", lineHeight: 1 }}>
                   {feedback ? formatMetric(category, movieB.metrics[category]) : (
                     <>
@@ -375,8 +377,7 @@ function GamePlayArea({
                     alignItems: "center",
                     justifyContent: "center",
                     fontSize: "clamp(3rem, 15vw, 6rem)",
-                    color:
-                      feedback === "correct" ? "#4ade80" : "#ff4444",
+                    color: "#f6f4ee",
                     textShadow: "0 0 40px rgba(0,0,0,1)",
                   }}>
                   {feedback === "correct" ? "✓" : "✕"}

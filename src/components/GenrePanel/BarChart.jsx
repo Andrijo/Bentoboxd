@@ -19,8 +19,8 @@ export default function BarChart({ genres }) {
         return (
           <div key={k} style={{ display: "flex", alignItems: "center", gap: "14px" }}>
             <div style={{
-              flex: 1, height: "12px", background: "rgba(255,255,255,0.03)",
-              border: "1px solid rgba(255,255,255,0.08)", borderRadius: "2px",
+              flex: 1, height: "12px", background: "rgb(var(--fg-rgb) / 0.03)",
+              border: "1px solid rgb(var(--fg-rgb) / 0.08)", borderRadius: "2px",
               overflow: "visible", position: "relative",
             }}>
               <div style={{
@@ -34,7 +34,7 @@ export default function BarChart({ genres }) {
               }}>
                 <div style={{
                   position: "absolute", right: 0, top: 0, bottom: 0,
-                  width: "4px", background: "#fff", opacity: 0.5,
+                  width: "4px", background: "var(--c-text-bright)", opacity: 0.5,
                 }} />
               </div>
             </div>

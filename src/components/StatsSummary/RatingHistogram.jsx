@@ -24,7 +24,7 @@ export default function RatingHistogram({ distribution }) {
       <div aria-hidden="true" style={{ position: "relative" }}>
         <div style={{
           height: `${CHART_HEIGHT}px`, display: "flex", alignItems: "flex-end", gap: "4px",
-          borderBottom: "1px solid rgba(255,255,255,0.12)",
+          borderBottom: "1px solid rgb(var(--fg-rgb) / 0.12)",
         }}>
           {distribution.map((d) => {
             const isMode = d === mode
@@ -51,14 +51,14 @@ export default function RatingHistogram({ distribution }) {
                   width: "100%", maxWidth: "48px",
                   height: d.count ? `${Math.max(4, (d.count / max) * (CHART_HEIGHT - 24))}px` : 0,
                   borderRadius: "4px 4px 0 0",
-                  background: isMode || isActive ? "var(--c-accent)" : "rgba(0,229,255,0.35)",
+                  background: isMode || isActive ? "var(--c-accent)" : "rgb(var(--accent-rgb) / 0.35)",
                   transition: "background 0.15s",
                 }} />
                 {isActive && (
                   <div style={{
                     position: "absolute", bottom: "100%", left: "50%", transform: "translateX(-50%)",
                     marginBottom: "-8px", whiteSpace: "nowrap", pointerEvents: "none", zIndex: 2,
-                    background: "#121212", border: "1px solid rgba(255,255,255,0.15)",
+                    background: "var(--c-card)", border: "1px solid rgb(var(--fg-rgb) / 0.15)",
                     borderRadius: "var(--radius-sm)", padding: "4px 8px",
                     fontSize: "var(--fs-xs)", color: "var(--c-text-bright)",
                   }}>

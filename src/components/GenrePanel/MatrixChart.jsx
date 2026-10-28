@@ -47,10 +47,10 @@ export default function MatrixChart({ genres }) {
               style={{
                 width: "16px", height: "16px",
                 background: isDimmed
-                  ? "rgba(255,255,255,0.05)"
+                  ? "rgb(var(--fg-rgb) / 0.05)"
                   : `linear-gradient(135deg, ${cfg.color}90, ${cfg.color}40)`,
                 border: isDimmed
-                  ? "1px solid rgba(255,255,255,0.05)"
+                  ? "1px solid rgb(var(--fg-rgb) / 0.05)"
                   : `1px solid ${cfg.color}80`,
                 borderRadius: "2px",
                 boxShadow: isHovered

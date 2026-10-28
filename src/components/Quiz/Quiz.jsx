@@ -2,8 +2,8 @@ import { useState, useRef, useEffect } from "react"
 import { generateQuestions } from "./quizQuestions.js"
 
 const actionBtn = {
-  background: "rgba(0,229,255,0.1)", border: "1px solid #00e5ff",
-  color: "var(--c-accent)", padding: "10px 20px", cursor: "pointer",
+  background: "var(--c-text-bright)", border: "1px solid var(--c-text-bright)",
+  color: "var(--c-on-text)", padding: "10px 20px", cursor: "pointer",
   fontFamily: "var(--font-mono)",
 }
 
@@ -87,7 +87,7 @@ export default function Quiz({ movies, onBack }) {
             </h2>
             <div style={{ fontSize: "var(--fs-base)", color: "var(--c-text)", margin: "20px 0" }}>
               Puntuación:{" "}
-              <span style={{ color: "#facc15", fontWeight: "bold" }}>
+              <span style={{ color: "var(--c-warning)", fontWeight: "bold" }}>
                 {score}
               </span>{" "}
               / {questions.length}
@@ -98,7 +98,7 @@ export default function Quiz({ movies, onBack }) {
               </button>
               <button onClick={onBack} type="button" style={{
                 ...actionBtn, background: "transparent",
-                borderColor: "rgba(255,255,255,0.2)", color: "var(--c-text)",
+                borderColor: "rgb(var(--fg-rgb) / 0.2)", color: "var(--c-text)",
               }}>
                 Volver al perfil
               </button>
@@ -107,7 +107,7 @@ export default function Quiz({ movies, onBack }) {
         ) : (
           <div>
             <div style={{
-              padding: "20px", borderBottom: "1px solid rgba(255,255,255,0.05)",
+              padding: "20px", borderBottom: "1px solid rgb(var(--fg-rgb) / 0.05)",
               display: "flex", justifyContent: "space-between",
               color: "var(--c-accent)", fontSize: "var(--fs-xs)",
             }}>
@@ -128,19 +128,19 @@ export default function Quiz({ movies, onBack }) {
 
               <div role="group" aria-labelledby="rd-quiz-question" style={{ display: "grid", gap: "12px" }}>
                 {current.options.map((opt) => {
-                  let bgColor = "rgba(255,255,255,0.03)"
-                  let borderColor = "rgba(255,255,255,0.1)"
+                  let bgColor = "rgb(var(--fg-rgb) / 0.03)"
+                  let borderColor = "rgb(var(--fg-rgb) / 0.1)"
                   let textColor = "var(--c-text)"
 
                   if (selected) {
                     if (opt === current.correct) {
-                      bgColor = "rgba(74,222,128,0.15)"
-                      borderColor = "#4ade80"
-                      textColor = "#4ade80"
+                      bgColor = "rgb(var(--success-rgb) / 0.15)"
+                      borderColor = "var(--c-success)"
+                      textColor = "var(--c-success)"
                     } else if (opt === selected && selected !== current.correct) {
-                      bgColor = "rgba(255,68,68,0.15)"
-                      borderColor = "#ff4444"
-                      textColor = "#ff4444"
+                      bgColor = "rgb(var(--danger-rgb) / 0.15)"
+                      borderColor = "var(--c-danger)"
+                      textColor = "var(--c-danger)"
                     }
                   }
 

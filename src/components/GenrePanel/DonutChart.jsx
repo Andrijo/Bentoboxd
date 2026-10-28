@@ -104,7 +104,7 @@ export default function DonutChart({ genres }) {
           </>
         ) : (
           <>
-            <text x={cx} y={cy - 8} textAnchor="middle" fontSize="22" fill="rgba(255,255,255,0.8)"
+            <text x={cx} y={cy - 8} textAnchor="middle" fontSize="22" fill="rgb(var(--fg-rgb) / 0.8)"
               style={{ fontFamily: "var(--font-display)" }} letterSpacing="2">
               {total}
             </text>

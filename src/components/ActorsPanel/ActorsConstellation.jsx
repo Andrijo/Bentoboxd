@@ -38,7 +38,7 @@ export default function ActorsConstellation({ actors }) {
             </g>
           )
         })}
-        <circle cx={cx} cy={cy} r={3} fill="#fff" filter="drop-shadow(0 0 6px #fff)" />
+        <circle cx={cx} cy={cy} r={3} style={{ fill: "var(--c-text-bright)", filter: "drop-shadow(0 0 6px var(--c-text-bright))" }} />
       </svg>
     </div>
   )

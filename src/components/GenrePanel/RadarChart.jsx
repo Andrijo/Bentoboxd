@@ -35,19 +35,19 @@ export default function RadarChart({ genres }) {
       style={{ width: "100%", maxWidth: "400px" }}>
       {levels.map((frac, li) => (
         <polygon key={li} points={gridPolygon(frac)} fill="none"
-          stroke="rgba(255,255,255,0.05)" strokeWidth="1" />
+          stroke="rgb(var(--fg-rgb) / 0.05)" strokeWidth="1" />
       ))}
 
       {keys.map((_, i) => {
         const p = pointAt(i, 1)
         return (
           <line key={i} x1={cx} y1={cy} x2={p.x} y2={p.y}
-            stroke="rgba(255,255,255,0.08)" strokeWidth="1" />
+            stroke="rgb(var(--fg-rgb) / 0.08)" strokeWidth="1" />
         )
       })}
 
-      <path d={dataPath} fill="rgba(0,229,255,0.08)"
-        stroke="rgba(0,229,255,0.5)" strokeWidth="1.5" strokeLinejoin="round" />
+      <path d={dataPath} fill="rgb(var(--accent-rgb) / 0.08)"
+        stroke="rgb(var(--accent-rgb) / 0.5)" strokeWidth="1.5" strokeLinejoin="round" />
 
       {dataPoints.map((p, i) => {
         const k = keys[i]
@@ -70,12 +70,12 @@ export default function RadarChart({ genres }) {
           <g key={k}>
             <text x={lp.x} y={lp.y - 6} textAnchor="middle" dominantBaseline="middle"
               fontSize="9" style={{ fontFamily: "var(--font-mono)" }}
-              fill={val > 0 ? cfg.color : "rgba(255,255,255,0.2)"} letterSpacing="0.5">
+              fill={val > 0 ? cfg.color : "rgb(var(--fg-rgb) / 0.2)"} letterSpacing="0.5">
               {k}
             </text>
             {val > 0 && (
               <text x={lp.x} y={lp.y + 8} textAnchor="middle" dominantBaseline="middle"
-                fontSize="8" style={{ fontFamily: "var(--font-mono)" }} fill="rgba(255,255,255,0.4)">
+                fontSize="8" style={{ fontFamily: "var(--font-mono)" }} fill="rgb(var(--fg-rgb) / 0.4)">
                 {formatMovieCount(val)}
               </text>
             )}
@@ -83,7 +83,7 @@ export default function RadarChart({ genres }) {
         )
       })}
 
-      <circle cx={cx} cy={cy} r={3} fill="rgba(0,229,255,0.4)" />
+      <circle cx={cx} cy={cy} r={3} fill="rgb(var(--accent-rgb) / 0.4)" />
     </svg>
   )
 }

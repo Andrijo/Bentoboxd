@@ -11,9 +11,9 @@ export default function DirectorOrbit({ directors }) {
   return (
     <div style={{ display: "flex", justifyContent: "center", padding: "10px" }}>
       <svg viewBox="0 0 300 300" style={{ width: "100%", maxWidth: "280px", overflow: "visible" }}>
-        <circle cx={cx} cy={cy} r={8} fill="#ffffff" opacity={0.8} />
+        <circle cx={cx} cy={cy} r={8} style={{ fill: "var(--c-text-bright)" }} opacity={0.8} />
         <text x={cx} y={cy + 4} textAnchor="middle" fontSize="6"
-          style={{ fontFamily: "var(--font-mono)" }} fill="#000" fontWeight="bold">
+          style={{ fontFamily: "var(--font-mono)", fill: "var(--c-on-text)" }} fontWeight="bold">
           Tú
         </text>
 
@@ -30,7 +30,7 @@ export default function DirectorOrbit({ directors }) {
               animation: "fadeSlideIn 1s ease both", animationDelay: `${i * 150}ms`,
             }}>
               <circle cx={cx} cy={cy} r={r} fill="none"
-                stroke="rgba(255,255,255,0.05)" strokeWidth="1" strokeDasharray="4 4" />
+                stroke="rgb(var(--fg-rgb) / 0.05)" strokeWidth="1" strokeDasharray="4 4" />
               <circle cx={x} cy={y} r={count * 2 + 4} fill={color}
                 opacity={0.8} filter={`drop-shadow(0 0 5px ${color})`} />
               <text x={x + (x > cx ? 12 : -12)} y={y}

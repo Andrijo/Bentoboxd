@@ -17,7 +17,7 @@ export default function GenreList({ genres }) {
         return (
           <li key={k} style={{
             display: "flex", alignItems: "center", gap: "12px",
-            background: "var(--c-inset-strong)", border: "1px solid rgba(255,255,255,0.05)",
+            background: "var(--c-inset-strong)", border: "1px solid rgb(var(--fg-rgb) / 0.05)",
             borderRadius: "var(--radius-md)", padding: "8px 14px",
             animation: "fadeSlideIn 0.3s ease both", animationDelay: `${i * 40}ms`,
           }}>
