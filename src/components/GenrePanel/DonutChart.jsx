@@ -7,15 +7,27 @@ const polarToCartesian = (cx, cy, r, angleDeg) => {
   return { x: cx + r * Math.cos(rad), y: cy + r * Math.sin(rad) }
 }
 
-export default function DonutChart({ genres }) {
+const MAX_SLICES = 6
+
+/** Las rebanadas más grandes y el resto agrupado en "Otro", ordenadas por tamaño. */
+function groupGenres(genres) {
+  const ranked = GENRE_KEYS.filter((k) => k !== "Otro" && (genres[k] || 0) > 0)
+    .sort((a, b) => genres[b] - genres[a])
+  const kept = ranked.slice(0, MAX_SLICES)
+  const rest = ranked.slice(MAX_SLICES).reduce((sum, k) => sum + genres[k], 0)
+  const other = rest + (genres.Otro || 0)
+  return [...kept.map((k) => [k, genres[k]]), ...(other > 0 ? [["Otro", other]] : [])]
+}
+
+export default function DonutChart({ genres, movieCount }) {
   const cx = 180, cy = 180, outerR = 168, innerR = 98
   const total = Object.values(genres).reduce((a, b) => a + b, 0) || 1
-  const activeGenres = GENRE_KEYS.filter((k) => (genres[k] || 0) > 0)
+  const grouped = groupGenres(genres)
+  const films = movieCount || total
   const [hovered, setHovered] = useState(null)
 
-  const { slices } = activeGenres.reduce(
-    (acc, k) => {
-      const count = genres[k] || 0
+  const { slices } = grouped.reduce(
+    (acc, [k, count]) => {
       const fraction = count / total
       const sweep = fraction * 360
       const start = acc.angle
@@ -41,8 +53,8 @@ export default function DonutChart({ genres }) {
         justifyContent: "center",
       }}>
       <svg
-        role="img"
-        aria-label={`Gráfico de pastel: ${slices.map((s) => `${s.k} ${s.count}`).join(", ")}`}
+        role="group"
+        aria-label="Gráfico de pastel de géneros"
         viewBox="0 0 360 360"
         style={{ width: "100%", maxWidth: "380px", overflow: "visible" }}>
         {slices.map((s, i) => {
@@ -70,16 +82,22 @@ export default function DonutChart({ genres }) {
               d={fullPath}
               fill={s.cfg.color}
               opacity={hovered === null ? 0.85 : isHovered ? 1 : 0.35}
-              style={{ cursor: "pointer", transition: "opacity 0.2s" }}
+              role="img"
+              aria-label={`${s.k}: ${formatMovieCount(s.count)}`}
+              tabIndex={0}
+              style={{ cursor: "pointer", transition: "opacity 0.2s", outline: "none" }}
               onMouseEnter={() => setHovered(i)}
               onMouseLeave={() => setHovered(null)}
+              onFocus={() => setHovered(i)}
+              onBlur={() => setHovered(null)}
+              onClick={() => setHovered((h) => (h === i ? null : i))}
             />
           )
         })}
 
         {hoveredSlice ? (
           <>
-            <text x={cx} y={cy - 18} textAnchor="middle" fontSize="18" fill={hoveredSlice.cfg.color}
+            <text x={cx} y={cy - 18} textAnchor="middle" fontSize="18" fill="var(--c-text)"
               style={{ fontFamily: "var(--font-mono)" }} letterSpacing="0.5">
               {hoveredSlice.k}
             </text>
@@ -89,18 +107,18 @@ export default function DonutChart({ genres }) {
             </text>
             <text x={cx} y={cy + 32} textAnchor="middle" fontSize="16" fill="var(--c-text-muted)"
               style={{ fontFamily: "var(--font-mono)" }}>
-              {Math.round(hoveredSlice.fraction * 100)}%
+              {Math.round((hoveredSlice.count / films) * 100)}% de tus películas
             </text>
           </>
         ) : (
           <>
             <text x={cx} y={cy + 4} textAnchor="middle" fontSize="48" fill="rgb(var(--fg-rgb) / 0.8)"
               style={{ fontFamily: "var(--font-display)" }} letterSpacing="2">
-              {total}
+              {films}
             </text>
             <text x={cx} y={cy + 32} textAnchor="middle" fontSize="15" fill="var(--c-text-muted)"
               style={{ fontFamily: "var(--font-mono)" }} letterSpacing="1">
-              Films
+              {films === 1 ? "película" : "películas"}
             </text>
           </>
         )}

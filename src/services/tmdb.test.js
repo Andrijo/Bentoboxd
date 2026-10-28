@@ -91,7 +91,7 @@ describe("fetchMetadataFromTMDB", () => {
       "fetch",
       vi.fn((url) => {
         if (url.includes("/search/movie")) {
-          return jsonResponse({ results: [{ id: 1, genre_ids: [12, 14] }] })
+          return jsonResponse({ results: [{ id: 1, genre_ids: [36, 10752] }] })
         }
         return jsonResponse(detailsResponse())
       }),

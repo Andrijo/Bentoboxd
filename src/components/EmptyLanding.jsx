@@ -1,4 +1,5 @@
 import RecentProfiles from "./RecentProfiles.jsx"
+import { FEED_LIMIT } from "../hooks/useLetterboxdFeed.js"
 
 // Perfil público de Letterboxd para probar la app sin tener cuenta.
 export const EXAMPLE_PROFILE = "Andrijo"
@@ -51,6 +52,11 @@ export default function EmptyLanding({
           <p className="rd-landing-lead">
             Escribe un usuario y convierte sus últimas películas vistas en
             estadísticas, gráficos y minijuegos.
+          </p>
+
+          <p className="rd-landing-note">
+            Usamos las últimas {FEED_LIMIT} entradas del diario público, sin
+            iniciar sesión ni guardar tus datos. El streaming es el de México.
           </p>
 
           <ul className="rd-landing-features" aria-label="Qué incluye">
