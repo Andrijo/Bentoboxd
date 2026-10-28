@@ -67,7 +67,6 @@ const cardStyle = {
   borderRadius: "var(--radius-lg)",
   overflow: "hidden",
   border: "1px solid rgb(var(--fg-rgb) / 0.1)",
-  boxShadow: "0 10px 40px rgba(0,0,0,0.8)",
 }
 const imgStyle = {
   width: "100%",
@@ -100,7 +99,7 @@ const labelStyle = (color) => ({
 // ensancharla; hasta 2 líneas centradas antes de recortar con "…".
 // minHeight reserva las 2 líneas para que ambas cartas queden alineadas.
 const titleStyle = {
-  color: "#ffffff",
+  color: "var(--c-text-bright)",
   marginTop: "15px",
   fontSize: "clamp(0.85rem, 3vw, 1.25rem)",
   fontWeight: "bold",
@@ -114,7 +113,6 @@ const titleStyle = {
   WebkitBoxOrient: "vertical",
   WebkitLineClamp: 2,
   overflow: "hidden",
-  textShadow: "0 2px 8px rgba(0,0,0,0.8)",
 }
 // Controles en un lienzo de 60×150 (ver .rd-hlg-controls): el círculo VS
 // está en (30,75) con r=25 y la base de cada flecha es un arco concéntrico
