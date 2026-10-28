@@ -17,20 +17,7 @@
       content="Géneros, directores, actores, países, streaming y juegos a partir de tus películas recientes en Letterboxd." />
     <meta property="og:locale" content="es_MX" />
     <meta name="twitter:card" content="summary" />
-    <script>
-      try {
-        var saved = localStorage.getItem("bentoboxd_theme:v1")
-        var light = saved
-          ? saved === "light"
-          : window.matchMedia("(prefers-color-scheme: light)").matches
-        if (light) {
-          document.documentElement.dataset.theme = "light"
-          document
-            .querySelector('meta[name="theme-color"]')
-            .setAttribute("content", "#f6f4ee")
-        }
-      } catch (e) {}
-    </script>
+    <script src="/theme-init.js"></script>
   </head>
   <body>
     <div id="root"></div>

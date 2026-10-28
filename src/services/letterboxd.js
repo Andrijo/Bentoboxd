@@ -35,9 +35,29 @@ export function buildRssUrl(username, proxyBase = import.meta.env.VITE_RSS_PROXY
   return `${base.replace(/\/$/, "")}${sep}user=${user}`
 }
 
+/** La URL solo si es https y su host pasa `isAllowedHost`; si no, null. */
+function httpsUrlOn(value, isAllowedHost) {
+  try {
+    const url = new URL(value)
+    return url.protocol === "https:" && isAllowedHost(url.hostname) ? value : null
+  } catch {
+    return null
+  }
+}
+
+/** Enlace del feed a una ficha de Letterboxd, o null si apunta a otro sitio. */
+export function safeFilmLink(value) {
+  return httpsUrlOn(value, (host) => host === "letterboxd.com")
+}
+
+/** Póster del CDN de Letterboxd (*.ltrbxd.com), o null. */
+export function safePosterUrl(value) {
+  return httpsUrlOn(value, (host) => host === "ltrbxd.com" || host.endsWith(".ltrbxd.com"))
+}
+
 export function extractPoster(description) {
   const match = description?.match(/<img[^>]+src="([^"]+)"/)
-  return match ? match[1] : null
+  return match ? safePosterUrl(match[1]) : null
 }
 
 export function extractRating(description) {

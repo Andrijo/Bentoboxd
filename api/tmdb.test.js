@@ -137,4 +137,15 @@ describe("api/tmdb handler", () => {
     expect(res.headers["Retry-After"]).toBe("2")
     expect(res.headers["Cache-Control"]).toBe("no-store")
   })
+
+  it("marca la respuesta como datos no ejecutables", async () => {
+    vi.stubEnv("TMDB_API_KEY", "secret")
+    vi.stubGlobal("fetch", vi.fn())
+
+    const res = mockRes()
+    await handler({ method: "GET", query: { path: "account" } }, res)
+
+    expect(res.headers["Content-Security-Policy"]).toMatch(/default-src 'none'/)
+    expect(res.headers["X-Content-Type-Options"]).toBe("nosniff")
+  })
 })
