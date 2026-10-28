@@ -5,6 +5,7 @@ import {
   buildRssUrl,
   extractPoster,
   extractRating,
+  safeFilmLink,
 } from "../services/letterboxd.js"
 
 /** Máximo de películas leídas del feed (el RSS de Letterboxd trae ~50). */
@@ -61,6 +62,8 @@ export function useLetterboxdFeed() {
         throw new Error(
           `No encontramos a @${user} en Letterboxd. Revisa el nombre o que el perfil sea público.`,
         )
+      if (res.status === 429)
+        throw new Error("Demasiadas búsquedas seguidas. Espera un minuto e inténtalo de nuevo.")
       if (!res.ok)
         throw new Error(
           "Letterboxd no responde en este momento. Inténtalo de nuevo en unos minutos.",
@@ -82,7 +85,7 @@ export function useLetterboxdFeed() {
 
         const title = letterboxdField(item, "filmTitle").textContent
 
-        const link = item.querySelector("link")?.textContent || "#"
+        const link = safeFilmLink(item.querySelector("link")?.textContent?.trim()) || "#"
         const description = item.querySelector("description")?.textContent || ""
 
         const ratingNode = letterboxdField(item, "memberRating")

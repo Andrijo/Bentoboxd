@@ -6,6 +6,8 @@ import {
   extractPoster,
   extractRating,
   extractTitle,
+  safeFilmLink,
+  safePosterUrl,
 } from "./letterboxd.js"
 
 describe("parseUsername", () => {
@@ -72,6 +74,39 @@ describe("extractPoster", () => {
   it("devuelve null si no hay imagen", () => {
     expect(extractPoster("<p>sin imagen</p>")).toBeNull()
     expect(extractPoster(undefined)).toBeNull()
+  })
+
+  it("descarta imágenes fuera del CDN de Letterboxd", () => {
+    expect(extractPoster('<img src="https://evil.example/x.jpg" />')).toBeNull()
+  })
+})
+
+describe("safeFilmLink", () => {
+  it("acepta enlaces https de letterboxd.com", () => {
+    const link = "https://letterboxd.com/user/film/dune/"
+    expect(safeFilmLink(link)).toBe(link)
+  })
+
+  it("rechaza otros protocolos, dominios y valores inválidos", () => {
+    expect(safeFilmLink("javascript:alert(1)")).toBeNull()
+    expect(safeFilmLink("http://letterboxd.com/user/film/dune/")).toBeNull()
+    expect(safeFilmLink("https://letterboxd.com.evil.example/")).toBeNull()
+    expect(safeFilmLink("https://evil.example/letterboxd.com")).toBeNull()
+    expect(safeFilmLink("no es una url")).toBeNull()
+    expect(safeFilmLink(undefined)).toBeNull()
+  })
+})
+
+describe("safePosterUrl", () => {
+  it("acepta subdominios de ltrbxd.com", () => {
+    const url = "https://a.ltrbxd.com/resized/film-poster/1.jpg?v=abc"
+    expect(safePosterUrl(url)).toBe(url)
+  })
+
+  it("rechaza dominios que solo se parecen", () => {
+    expect(safePosterUrl("https://evilltrbxd.com/x.jpg")).toBeNull()
+    expect(safePosterUrl("https://ltrbxd.com.evil.example/x.jpg")).toBeNull()
+    expect(safePosterUrl("data:image/png;base64,AAAA")).toBeNull()
   })
 })
 
