@@ -12,11 +12,11 @@ export default function SegmentedControl({ label, options, value, onChange }) {
           type="button"
           aria-pressed={value === key}
           style={{
-            background: value === key ? "rgb(var(--fg-rgb) / 0.08)" : "transparent",
+            background: value === key ? "var(--c-text-bright)" : "transparent",
             border: value === key
-              ? "1px solid rgb(var(--fg-rgb) / 0.2)"
+              ? "1px solid var(--c-text-bright)"
               : "1px solid transparent",
-            color: value === key ? "var(--c-text-bright)" : "var(--c-text-muted)",
+            color: value === key ? "var(--c-on-text)" : "var(--c-text-muted)",
             padding: "5px 12px", borderRadius: "var(--radius-sm)", cursor: "pointer",
             fontSize: "var(--fs-xs)", fontFamily: "var(--font-mono)",
             letterSpacing: "1.5px", transition: "background 0.2s, border-color 0.2s, color 0.2s",
