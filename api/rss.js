@@ -4,13 +4,25 @@
 // El RSS de Letterboxd no envía cabeceras CORS, así que el navegador no puede
 // leerlo directamente desde otro origen. Esta función hace de intermediaria.
 
+import { createRateLimiter } from "./_lib/rateLimit.js"
+import { rejectIfRateLimited, setApiSecurityHeaders } from "./_lib/apiHeaders.js"
+
 const LETTERBOXD = "https://letterboxd.com"
 const USERNAME_RE = /^[A-Za-z0-9_-]{1,60}$/
 const CACHE_SECONDS = 300
 
+const rateLimit = createRateLimiter({ limit: 20, windowMs: 60_000 })
+
 export default async function handler(req, res) {
-  // Permite consumirlo también desde otro dominio (p. ej. con VITE_RSS_PROXY_URL absoluto).
-  res.setHeader("Access-Control-Allow-Origin", "*")
+  setApiSecurityHeaders(res)
+
+  // Solo mismo origen, salvo que se autorice otro dominio explícitamente
+  // (p. ej. un frontend alojado aparte con VITE_RSS_PROXY_URL absoluto).
+  const allowedOrigin = process.env.RSS_ALLOWED_ORIGIN
+  if (allowedOrigin) {
+    res.setHeader("Access-Control-Allow-Origin", allowedOrigin)
+    res.setHeader("Vary", "Origin")
+  }
 
   if (req.method === "OPTIONS") {
     res.status(204).end()
@@ -21,6 +33,8 @@ export default async function handler(req, res) {
     res.status(405).json({ error: "Método no permitido" })
     return
   }
+
+  if (rejectIfRateLimited(res, rateLimit(req))) return
 
   const user = String(req.query?.user ?? "").trim()
 

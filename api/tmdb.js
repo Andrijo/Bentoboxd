@@ -5,15 +5,25 @@
 // La key vive solo en el servidor (TMDB_API_KEY), así que nunca llega al bundle.
 
 import { buildTmdbUpstreamUrl } from "./_lib/tmdbUpstream.js"
+import { createRateLimiter } from "./_lib/rateLimit.js"
+import { rejectIfRateLimited, setApiSecurityHeaders } from "./_lib/apiHeaders.js"
 
 const CACHE_SECONDS = 60 * 60 * 24
 const NOT_FOUND_CACHE_SECONDS = 60 * 60
 
+// Un perfil hace hasta ~100 peticiones (búsqueda + detalles por película);
+// esto deja cargar un par de perfiles por minuto sin cortar a nadie.
+const rateLimit = createRateLimiter({ limit: 240, windowMs: 60_000 })
+
 export default async function handler(req, res) {
+  setApiSecurityHeaders(res)
+
   if (req.method !== "GET") {
     res.status(405).json({ error: "Método no permitido" })
     return
   }
+
+  if (rejectIfRateLimited(res, rateLimit(req))) return
 
   const apiKey = process.env.TMDB_API_KEY
   if (!apiKey) {
