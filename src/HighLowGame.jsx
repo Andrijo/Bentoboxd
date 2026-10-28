@@ -287,8 +287,9 @@ function GamePlayArea({
           <h2
             style={{
               fontSize: "clamp(2.5rem, 12vw, 4rem)",
-              color: "var(--c-danger)",
+              color: "var(--c-text-bright)",
               fontFamily: "var(--font-display)",
+              marginBottom: "16px",
             }}>
             GAME OVER
           </h2>
@@ -296,13 +297,15 @@ function GamePlayArea({
             onClick={onRestart}
             type="button"
             style={{
-              background: "#facc15",
-              color: "#000",
-              padding: "15px 30px",
-              border: "none",
+              background: "var(--c-text-bright)",
+              color: "var(--c-on-text)",
+              padding: "10px 28px",
+              border: "1px solid var(--c-text-bright)",
               borderRadius: "var(--radius-md)",
               cursor: "pointer",
               fontWeight: "bold",
+              fontSize: "var(--fs-xs)",
+              fontFamily: "var(--font-mono)",
             }}>
             Reintentar
           </button>
@@ -374,8 +377,7 @@ function GamePlayArea({
                     alignItems: "center",
                     justifyContent: "center",
                     fontSize: "clamp(3rem, 15vw, 6rem)",
-                    color:
-                      feedback === "correct" ? "var(--c-success)" : "var(--c-danger)",
+                    color: "#f6f4ee",
                     textShadow: "0 0 40px rgba(0,0,0,1)",
                   }}>
                   {feedback === "correct" ? "✓" : "✕"}

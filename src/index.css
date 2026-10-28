@@ -215,7 +215,7 @@ input:focus-visible { outline: none; }
 @media (max-width: 640px) {
   .rd-header-actions { width: 100%; }
   /* Las 3 pestañas en una fila aun a 360px ("Higher or Lower" es la más larga). */
-  .rd-tab { padding: 8px 10px !important; letter-spacing: 1px !important; flex-basis: auto !important; }
+  .rd-tab { padding: 0 10px !important; letter-spacing: 1px !important; flex-basis: auto !important; }
   .rd-search-btn { width: 100%; }
   .rd-timeline-row { gap: 12px; padding: 10px; }
   .rd-timeline-index { display: none; }

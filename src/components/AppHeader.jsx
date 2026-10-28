@@ -5,7 +5,8 @@ const TABS = [
 ]
 
 const tabBase = {
-  padding: "8px 16px",
+  height: "36px",
+  padding: "0 16px",
   borderRadius: "var(--radius-md)",
   fontFamily: "var(--font-mono)",
   fontSize: "var(--fs-2xs)",
