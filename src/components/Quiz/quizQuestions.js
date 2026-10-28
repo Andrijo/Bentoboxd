@@ -7,7 +7,17 @@ const YEAR_SPREAD = 5
 const FIRST_FILM_YEAR = 1888
 const UNRATED = "Sin calificar"
 const POSSIBLE_RATINGS = [
-  "0.5", "1", "1.5", "2", "2.5", "3", "3.5", "4", "4.5", "5", UNRATED,
+  "0.5",
+  "1",
+  "1.5",
+  "2",
+  "2.5",
+  "3",
+  "3.5",
+  "4",
+  "4.5",
+  "5",
+  UNRATED,
 ]
 
 /**
@@ -100,7 +110,7 @@ const QUESTION_TYPES = [
     available: (movie, pool) =>
       Boolean(movie.poster) && hasEnoughOthers(pool.titles, movie.title),
     build: (movie) => ({
-      qText: "¿Qué película es este póster?",
+      qText: "¿De qué película es este póster?",
       correct: movie.title,
     }),
     distractors: (correct, pool, random) =>

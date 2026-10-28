@@ -137,8 +137,12 @@ function QuizRound({ movies, onBack }) {
           ) : (
             <div className="rd-quiz-body">
               {current.type === "poster" && current.movie?.poster && (
-                <div className="rd-quiz-poster">
-                  <PosterImage src={current.movie.poster} alt="Póster de la película a adivinar" />
+                <div className="rd-quiz-poster" data-blurred={selected === null}>
+                  <PosterImage
+                    src={current.movie.poster}
+                    alt="Póster de la película a adivinar"
+                    style={{ transition: "filter 0.4s ease, transform 0.4s ease" }}
+                  />
                 </div>
               )}
               <h2 id="rd-quiz-question" ref={questionRef} tabIndex={-1} className="rd-quiz-question">
