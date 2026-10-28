@@ -53,7 +53,7 @@ export default function MovieCard({ movie, size, index }) {
           inset: 0,
           zIndex: 2,
           background:
-            "linear-gradient(to top, #0a0a0a 0%, rgba(10,10,10,0.85) 25%, rgba(10,10,10,0.3) 55%, transparent 100%)",
+            "linear-gradient(to top, #111111 0%, rgba(17,17,17,0.85) 25%, rgba(17,17,17,0.3) 55%, transparent 100%)",
           transition: "opacity 0.3s",
           opacity: hovered ? 1 : size === 1 ? 0.9 : 0.7,
           pointerEvents: "none",
@@ -84,7 +84,7 @@ export default function MovieCard({ movie, size, index }) {
             lineHeight: 1.1,
             letterSpacing: "0.5px",
             marginBottom: "3px",
-            textShadow: "0 1px 8px rgba(0,0,0,0.8)",
+            textShadow: "0 1px 8px rgba(17,17,17,0.8)",
           }}>
           {movie.title}
         </div>

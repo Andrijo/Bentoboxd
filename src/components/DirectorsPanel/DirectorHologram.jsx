@@ -1,4 +1,4 @@
-const rankColors = ["#00e5ff", "#c084fc", "#facc15", "#4ade80", "#ff4444"]
+const rankColors = ["var(--ramp-1)", "var(--ramp-3)", "var(--ramp-5)", "var(--ramp-7)", "var(--ramp-9)"]
 
 export default function DirectorHologram({ directors }) {
   const topDirectors = Object.entries(directors || {})
@@ -24,14 +24,14 @@ export default function DirectorHologram({ directors }) {
           }}>
             <div style={{
               fontSize: "var(--fs-md)", fontFamily: "var(--font-display)",
-              color: color, textShadow: `0 0 10px ${color}`,
+              color: color,
             }}>
               {count}
             </div>
             <div style={{
               width: "30px", height: `${Math.max(heightPct, 15)}px`,
-              background: `linear-gradient(to top, transparent, ${color}90)`,
-              borderTop: `3px solid ${color}`, boxShadow: `0 -10px 20px ${color}60`,
+              background: `linear-gradient(to top, transparent, color-mix(in srgb, ${color} 56%, transparent))`,
+              borderTop: `3px solid ${color}`,
               borderRadius: "2px 2px 0 0", position: "relative",
             }}>
               <div style={{

@@ -44,16 +44,6 @@ export default function DonutChart({ genres }) {
         aria-label={`Gráfico de pastel: ${slices.map((s) => `${s.k} ${s.count}`).join(", ")}`}
         viewBox="0 0 360 360"
         style={{ width: "100%", maxWidth: "300px", overflow: "visible" }}>
-        <defs>
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="3" result="coloredBlur" />
-            <feMerge>
-              <feMergeNode in="coloredBlur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
-
         {slices.map((s, i) => {
           const isHovered = hovered === i
           const gap = 2
@@ -79,7 +69,6 @@ export default function DonutChart({ genres }) {
               d={fullPath}
               fill={s.cfg.color}
               opacity={hovered === null ? 0.85 : isHovered ? 1 : 0.35}
-              filter={isHovered ? "url(#glow)" : undefined}
               style={{ cursor: "pointer", transition: "opacity 0.2s" }}
               onMouseEnter={() => setHovered(i)}
               onMouseLeave={() => setHovered(null)}
@@ -93,7 +82,7 @@ export default function DonutChart({ genres }) {
               style={{ fontFamily: "var(--font-mono)" }} letterSpacing="0.5">
               {hoveredSlice.k}
             </text>
-            <text x={cx} y={cy + 4} textAnchor="middle" fontSize="11" fill="white"
+            <text x={cx} y={cy + 4} textAnchor="middle" fontSize="11" fill="var(--c-text-bright)"
               style={{ fontFamily: "var(--font-mono)" }} fontWeight="bold">
               {formatMovieCount(hoveredSlice.count)}
             </text>

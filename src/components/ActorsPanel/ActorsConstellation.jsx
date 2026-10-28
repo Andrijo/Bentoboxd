@@ -1,7 +1,4 @@
-const rankColors = [
-  "#4ade80", "#f472b6", "#00e5ff", "#c084fc", "#facc15",
-  "#fb7185", "#2ecc71", "#3498db", "#9b59b6",
-]
+const rankColors = Array.from({ length: 9 }, (_, i) => `var(--ramp-${i + 1})`)
 
 export default function ActorsConstellation({ actors }) {
   const topActors = Object.entries(actors || {})
@@ -26,8 +23,7 @@ export default function ActorsConstellation({ actors }) {
             }}>
               <line x1={cx} y1={cy} x2={x} y2={y} stroke={color}
                 strokeWidth="0.5" opacity="0.2" strokeDasharray="2 2" />
-              <circle cx={x} cy={y} r={count + 3} fill={color}
-                filter={`drop-shadow(0 0 4px ${color})`}>
+              <circle cx={x} cy={y} r={count + 3} fill={color}>
                 <animate attributeName="opacity" values="0.4;0.9;0.4"
                   dur={`${2 + i}s`} repeatCount="indefinite" />
               </circle>
@@ -38,7 +34,7 @@ export default function ActorsConstellation({ actors }) {
             </g>
           )
         })}
-        <circle cx={cx} cy={cy} r={3} style={{ fill: "var(--c-text-bright)", filter: "drop-shadow(0 0 6px var(--c-text-bright))" }} />
+        <circle cx={cx} cy={cy} r={3} style={{ fill: "var(--c-text-bright)" }} />
       </svg>
     </div>
   )

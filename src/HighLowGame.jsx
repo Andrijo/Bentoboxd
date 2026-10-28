@@ -75,7 +75,7 @@ const darkOverlayStyle = {
   position: "absolute",
   inset: 0,
   background:
-    "linear-gradient(to top, rgba(0,0,0,0.95) 0%, rgba(0,0,0,0.7) 35%, transparent 60%)",
+    "linear-gradient(to top, rgba(17,17,17,0.95) 0%, rgba(17,17,17,0.7) 35%, transparent 60%)",
   pointerEvents: "none",
   zIndex: 1,
 }
@@ -89,7 +89,7 @@ const labelStyle = {
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
-  textShadow: "0px 4px 20px rgba(0,0,0,1), 0px 2px 5px rgba(0,0,0,1)",
+  textShadow: "0px 4px 20px rgba(17,17,17,1), 0px 2px 5px rgba(17,17,17,1)",
   zIndex: 2,
 }
 // width 0 + minWidth 100%: el título toma el ancho de la carta sin
@@ -378,7 +378,7 @@ function GamePlayArea({
                     justifyContent: "center",
                     fontSize: "clamp(3rem, 15vw, 6rem)",
                     color: "#f6f4ee",
-                    textShadow: "0 0 40px rgba(0,0,0,1)",
+                    textShadow: "0 0 40px rgba(17,17,17,1)",
                   }}>
                   {feedback === "correct" ? "✓" : "✕"}
                 </div>

@@ -1,4 +1,4 @@
-const rankColors = ["#00e5ff", "#c084fc", "#facc15", "#4ade80", "#ff4444"]
+const rankColors = ["var(--ramp-1)", "var(--ramp-3)", "var(--ramp-5)", "var(--ramp-7)", "var(--ramp-9)"]
 const radii = [40, 70, 100, 130, 160]
 
 export default function DirectorOrbit({ directors }) {
@@ -32,7 +32,7 @@ export default function DirectorOrbit({ directors }) {
               <circle cx={cx} cy={cy} r={r} fill="none"
                 stroke="rgb(var(--fg-rgb) / 0.05)" strokeWidth="1" strokeDasharray="4 4" />
               <circle cx={x} cy={y} r={count * 2 + 4} fill={color}
-                opacity={0.8} filter={`drop-shadow(0 0 5px ${color})`} />
+                opacity={0.8} />
               <text x={x + (x > cx ? 12 : -12)} y={y}
                 textAnchor={x > cx ? "start" : "end"} dominantBaseline="middle"
                 fontSize="8" fill="var(--c-text-bright)" style={{ fontFamily: "var(--font-mono)" }} letterSpacing="0.5">

@@ -25,22 +25,12 @@ export default function GaugesChart({ genres }) {
             animation: "fadeSlideIn 0.5s ease both", animationDelay: `${i * 60}ms`,
           }}>
             <svg viewBox="0 0 100 100" style={{ width: "80px", height: "80px", overflow: "visible" }}>
-              <defs>
-                <filter id={`glow-${k}`}>
-                  <feGaussianBlur stdDeviation="2" result="blur" />
-                  <feMerge>
-                    <feMergeNode in="blur" />
-                    <feMergeNode in="SourceGraphic" />
-                  </feMerge>
-                </filter>
-              </defs>
-
               <circle cx="50" cy="50" r={r} fill="none" stroke="rgb(var(--fg-rgb) / 0.05)" strokeWidth="6" />
               <circle cx="50" cy="50" r={r - 12} fill="none" stroke="rgb(var(--fg-rgb) / 0.08)" strokeWidth="1" strokeDasharray="2 4" />
 
               <circle cx="50" cy="50" r={r} fill="none" stroke={cfg.color} strokeWidth="6"
                 strokeLinecap="round" strokeDasharray={circ} strokeDashoffset={dashOffset}
-                transform="rotate(-90 50 50)" filter={`url(#glow-${k})`}
+                transform="rotate(-90 50 50)"
                 style={{ transition: "stroke-dashoffset 0.5s cubic-bezier(0.1, 0.8, 0.2, 1)" }}
               />
 

@@ -1,7 +1,4 @@
-const rankColors = [
-  "#4ade80", "#f472b6", "#00e5ff", "#c084fc", "#facc15",
-  "#fb7185", "#2ecc71", "#3498db", "#9b59b6",
-]
+const rankColors = Array.from({ length: 9 }, (_, i) => `var(--ramp-${i + 1})`)
 
 export default function ActorsSpectrum({ actors }) {
   const topActors = Object.entries(actors || {})
@@ -32,8 +29,8 @@ export default function ActorsSpectrum({ actors }) {
             </div>
             <div style={{
               width: "100%", maxWidth: "20px", height: `${heightPct}%`,
-              background: `linear-gradient(to top, ${color}20, ${color})`,
-              boxShadow: `0 0 15px ${color}40`, borderRadius: "1px",
+              background: `linear-gradient(to top, color-mix(in srgb, ${color} 12%, transparent), ${color})`,
+              borderRadius: "1px",
               position: "relative",
             }}>
               <div style={{

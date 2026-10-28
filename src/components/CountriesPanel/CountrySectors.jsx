@@ -1,6 +1,6 @@
 import { getFlagUrl, countryName } from "../../utils/formatters.js"
 
-const themeColor = "#ff8c00"
+const themeColor = "var(--c-text-bright)"
 
 export default function CountrySectors({ countries }) {
   const topCountryCodes = Object.entries(countries || {})
@@ -26,7 +26,7 @@ export default function CountrySectors({ countries }) {
           }}>
             <div style={{
               position: "absolute", bottom: 0, left: 0, height: "3px",
-              width: `${pct}%`, background: themeColor, boxShadow: `0 0 10px ${themeColor}`,
+              width: `${pct}%`, background: themeColor,
             }} />
 
             <div style={{
