@@ -1,7 +1,7 @@
 const TABS = [
-  { page: "profile", label: "Perfil", color: "var(--fg-rgb)" },
-  { page: "quiz", label: "Quiz", color: "var(--accent-rgb)" },
-  { page: "higher-lower", label: "Higher or Lower", color: "var(--warning-rgb)" },
+  { page: "profile", label: "Perfil" },
+  { page: "quiz", label: "Quiz" },
+  { page: "higher-lower", label: "Higher or Lower" },
 ]
 
 const tabBase = {
@@ -61,7 +61,7 @@ export default function AppHeader({ page, showTabs, theme, onNavigate, onReset, 
       <div className="rd-header-actions" style={{ display: "flex", gap: "12px", alignItems: "center" }}>
         {showTabs && (
           <nav aria-label="Secciones" style={{ display: "flex", gap: "12px", flex: 1 }}>
-            {TABS.map(({ page: tab, label, color }) => {
+            {TABS.map(({ page: tab, label }) => {
               const active = page === tab
               return (
                 <button
@@ -72,9 +72,9 @@ export default function AppHeader({ page, showTabs, theme, onNavigate, onReset, 
                   className="rd-tab"
                   style={{
                     ...tabBase,
-                    background: `rgb(${color} / ${active ? 0.15 : 0.03})`,
-                    border: `1px solid rgb(${color} / ${active ? 0.6 : 0.2})`,
-                    color: `rgb(${color} / ${active ? 1 : 0.6})`,
+                    background: active ? "var(--c-text-bright)" : "rgb(var(--fg-rgb) / 0.03)",
+                    border: `1px solid ${active ? "var(--c-text-bright)" : "rgb(var(--fg-rgb) / 0.2)"}`,
+                    color: active ? "var(--c-on-text)" : "var(--c-text-muted)",
                   }}>
                   {label}
                 </button>

@@ -31,15 +31,7 @@ export default function SearchSection({ url, loading, onUrlChange, onFetch }) {
       <button
         disabled={loading}
         type="submit"
-        className="rd-search-btn"
-        style={{
-          background: loading
-            ? "rgb(var(--accent-rgb) / 0.1)"
-            : "rgb(var(--accent-rgb) / 0.12)",
-          border: "1px solid rgb(var(--accent-rgb) / 0.4)",
-          color: loading ? "rgb(var(--accent-rgb) / 0.4)" : "var(--c-accent)",
-          cursor: loading ? "not-allowed" : "pointer",
-        }}>
+        className="rd-search-btn rd-btn-solid">
         {loading ? "Cargando..." : "Generar"}
       </button>
     </form>

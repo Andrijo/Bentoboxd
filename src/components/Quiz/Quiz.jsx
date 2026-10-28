@@ -2,8 +2,8 @@ import { useState, useRef, useEffect } from "react"
 import { generateQuestions } from "./quizQuestions.js"
 
 const actionBtn = {
-  background: "rgb(var(--accent-rgb) / 0.1)", border: "1px solid var(--c-accent)",
-  color: "var(--c-accent)", padding: "10px 20px", cursor: "pointer",
+  background: "var(--c-text-bright)", border: "1px solid var(--c-text-bright)",
+  color: "var(--c-on-text)", padding: "10px 20px", cursor: "pointer",
   fontFamily: "var(--font-mono)",
 }
 
