@@ -21,10 +21,8 @@ export default function PlatformsPanel({ platformsData, movies, loading, error }
       title="STREAMING"
       subtitle="Disponible por suscripción en México"
       actions={selectedPlatform && (
-        <button onClick={() => setSelectedPlatform(null)} type="button" style={{
-          background: "none", border: "1px solid rgb(var(--fg-rgb) / 0.2)", color: "var(--c-text)",
-          fontSize: "var(--fs-xs)", padding: "4px 10px", cursor: "pointer",
-          borderRadius: "var(--radius-sm)",
+        <button onClick={() => setSelectedPlatform(null)} type="button" className="rd-btn-solid" style={{
+          fontSize: "var(--fs-xs)", padding: "4px 10px", borderRadius: "var(--radius-sm)",
         }}>
           <span aria-hidden="true">✕</span> Quitar filtro
         </button>

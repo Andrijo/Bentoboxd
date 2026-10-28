@@ -96,10 +96,7 @@ export default function Quiz({ movies, onBack }) {
               <button onClick={restart} type="button" style={actionBtn}>
                 Jugar de nuevo
               </button>
-              <button onClick={onBack} type="button" style={{
-                ...actionBtn, background: "transparent",
-                borderColor: "rgb(var(--fg-rgb) / 0.2)", color: "var(--c-text)",
-              }}>
+              <button onClick={onBack} type="button" style={actionBtn}>
                 Volver al perfil
               </button>
             </div>

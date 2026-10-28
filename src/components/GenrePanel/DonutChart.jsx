@@ -43,7 +43,7 @@ export default function DonutChart({ genres }) {
         role="img"
         aria-label={`Gráfico de pastel: ${slices.map((s) => `${s.k} ${s.count}`).join(", ")}`}
         viewBox="0 0 360 360"
-        style={{ width: "100%", maxWidth: "300px", overflow: "visible" }}>
+        style={{ width: "100%", maxWidth: "440px", overflow: "visible" }}>
         {slices.map((s, i) => {
           const isHovered = hovered === i
           const gap = 2
