@@ -19,12 +19,11 @@ export default function MovieCard({ movie, size, index }) {
       style={{
         ...TILE_SPANS[size],
         border: hovered
-          ? "1px solid rgb(var(--accent-rgb) / 0.5)"
+          ? "1px solid rgb(var(--fg-rgb) / 0.25)"
           : "1px solid rgb(var(--fg-rgb) / 0.06)",
         transition:
-          "border 0.3s ease, transform 0.3s ease, box-shadow 0.3s ease",
+          "border 0.3s ease, transform 0.3s ease",
         transform: hovered ? "scale(1.015)" : "scale(1)",
-        boxShadow: hovered ? "0 0 30px rgb(var(--accent-rgb) / 0.15)" : "none",
         animation: `fadeSlideIn 0.5s ease both`,
         animationDelay: `${index * 60}ms`,
       }}>
@@ -118,7 +117,7 @@ export default function MovieCard({ movie, size, index }) {
             style={{
               marginTop: "5px",
               fontSize: "var(--fs-xs)",
-              color: "rgb(var(--accent-rgb) / 0.6)",
+              color: "var(--c-text-muted)",
               fontFamily: "var(--font-mono)",
               letterSpacing: "1px",
             }}>
