@@ -1,6 +1,8 @@
 import { useState } from "react"
 import { GENRE_KEYS, GENRE_CONFIG } from "../../constants/genres.js"
 
+const mixAlpha = (color, pct) => `color-mix(in srgb, ${color} ${pct}%, transparent)`
+
 export default function MatrixChart({ genres }) {
   const [hoveredGenre, setHoveredGenre] = useState(null)
 
@@ -48,15 +50,12 @@ export default function MatrixChart({ genres }) {
                 width: "16px", height: "16px",
                 background: isDimmed
                   ? "rgb(var(--fg-rgb) / 0.05)"
-                  : `linear-gradient(135deg, ${cfg.color}90, ${cfg.color}40)`,
+                  : `linear-gradient(135deg, ${mixAlpha(cfg.color, 56)}, ${mixAlpha(cfg.color, 25)})`,
                 border: isDimmed
                   ? "1px solid rgb(var(--fg-rgb) / 0.05)"
-                  : `1px solid ${cfg.color}80`,
+                  : `1px solid ${mixAlpha(cfg.color, 50)}`,
                 borderRadius: "2px",
-                boxShadow: isHovered
-                  ? `0 0 10px ${cfg.glow}, 0 0 20px ${cfg.glow}`
-                  : isDimmed ? "none" : `0 0 4px ${cfg.glow}`,
-                transition: "background 0.2s ease, border 0.2s ease, box-shadow 0.2s ease",
+                transition: "background 0.2s ease, border 0.2s ease",
                 cursor: "crosshair",
                 animation: "fadeSlideIn 0.3s ease both",
                 animationDelay: `${i * 15}ms`,

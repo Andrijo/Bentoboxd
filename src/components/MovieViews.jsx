@@ -163,7 +163,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                   )}
                   <StarRating rating={movie.rating} />
                   {movie.liked && (
-                    <span role="img" aria-label="Me gusta" style={{ color: "#ff8000", fontSize: "var(--fs-xs)" }}>
+                    <span role="img" aria-label="Me gusta" style={{ color: "var(--c-text-bright)", fontSize: "var(--fs-xs)" }}>
                       ♥
                     </span>
                   )}
@@ -241,7 +241,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                   animationDelay: `${i * 20}ms`,
                 }}>
                 <span style={{ display: "flex", gap: "12px", overflow: "hidden", whiteSpace: "nowrap" }}>
-                  <span style={{ color: "#facc15" }}>
+                  <span style={{ color: "var(--c-text-muted)" }}>
                     [{String(i + 1).padStart(2, "0")}]
                   </span>
                   <span style={{ textOverflow: "ellipsis", overflow: "hidden", color: "var(--c-text)" }}>
@@ -252,7 +252,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                   <span style={{ color: "var(--c-text-muted)" }}>
                     {movie.year || "----"}
                   </span>
-                  <span style={{ color: "#4ade80", width: "40px", textAlign: "right" }}>
+                  <span style={{ color: "var(--c-text-bright)", width: "40px", textAlign: "right" }}>
                     {movie.rating ? (
                       <span role="img" aria-label={`${movie.rating} de 5 estrellas`}>{movie.rating}★</span>
                     ) : (

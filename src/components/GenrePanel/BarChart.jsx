@@ -26,7 +26,6 @@ export default function BarChart({ genres }) {
               <div style={{
                 height: "100%", width: `${widthPct}%`,
                 background: `linear-gradient(90deg, transparent, ${cfg.color})`,
-                boxShadow: `0 0 12px ${cfg.glow}`,
                 borderRight: `2px solid ${cfg.color}`,
                 animation: "fadeSlideIn 0.8s ease both",
                 animationDelay: `${i * 100}ms`,

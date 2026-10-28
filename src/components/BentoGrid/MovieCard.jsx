@@ -18,11 +18,7 @@ export default function MovieCard({ movie, size, index }) {
       className="rd-movie-card rd-keep-dark"
       style={{
         ...TILE_SPANS[size],
-        border: hovered
-          ? "1px solid rgb(var(--fg-rgb) / 0.25)"
-          : "1px solid rgb(var(--fg-rgb) / 0.06)",
-        transition:
-          "border 0.3s ease, transform 0.3s ease",
+        transition: "border 0.3s ease, transform 0.3s ease",
         transform: hovered ? "scale(1.015)" : "scale(1)",
         animation: `fadeSlideIn 0.5s ease both`,
         animationDelay: `${index * 60}ms`,
@@ -44,7 +40,9 @@ export default function MovieCard({ movie, size, index }) {
           }}
         />
       ) : (
-        <div className="rd-no-poster" aria-hidden="true">🎬</div>
+        <div className="rd-no-poster" aria-hidden="true">
+          🎬
+        </div>
       )}
 
       <div
@@ -53,7 +51,7 @@ export default function MovieCard({ movie, size, index }) {
           inset: 0,
           zIndex: 2,
           background:
-            "linear-gradient(to top, #0a0a0a 0%, rgba(10,10,10,0.85) 25%, rgba(10,10,10,0.3) 55%, transparent 100%)",
+            "linear-gradient(to top, #111111 0%, rgba(17,17,17,0.85) 25%, rgba(17,17,17,0.3) 55%, transparent 100%)",
           transition: "opacity 0.3s",
           opacity: hovered ? 1 : size === 1 ? 0.9 : 0.7,
           pointerEvents: "none",
@@ -79,12 +77,17 @@ export default function MovieCard({ movie, size, index }) {
         <div
           style={{
             fontFamily: "var(--font-display)",
-            fontSize: size === 3 ? "var(--fs-xl)" : size === 1 ? "var(--fs-base)" : "var(--fs-md)",
+            fontSize:
+              size === 3
+                ? "var(--fs-xl)"
+                : size === 1
+                  ? "var(--fs-base)"
+                  : "var(--fs-md)",
             color: "var(--c-text-bright)",
             lineHeight: 1.1,
             letterSpacing: "0.5px",
             marginBottom: "3px",
-            textShadow: "0 1px 8px rgba(0,0,0,0.8)",
+            textShadow: "0 1px 8px rgba(17,17,17,0.8)",
           }}>
           {movie.title}
         </div>
@@ -109,7 +112,9 @@ export default function MovieCard({ movie, size, index }) {
           <StarRating rating={movie.rating} />
         </div>
 
-        <span className="rd-sr-only">(se abre en Letterboxd en una pestaña nueva)</span>
+        <span className="rd-sr-only">
+          (se abre en Letterboxd en una pestaña nueva)
+        </span>
 
         {hovered && size >= 2 && (
           <div
@@ -126,7 +131,9 @@ export default function MovieCard({ movie, size, index }) {
         )}
       </div>
 
-      <div className="rd-index-badge" aria-hidden="true">{String(index + 1).padStart(2, "0")}</div>
+      <div className="rd-index-badge" aria-hidden="true">
+        {String(index + 1).padStart(2, "0")}
+      </div>
     </a>
   )
 }

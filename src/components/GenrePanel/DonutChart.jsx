@@ -8,7 +8,7 @@ const polarToCartesian = (cx, cy, r, angleDeg) => {
 }
 
 export default function DonutChart({ genres }) {
-  const cx = 180, cy = 180, outerR = 130, innerR = 72
+  const cx = 180, cy = 180, outerR = 168, innerR = 98
   const total = Object.values(genres).reduce((a, b) => a + b, 0) || 1
   const activeGenres = GENRE_KEYS.filter((k) => (genres[k] || 0) > 0)
   const [hovered, setHovered] = useState(null)
@@ -33,6 +33,7 @@ export default function DonutChart({ genres }) {
   return (
     <div
       style={{
+        width: "100%",
         display: "flex",
         alignItems: "center",
         gap: "32px",
@@ -43,17 +44,7 @@ export default function DonutChart({ genres }) {
         role="img"
         aria-label={`Gráfico de pastel: ${slices.map((s) => `${s.k} ${s.count}`).join(", ")}`}
         viewBox="0 0 360 360"
-        style={{ width: "100%", maxWidth: "300px", overflow: "visible" }}>
-        <defs>
-          <filter id="glow">
-            <feGaussianBlur stdDeviation="3" result="coloredBlur" />
-            <feMerge>
-              <feMergeNode in="coloredBlur" />
-              <feMergeNode in="SourceGraphic" />
-            </feMerge>
-          </filter>
-        </defs>
-
+        style={{ width: "100%", maxWidth: "380px", overflow: "visible" }}>
         {slices.map((s, i) => {
           const isHovered = hovered === i
           const gap = 2
@@ -79,7 +70,6 @@ export default function DonutChart({ genres }) {
               d={fullPath}
               fill={s.cfg.color}
               opacity={hovered === null ? 0.85 : isHovered ? 1 : 0.35}
-              filter={isHovered ? "url(#glow)" : undefined}
               style={{ cursor: "pointer", transition: "opacity 0.2s" }}
               onMouseEnter={() => setHovered(i)}
               onMouseLeave={() => setHovered(null)}
@@ -89,26 +79,26 @@ export default function DonutChart({ genres }) {
 
         {hoveredSlice ? (
           <>
-            <text x={cx} y={cy - 10} textAnchor="middle" fontSize="9" fill={hoveredSlice.cfg.color}
+            <text x={cx} y={cy - 18} textAnchor="middle" fontSize="18" fill={hoveredSlice.cfg.color}
               style={{ fontFamily: "var(--font-mono)" }} letterSpacing="0.5">
               {hoveredSlice.k}
             </text>
-            <text x={cx} y={cy + 4} textAnchor="middle" fontSize="11" fill="white"
+            <text x={cx} y={cy + 10} textAnchor="middle" fontSize="22" fill="var(--c-text-bright)"
               style={{ fontFamily: "var(--font-mono)" }} fontWeight="bold">
               {formatMovieCount(hoveredSlice.count)}
             </text>
-            <text x={cx} y={cy + 18} textAnchor="middle" fontSize="8" fill="var(--c-text-muted)"
+            <text x={cx} y={cy + 32} textAnchor="middle" fontSize="16" fill="var(--c-text-muted)"
               style={{ fontFamily: "var(--font-mono)" }}>
               {Math.round(hoveredSlice.fraction * 100)}%
             </text>
           </>
         ) : (
           <>
-            <text x={cx} y={cy - 8} textAnchor="middle" fontSize="22" fill="rgb(var(--fg-rgb) / 0.8)"
+            <text x={cx} y={cy + 4} textAnchor="middle" fontSize="48" fill="rgb(var(--fg-rgb) / 0.8)"
               style={{ fontFamily: "var(--font-display)" }} letterSpacing="2">
               {total}
             </text>
-            <text x={cx} y={cy + 10} textAnchor="middle" fontSize="7" fill="var(--c-text-muted)"
+            <text x={cx} y={cy + 32} textAnchor="middle" fontSize="15" fill="var(--c-text-muted)"
               style={{ fontFamily: "var(--font-mono)" }} letterSpacing="1">
               Films
             </text>

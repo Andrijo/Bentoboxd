@@ -87,7 +87,7 @@ export default function Quiz({ movies, onBack }) {
             </h2>
             <div style={{ fontSize: "var(--fs-base)", color: "var(--c-text)", margin: "20px 0" }}>
               Puntuación:{" "}
-              <span style={{ color: "var(--c-warning)", fontWeight: "bold" }}>
+              <span style={{ color: "var(--c-text-bright)", fontWeight: "bold" }}>
                 {score}
               </span>{" "}
               / {questions.length}
@@ -96,10 +96,7 @@ export default function Quiz({ movies, onBack }) {
               <button onClick={restart} type="button" style={actionBtn}>
                 Jugar de nuevo
               </button>
-              <button onClick={onBack} type="button" style={{
-                ...actionBtn, background: "transparent",
-                borderColor: "rgb(var(--fg-rgb) / 0.2)", color: "var(--c-text)",
-              }}>
+              <button onClick={onBack} type="button" style={actionBtn}>
                 Volver al perfil
               </button>
             </div>
@@ -131,16 +128,23 @@ export default function Quiz({ movies, onBack }) {
                   let bgColor = "rgb(var(--fg-rgb) / 0.03)"
                   let borderColor = "rgb(var(--fg-rgb) / 0.1)"
                   let textColor = "var(--c-text)"
+                  let borderStyle = "solid"
+                  let mark = ""
+                  let strike = "none"
 
                   if (selected) {
                     if (opt === current.correct) {
-                      bgColor = "rgb(var(--success-rgb) / 0.15)"
-                      borderColor = "var(--c-success)"
-                      textColor = "var(--c-success)"
+                      bgColor = "var(--c-text-bright)"
+                      borderColor = "var(--c-text-bright)"
+                      textColor = "var(--c-on-text)"
+                      mark = "✓ "
                     } else if (opt === selected && selected !== current.correct) {
-                      bgColor = "rgb(var(--danger-rgb) / 0.15)"
-                      borderColor = "var(--c-danger)"
-                      textColor = "var(--c-danger)"
+                      bgColor = "var(--c-inset-strong)"
+                      borderColor = "var(--c-text-bright)"
+                      borderStyle = "dashed"
+                      textColor = "var(--c-text-bright)"
+                      strike = "line-through"
+                      mark = "✕ "
                     }
                   }
 
@@ -151,13 +155,14 @@ export default function Quiz({ movies, onBack }) {
                       onClick={() => handleAnswer(opt)}
                       type="button"
                       style={{
-                        background: bgColor, border: `1px solid ${borderColor}`,
+                        background: bgColor, border: `1px ${borderStyle} ${borderColor}`,
+                        textDecoration: strike,
                         color: textColor, padding: "14px", borderRadius: "var(--radius-md)",
                         cursor: selected ? "default" : "pointer",
                         fontSize: "var(--fs-sm)", fontFamily: "var(--font-mono)",
                         transition: "background 0.2s, border-color 0.2s, color 0.2s",
                       }}>
-                      {opt}{" "}
+                      {mark}{opt}{" "}
                       {opt !== "Sin calificar" && !current.isYear && (
                         <span role="img" aria-label="estrellas">★</span>
                       )}

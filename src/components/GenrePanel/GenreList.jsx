@@ -23,7 +23,7 @@ export default function GenreList({ genres }) {
           }}>
             <span aria-hidden="true" style={{
               width: "8px", height: "8px", borderRadius: "50%", flexShrink: 0,
-              background: color, boxShadow: `0 0 8px ${color}`,
+              background: color,
             }} />
             <span style={{
               flex: 1, fontSize: "var(--fs-xs)", fontWeight: "bold", color: "var(--c-text)",

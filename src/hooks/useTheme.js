@@ -1,7 +1,7 @@
 import { useCallback, useState } from "react"
 
 const STORAGE_KEY = "bentoboxd_theme:v1"
-const THEME_COLORS = { dark: "#111312", light: "#f6f4ee" }
+const THEME_COLORS = { dark: "#111111", light: "#f6f4ee" }
 
 /** Tema inicial: el que fijó el script de index.html antes de pintar. */
 function readTheme() {
