@@ -61,4 +61,42 @@ describe("generateQuestions", () => {
     expect(q.isYear).toBe(false)
     expect(q.correct).toBe("Sin calificar")
   })
+
+  describe("preguntas de director y póster", () => {
+    const rich = ["A", "B", "C", "D", "E", "F"].map((title, i) => ({
+      title,
+      year: String(2000 + i),
+      rating: 3,
+      poster: `https://img/${title}.jpg`,
+      directors: [`Director ${title}`],
+    }))
+
+    it("pregunta por director y póster con distractores del propio diario", () => {
+      const seen = new Set()
+      runMany(() => {
+        generateQuestions(rich, { currentYear: 2026 }).forEach((q) => {
+          seen.add(q.type)
+          if (q.type === "director") {
+            expect(q.correct).toBe(q.movie.directors[0])
+            expect(q.options.every((o) => o.startsWith("Director "))).toBe(true)
+          }
+          if (q.type === "poster") {
+            expect(q.correct).toBe(q.movie.title)
+          }
+          expect(new Set(q.options).size).toBe(4)
+          expect(q.options).toContain(q.correct)
+        })
+      })
+      expect(seen).toEqual(new Set(["rating", "year", "director", "poster"]))
+    })
+
+    it("no pregunta por director ni póster sin datos o sin distractores suficientes", () => {
+      const few = rich.slice(0, 3)
+      runMany(() => {
+        generateQuestions(few, { currentYear: 2026 }).forEach((q) => {
+          expect(["rating", "year"]).toContain(q.type)
+        })
+      })
+    })
+  })
 })

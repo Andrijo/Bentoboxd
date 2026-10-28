@@ -1,22 +1,51 @@
 import { useState, useRef, useEffect } from "react"
+import PosterImage from "../PosterImage.jsx"
 import { generateQuestions } from "./quizQuestions.js"
 
-const actionBtn = {
-  background: "var(--c-text-bright)", border: "1px solid var(--c-text-bright)",
-  color: "var(--c-on-text)", padding: "10px 20px", cursor: "pointer",
-  fontFamily: "var(--font-mono)",
+const UNRATED = "Sin calificar"
+
+function resultMessage(score, total) {
+  if (score === total) return "Conoces tu diario de memoria."
+  if (score >= total / 2) return "Buena memoria cinéfila."
+  return "Toca repasar el diario."
 }
 
-export default function Quiz({ movies, onBack }) {
+function QuizReview({ questions, answers }) {
+  return (
+    <ol className="rd-quiz-review" aria-label="Repaso de respuestas">
+      {questions.map((q, i) => {
+        const right = answers[i] === q.correct
+        return (
+          <li key={i}>
+            {q.movie?.poster && (
+              <img className="rd-quiz-review-poster" src={q.movie.poster} alt="" loading="lazy" />
+            )}
+            <div className="rd-quiz-review-text">
+              <div>{q.qText}</div>
+              <div className="rd-quiz-review-answer">Tu respuesta: {answers[i]}</div>
+              {!right && <div>Correcta: {q.correct}</div>}
+            </div>
+            <span className="rd-quiz-review-mark" aria-hidden="true">{right ? "✓" : "✕"}</span>
+            <span className="rd-sr-only">{right ? "Acertada" : "Fallada"}</span>
+          </li>
+        )
+      })}
+    </ol>
+  )
+}
+
+function QuizRound({ movies, onBack }) {
   const [currentQ, setCurrentQ] = useState(0)
-  const [score, setScore] = useState(0)
+  const [answers, setAnswers] = useState([])
   const [showResult, setShowResult] = useState(false)
-  const [selected, setSelected] = useState(null)
   const [questions, setQuestions] = useState(() => generateQuestions(movies))
   const questionRef = useRef(null)
   const resultRef = useRef(null)
   const nextRef = useRef(null)
   const answeredRef = useRef(false)
+
+  const selected = answers[currentQ] ?? null
+  const score = answers.filter((a, i) => a === questions[i]?.correct).length
 
   // Al desactivarse las opciones el foco se pierde; se lleva a la nueva
   // pregunta o al resultado. Solo tras responder, no al entrar a la página.
@@ -33,28 +62,23 @@ export default function Quiz({ movies, onBack }) {
     answeredRef.current = true
     setQuestions(generateQuestions(movies))
     setCurrentQ(0)
-    setScore(0)
-    setSelected(null)
+    setAnswers([])
     setShowResult(false)
   }
 
   const handleAnswer = (option) => {
     if (selected !== null) return
     answeredRef.current = true
-    setSelected(option)
-
-    if (option === questions[currentQ].correct) {
-      setScore((s) => s + 1)
-    }
+    setAnswers((prev) => {
+      const next = [...prev]
+      next[currentQ] = option
+      return next
+    })
   }
 
   const handleNext = () => {
-    if (currentQ < questions.length - 1) {
-      setCurrentQ((c) => c + 1)
-      setSelected(null)
-    } else {
-      setShowResult(true)
-    }
+    if (currentQ < questions.length - 1) setCurrentQ((c) => c + 1)
+    else setShowResult(true)
   }
 
   if (questions.length === 0) {
@@ -77,81 +101,61 @@ export default function Quiz({ movies, onBack }) {
 
   return (
     <section className="rd-page" aria-label="Quiz">
-      <div className="rd-quiz-card">
-        <p className="rd-sr-only" role="status" aria-live="polite">
-          {showResult ? `Quiz completado: ${score} de ${questions.length}` : feedback}
-        </p>
-        {showResult ? (
-          <div style={{ padding: "clamp(24px, 8vw, 50px)", textAlign: "center" }}>
-            <h2 ref={resultRef} tabIndex={-1} style={{
-              outline: "none",
-              fontFamily: "var(--font-display)", fontSize: "clamp(2rem, 9vw, 3rem)",
-              color: "var(--c-accent)", margin: 0,
-            }}>
-              QUIZ COMPLETADO
-            </h2>
-            <div style={{ fontSize: "var(--fs-base)", color: "var(--c-text)", margin: "20px 0" }}>
-              Puntuación:{" "}
-              <span style={{ color: "var(--c-text-bright)", fontWeight: "bold" }}>
-                {score}
-              </span>{" "}
-              / {questions.length}
-            </div>
-            <div style={{ display: "flex", gap: "12px", justifyContent: "center", flexWrap: "wrap" }}>
-              <button onClick={restart} type="button" style={actionBtn}>
-                Jugar de nuevo
-              </button>
-              <button onClick={onBack} type="button" style={actionBtn}>
-                Volver al perfil
-              </button>
-            </div>
-          </div>
-        ) : (
-          <div>
-            <div style={{
-              padding: "20px", borderBottom: "1px solid rgb(var(--fg-rgb) / 0.05)",
-              display: "flex", justifyContent: "space-between",
-              color: "var(--c-accent)", fontSize: "var(--fs-xs)",
-            }}>
-              <span aria-hidden="true">Quiz</span>
-              <span>Pregunta {currentQ + 1} / {questions.length}</span>
-            </div>
+      <div className="rd-quiz">
+        <div className="rd-quiz-head">
+          <h2 className="rd-panel-title">QUIZ</h2>
+          {!showResult && (
+            <span className="rd-quiz-progress">
+              Pregunta {currentQ + 1} / {questions.length}
+            </span>
+          )}
+        </div>
 
-            <div style={{ padding: "clamp(20px, 6vw, 30px)" }}>
-              <div style={{ textAlign: "center", marginBottom: "20px" }}>
-                <h2 id="rd-quiz-question" ref={questionRef} tabIndex={-1} style={{
-                  outline: "none",
-                  fontSize: "var(--fs-md)", color: "var(--c-text-bright)", fontWeight: "inherit",
-                  marginBottom: "20px", lineHeight: "1.4",
-                }}>
-                  {current.qText}
-                </h2>
+        <div className="rd-quiz-card">
+          <p className="rd-sr-only" role="status" aria-live="polite">
+            {showResult ? `Quiz completado: ${score} de ${questions.length}` : feedback}
+          </p>
+          {showResult ? (
+            <div className="rd-quiz-result">
+              <h2 ref={resultRef} tabIndex={-1} className="rd-quiz-result-title">
+                QUIZ COMPLETADO
+              </h2>
+              <div className="rd-quiz-score">
+                Puntuación: <strong>{score}</strong> / {questions.length}
+                <div className="rd-quiz-message">{resultMessage(score, questions.length)}</div>
               </div>
+              <QuizReview questions={questions} answers={answers} />
+              <div className="rd-quiz-actions">
+                <button onClick={restart} type="button" className="rd-btn-solid rd-quiz-btn">
+                  Jugar de nuevo
+                </button>
+                <button onClick={onBack} type="button" className="rd-btn-solid rd-quiz-btn">
+                  Volver al perfil
+                </button>
+              </div>
+            </div>
+          ) : (
+            <div className="rd-quiz-body">
+              {current.type === "poster" && current.movie?.poster && (
+                <div className="rd-quiz-poster">
+                  <PosterImage src={current.movie.poster} alt="Póster de la película a adivinar" />
+                </div>
+              )}
+              <h2 id="rd-quiz-question" ref={questionRef} tabIndex={-1} className="rd-quiz-question">
+                {current.qText}
+              </h2>
 
-              <div role="group" aria-labelledby="rd-quiz-question" style={{ display: "grid", gap: "12px" }}>
+              <div role="group" aria-labelledby="rd-quiz-question" className="rd-quiz-options">
                 {current.options.map((opt) => {
-                  let bgColor = "rgb(var(--fg-rgb) / 0.03)"
-                  let borderColor = "rgb(var(--fg-rgb) / 0.1)"
-                  let textColor = "var(--c-text)"
-                  let borderStyle = "solid"
-                  let mark = ""
-                  let strike = "none"
-
-                  if (selected) {
-                    if (opt === current.correct) {
-                      bgColor = "var(--c-text-bright)"
-                      borderColor = "var(--c-text-bright)"
-                      textColor = "var(--c-on-text)"
-                      mark = "✓ "
-                    } else if (opt === selected && selected !== current.correct) {
-                      bgColor = "var(--c-inset-strong)"
-                      borderColor = "var(--c-text-bright)"
-                      borderStyle = "dashed"
-                      textColor = "var(--c-text-bright)"
-                      strike = "line-through"
-                      mark = "✕ "
-                    }
-                  }
+                  const state =
+                    selected === null
+                      ? undefined
+                      : opt === current.correct
+                        ? "correct"
+                        : opt === selected
+                          ? "wrong"
+                          : undefined
+                  const mark = state === "correct" ? "✓ " : state === "wrong" ? "✕ " : ""
 
                   return (
                     <button
@@ -159,16 +163,10 @@ export default function Quiz({ movies, onBack }) {
                       disabled={selected !== null}
                       onClick={() => handleAnswer(opt)}
                       type="button"
-                      style={{
-                        background: bgColor, border: `1px ${borderStyle} ${borderColor}`,
-                        textDecoration: strike,
-                        color: textColor, padding: "14px", borderRadius: "var(--radius-md)",
-                        cursor: selected ? "default" : "pointer",
-                        fontSize: "var(--fs-sm)", fontFamily: "var(--font-mono)",
-                        transition: "background 0.2s, border-color 0.2s, color 0.2s",
-                      }}>
+                      data-state={state}
+                      className="rd-quiz-option">
                       {mark}{opt}{" "}
-                      {opt !== "Sin calificar" && !current.isYear && (
+                      {current.type === "rating" && opt !== UNRATED && (
                         <span role="img" aria-label="estrellas">★</span>
                       )}
                     </button>
@@ -177,20 +175,29 @@ export default function Quiz({ movies, onBack }) {
               </div>
 
               {selected !== null && (
-                <div style={{ marginTop: "20px", textAlign: "center" }}>
-                  <button
-                    ref={nextRef}
-                    onClick={handleNext}
-                    type="button"
-                    style={{ ...actionBtn, borderRadius: "var(--radius-md)", fontSize: "var(--fs-sm)" }}>
+                <div className="rd-quiz-actions">
+                  <button ref={nextRef} onClick={handleNext} type="button" className="rd-btn-solid rd-quiz-btn">
                     {currentQ < questions.length - 1 ? "Siguiente" : "Ver resultado"}
                   </button>
                 </div>
               )}
             </div>
-          </div>
-        )}
+          )}
+        </div>
       </div>
     </section>
   )
+}
+
+export default function Quiz({ movies, loading = false, onBack }) {
+  if (loading) {
+    return (
+      <section className="rd-page" aria-label="Quiz">
+        <div className="rd-page-notice" role="status">
+          Cargando datos de las películas…
+        </div>
+      </section>
+    )
+  }
+  return <QuizRound movies={movies} onBack={onBack} />
 }
