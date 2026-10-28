@@ -276,6 +276,7 @@ export default function App() {
         <Quiz
           key={username}
           movies={movies}
+          loading={metaLoading}
           onBack={() => navigate("profile")}
         />
       )}
