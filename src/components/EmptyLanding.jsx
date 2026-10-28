@@ -18,14 +18,14 @@ function FilmIcon() {
     <svg
       aria-hidden="true"
       viewBox="0 0 48 48"
-      width="56"
-      height="56"
+      width="40"
+      height="40"
       fill="none"
       stroke="var(--c-accent)"
       strokeWidth="2"
       strokeLinecap="round"
       strokeLinejoin="round"
-      style={{ opacity: 0.7, marginBottom: "20px" }}>
+      style={{ opacity: 0.7, marginBottom: "12px" }}>
       <rect x="6" y="8" width="36" height="32" rx="3" />
       <path d="M14 8v32M34 8v32M6 18h8M6 30h8M34 18h8M34 30h8" />
     </svg>
