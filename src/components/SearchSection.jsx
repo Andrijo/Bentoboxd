@@ -24,7 +24,7 @@ export default function SearchSection({ url, loading, onUrlChange, onFetch }) {
         onChange={(e) => onUrlChange(e.target.value)}
         autoComplete="off"
         spellCheck={false}
-        placeholder="letterboxd.com/username o solo el username"
+        placeholder="letterboxd.com/tu-usuario o solo tu usuario"
         className="rd-search-input"
       />
 

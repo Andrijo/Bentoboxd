@@ -8,7 +8,7 @@ import Panel from "../Panel/Panel.jsx"
 import SegmentedControl from "../Panel/SegmentedControl.jsx"
 
 const VIEW_OPTIONS = [
-  { key: "grid", label: "Grilla" },
+  { key: "grid", label: "Cuadrícula" },
   { key: "spectrum", label: "Espectro" },
   { key: "constellation", label: "Mapa" },
 ]

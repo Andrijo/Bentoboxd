@@ -173,7 +173,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                       color: "rgba(0,229,255,0.8)", border: "1px solid rgba(0,229,255,0.3)",
                       borderRadius: "var(--radius-sm)", padding: "1px 6px",
                     }}>
-                      Revisión
+                      Vista otra vez
                     </span>
                   )}
                 </div>
