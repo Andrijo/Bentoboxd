@@ -33,7 +33,7 @@ export default function AppHeader({ page, showTabs, theme, onNavigate, onReset, 
           right: 0,
           height: "1px",
           background:
-            "linear-gradient(90deg, transparent, rgb(var(--accent-rgb) / 0.4), transparent)",
+            "linear-gradient(90deg, transparent, rgb(var(--fg-rgb) / 0.3), transparent)",
         }}
       />
 

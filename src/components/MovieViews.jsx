@@ -170,7 +170,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                   {movie.rewatch && (
                     <span style={{
                       fontSize: "var(--fs-2xs)", letterSpacing: "1px",
-                      color: "rgb(var(--accent-rgb) / 0.8)", border: "1px solid rgb(var(--accent-rgb) / 0.3)",
+                      color: "var(--c-text-muted)", border: "1px solid rgb(var(--fg-rgb) / 0.2)",
                       borderRadius: "var(--radius-sm)", padding: "1px 6px",
                     }}>
                       Revisión
@@ -234,7 +234,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                   justifyContent: "space-between",
                   textDecoration: "none",
                   padding: "6px 0",
-                  borderBottom: "1px dashed rgb(var(--accent-rgb) / 0.15)",
+                  borderBottom: "1px dashed rgb(var(--fg-rgb) / 0.15)",
                   fontSize: "var(--fs-xs)",
                   color: "var(--c-accent)",
                   animation: "fadeSlideIn 0.1s ease both",
