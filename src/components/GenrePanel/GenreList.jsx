@@ -39,7 +39,7 @@ export default function GenreList({ genres }) {
             </span>
             <span style={{
               minWidth: "24px", textAlign: "right", fontSize: "var(--fs-sm)",
-              fontFamily: "var(--font-display)", letterSpacing: "1px", color,
+              fontFamily: "var(--font-display)", letterSpacing: "1px", color: "var(--c-text-bright)",
             }}>
               {count}
             </span>

@@ -15,6 +15,7 @@ export default function Quiz({ movies, onBack }) {
   const [questions, setQuestions] = useState(() => generateQuestions(movies))
   const questionRef = useRef(null)
   const resultRef = useRef(null)
+  const nextRef = useRef(null)
   const answeredRef = useRef(false)
 
   // Al desactivarse las opciones el foco se pierde; se lleva a la nueva
@@ -23,6 +24,10 @@ export default function Quiz({ movies, onBack }) {
     if (!answeredRef.current) return
     ;(showResult ? resultRef : questionRef).current?.focus()
   }, [currentQ, showResult])
+
+  useEffect(() => {
+    if (selected !== null) nextRef.current?.focus()
+  }, [selected])
 
   const restart = () => {
     answeredRef.current = true
@@ -41,15 +46,15 @@ export default function Quiz({ movies, onBack }) {
     if (option === questions[currentQ].correct) {
       setScore((s) => s + 1)
     }
+  }
 
-    setTimeout(() => {
-      if (currentQ < questions.length - 1) {
-        setCurrentQ((c) => c + 1)
-        setSelected(null)
-      } else {
-        setShowResult(true)
-      }
-    }, 1200)
+  const handleNext = () => {
+    if (currentQ < questions.length - 1) {
+      setCurrentQ((c) => c + 1)
+      setSelected(null)
+    } else {
+      setShowResult(true)
+    }
   }
 
   if (questions.length === 0) {
@@ -170,6 +175,18 @@ export default function Quiz({ movies, onBack }) {
                   )
                 })}
               </div>
+
+              {selected !== null && (
+                <div style={{ marginTop: "20px", textAlign: "center" }}>
+                  <button
+                    ref={nextRef}
+                    onClick={handleNext}
+                    type="button"
+                    style={{ ...actionBtn, borderRadius: "var(--radius-md)", fontSize: "var(--fs-sm)" }}>
+                    {currentQ < questions.length - 1 ? "Siguiente" : "Ver resultado"}
+                  </button>
+                </div>
+              )}
             </div>
           </div>
         )}

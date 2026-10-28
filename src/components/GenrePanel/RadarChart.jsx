@@ -5,7 +5,10 @@ const levels = [0.25, 0.5, 0.75, 1.0]
 
 export default function RadarChart({ genres }) {
   const cx = 200, cy = 200, r = 140
-  const keys = GENRE_KEYS.filter((k) => (genres[k] || 0) > 0 || true)
+  const withData = GENRE_KEYS.filter((k) => (genres[k] || 0) > 0)
+  const keys = withData.length >= 5
+    ? withData
+    : [...withData, ...GENRE_KEYS.filter((k) => !withData.includes(k))].slice(0, 5)
   const total = Object.values(genres).reduce((a, b) => a + b, 0) || 1
   const n = keys.length
 
@@ -64,18 +67,17 @@ export default function RadarChart({ genres }) {
 
       {keys.map((k, i) => {
         const lp = pointAt(i, 1.25)
-        const cfg = GENRE_CONFIG[k]
         const val = genres[k] || 0
         return (
           <g key={k}>
             <text x={lp.x} y={lp.y - 6} textAnchor="middle" dominantBaseline="middle"
-              fontSize="9" style={{ fontFamily: "var(--font-mono)" }}
-              fill={val > 0 ? cfg.color : "rgb(var(--fg-rgb) / 0.2)"} letterSpacing="0.5">
+              fontSize="11" style={{ fontFamily: "var(--font-mono)" }}
+              fill={val > 0 ? "var(--c-text)" : "var(--c-text-muted)"} letterSpacing="0.5">
               {k}
             </text>
             {val > 0 && (
               <text x={lp.x} y={lp.y + 8} textAnchor="middle" dominantBaseline="middle"
-                fontSize="8" style={{ fontFamily: "var(--font-mono)" }} fill="rgb(var(--fg-rgb) / 0.4)">
+                fontSize="10" style={{ fontFamily: "var(--font-mono)" }} fill="var(--c-text-muted)">
                 {formatMovieCount(val)}
               </text>
             )}
