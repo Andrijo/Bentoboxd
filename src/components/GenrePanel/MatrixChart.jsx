@@ -46,6 +46,7 @@ export default function MatrixChart({ genres }) {
               key={i}
               onMouseEnter={() => setHoveredGenre(genre)}
               onMouseLeave={() => setHoveredGenre(null)}
+              onClick={() => setHoveredGenre((g) => (g === genre ? null : genre))}
               style={{
                 width: "16px", height: "16px",
                 background: isDimmed
@@ -73,7 +74,7 @@ export default function MatrixChart({ genres }) {
           <>
             <div style={{
               fontSize: "var(--fs-md)", fontFamily: "var(--font-display)",
-              color: GENRE_CONFIG[hoveredGenre].color, letterSpacing: "2px",
+              color: "var(--c-text-bright)", letterSpacing: "2px",
             }}>
               {hoveredGenre}
             </div>
@@ -90,7 +91,7 @@ export default function MatrixChart({ genres }) {
               fontSize: "var(--fs-xs)", fontFamily: "var(--font-mono)",
               color: "var(--c-text-muted)", letterSpacing: "2px",
           }}>
-            [ Pase el cursor para analizar nodos ]
+            [ Toca o pasa el cursor sobre un nodo ]
           </div>
         )}
       </div>

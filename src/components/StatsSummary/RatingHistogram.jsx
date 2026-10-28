@@ -35,6 +35,7 @@ export default function RatingHistogram({ distribution }) {
                 key={d.rating}
                 onMouseEnter={() => setActive(d.rating)}
                 onMouseLeave={() => setActive(null)}
+                onClick={() => setActive((a) => (a === d.rating ? null : d.rating))}
                 style={{
                   flex: 1, height: "100%", position: "relative",
                   display: "flex", flexDirection: "column", justifyContent: "flex-end",
