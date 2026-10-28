@@ -6,7 +6,6 @@ const CAT_CONFIG = {
   rating: {
     label: "Puntuación",
     unit: "Estrellas",
-    color: "var(--c-accent)",
     title: "Aclamación Mundial",
     desc: "Adivina si la siguiente película tiene una calificación mayor o menor.",
     sub: "Basado en la puntuación promedio mundial de TMDB.",
@@ -14,7 +13,6 @@ const CAT_CONFIG = {
   popularity: {
     label: "Popularidad",
     unit: "Índice TMDB",
-    color: "#e81cff",
     title: "En Tendencia",
     desc: "Adivina qué película es más popular hoy en TMDB.",
     sub: "Basado en el índice de tendencias actual de TMDB.",
@@ -22,7 +20,6 @@ const CAT_CONFIG = {
   year: {
     label: "Año",
     unit: "Estreno",
-    color: "#4ade80",
     title: "Línea de Tiempo",
     desc: "Adivina qué película se estrenó más recientemente (Higher = Más Nueva).",
     sub: "Basado en la fecha de estreno oficial en cines.",
@@ -82,20 +79,19 @@ const darkOverlayStyle = {
   pointerEvents: "none",
   zIndex: 1,
 }
-const labelStyle = (color) => ({
+const labelStyle = {
   position: "absolute",
   bottom: 0,
   width: "100%",
   padding: "20px 10px",
-  // Las cartas siempre son oscuras: el acento del tema claro no se leería.
-  color: color === "var(--c-accent)" ? "#00e5ff" : color,
+  color: "#f6f4ee",
   fontFamily: "var(--font-display)",
   display: "flex",
   flexDirection: "column",
   alignItems: "center",
   textShadow: "0px 4px 20px rgba(0,0,0,1), 0px 2px 5px rgba(0,0,0,1)",
   zIndex: 2,
-})
+}
 // width 0 + minWidth 100%: el título toma el ancho de la carta sin
 // ensancharla; hasta 2 líneas centradas antes de recortar con "…".
 // minHeight reserva las 2 líneas para que ambas cartas queden alineadas.
@@ -200,7 +196,7 @@ function GameHeader({ category, streak, onCategoryChange }) {
             <br />
             <span
               style={{
-                color: CAT_CONFIG[category].color,
+                color: "var(--c-text)",
                 transition: "color 0.3s",
               }}>
               {CAT_CONFIG[category].sub}
@@ -210,7 +206,7 @@ function GameHeader({ category, streak, onCategoryChange }) {
 
         <div
           style={{
-            color: "var(--c-warning)",
+            color: "var(--c-text-bright)",
             fontSize: "clamp(1.1rem, 4vw, 1.8rem)",
             fontFamily: "var(--font-display)",
             letterSpacing: "2px",
@@ -242,13 +238,13 @@ function GameHeader({ category, streak, onCategoryChange }) {
             style={{
               background:
                 category === cat.id
-                  ? CAT_CONFIG[cat.id].color
+                  ? "var(--c-text-bright)"
                   : "rgb(var(--fg-rgb) / 0.05)",
               color:
-                category === cat.id ? (cat.id === "rating" ? "var(--c-on-text)" : "#000") : "var(--c-text-muted)",
+                category === cat.id ? "var(--c-on-text)" : "var(--c-text-muted)",
               border:
                 category === cat.id
-                  ? `1px solid ${CAT_CONFIG[cat.id].color}`
+                  ? "1px solid var(--c-text-bright)"
                   : "1px solid rgb(var(--fg-rgb) / 0.1)",
               padding: "8px clamp(12px, 4vw, 24px)",
               borderRadius: "var(--radius-md)",
@@ -257,10 +253,6 @@ function GameHeader({ category, streak, onCategoryChange }) {
               fontSize: "var(--fs-xs)",
               fontFamily: "var(--font-mono)",
               transition: "background 0.3s, color 0.3s, border 0.3s, box-shadow 0.3s",
-              boxShadow:
-                category === cat.id
-                  ? `0 0 15px ${CAT_CONFIG[cat.id].color}40`
-                  : "none",
             }}>
             {cat.label}
           </button>
@@ -328,7 +320,7 @@ function GamePlayArea({
               />
               <div style={darkOverlayStyle} />
 
-              <div style={labelStyle(CAT_CONFIG[category].color)}>
+              <div style={labelStyle}>
                 <div style={{ fontSize: "clamp(2rem, 9vw, 3.5rem)", lineHeight: 1 }}>
                   {formatMetric(category, movieA.metrics[category])}
                 </div>
@@ -358,7 +350,7 @@ function GamePlayArea({
               />
               <div style={darkOverlayStyle} />
 
-              <div style={labelStyle(CAT_CONFIG[category].color)}>
+              <div style={labelStyle}>
                 <div style={{ fontSize: "clamp(2rem, 9vw, 3.5rem)", lineHeight: 1 }}>
                   {feedback ? formatMetric(category, movieB.metrics[category]) : (
                     <>
