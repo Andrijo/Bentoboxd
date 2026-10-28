@@ -40,7 +40,7 @@ export default function BarChart({ genres }) {
 
             <div style={{
               width: "25px", fontSize: "var(--fs-sm)", fontFamily: "var(--font-display)",
-              color: cfg.color, letterSpacing: "1px",
+              color: "var(--c-text-bright)", letterSpacing: "1px",
             }}>
               {count}
             </div>

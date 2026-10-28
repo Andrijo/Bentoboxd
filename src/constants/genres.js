@@ -1,19 +1,3 @@
-// Tonos de la rampa neutra definida en index.css (--ramp-1 más contrastado).
-export const GENRE_CONFIG = {
-  Terror: { color: "var(--ramp-1)" },
-  Acción: { color: "var(--ramp-2)" },
-  "Ciencia Ficción": { color: "var(--ramp-3)" },
-  Drama: { color: "var(--ramp-4)" },
-  Comedia: { color: "var(--ramp-5)" },
-  Thriller: { color: "var(--ramp-6)" },
-  Romance: { color: "var(--ramp-7)" },
-  Animación: { color: "var(--ramp-8)" },
-  Documental: { color: "var(--ramp-9)" },
-  Otro: { color: "var(--ramp-10)" },
-}
-
-export const GENRE_KEYS = Object.keys(GENRE_CONFIG)
-
 export const TMDB_GENRES = {
   27: "Terror",
   28: "Acción",
@@ -24,4 +8,24 @@ export const TMDB_GENRES = {
   10749: "Romance",
   16: "Animación",
   99: "Documental",
+  12: "Aventura",
+  80: "Crimen",
+  14: "Fantasía",
+  9648: "Misterio",
+  10751: "Familiar",
 }
+
+const RAMP_STEPS = 10
+
+// Reparte los géneros por la rampa neutra definida en index.css
+// (--ramp-1 más contrastado), dejando "Otro" en el tono más tenue.
+const KEYS = [...new Set(Object.values(TMDB_GENRES)), "Otro"]
+
+export const GENRE_CONFIG = Object.fromEntries(
+  KEYS.map((genre, i) => {
+    const step = 1 + Math.round((i * (RAMP_STEPS - 1)) / (KEYS.length - 1))
+    return [genre, { color: `var(--ramp-${step})` }]
+  }),
+)
+
+export const GENRE_KEYS = Object.keys(GENRE_CONFIG)

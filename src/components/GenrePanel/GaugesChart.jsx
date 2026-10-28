@@ -43,7 +43,7 @@ export default function GaugesChart({ genres }) {
             <div style={{ textAlign: "center" }}>
               <div style={{
                 fontSize: "var(--fs-2xs)", fontFamily: "var(--font-mono)",
-                color: cfg.color, letterSpacing: "1px",
+                color: "var(--c-text)", letterSpacing: "1px",
               }}>
                 {k}
               </div>

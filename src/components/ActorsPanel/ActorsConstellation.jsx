@@ -23,10 +23,8 @@ export default function ActorsConstellation({ actors }) {
             }}>
               <line x1={cx} y1={cy} x2={x} y2={y} stroke={color}
                 strokeWidth="0.5" opacity="0.2" strokeDasharray="2 2" />
-              <circle cx={x} cy={y} r={count + 3} fill={color}>
-                <animate attributeName="opacity" values="0.4;0.9;0.4"
-                  dur={`${2 + i}s`} repeatCount="indefinite" />
-              </circle>
+              <circle cx={x} cy={y} r={count + 3} fill={color}
+                style={{ animation: `pulse ${2 + i}s ease-in-out infinite` }} />
               <text x={x} y={y - (count + 8)} textAnchor="middle" fontSize="7"
                 fill="var(--c-text-bright)" style={{ fontFamily: "var(--font-mono)" }} opacity="0.8">
                 {name.split(" ").pop()}
