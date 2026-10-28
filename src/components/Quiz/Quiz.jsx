@@ -74,7 +74,7 @@ export default function Quiz({ movies, onBack }) {
     <section className="rd-page" aria-label="Quiz">
       <div className="rd-quiz-card">
         <p className="rd-sr-only" role="status" aria-live="polite">
-          {showResult ? `Test completado: ${score} de ${questions.length}` : feedback}
+          {showResult ? `Quiz completado: ${score} de ${questions.length}` : feedback}
         </p>
         {showResult ? (
           <div style={{ padding: "clamp(24px, 8vw, 50px)", textAlign: "center" }}>
@@ -83,7 +83,7 @@ export default function Quiz({ movies, onBack }) {
               fontFamily: "var(--font-display)", fontSize: "clamp(2rem, 9vw, 3rem)",
               color: "var(--c-accent)", margin: 0,
             }}>
-              TEST COMPLETADO
+              QUIZ COMPLETADO
             </h2>
             <div style={{ fontSize: "var(--fs-base)", color: "var(--c-text)", margin: "20px 0" }}>
               Puntuación:{" "}
@@ -108,7 +108,7 @@ export default function Quiz({ movies, onBack }) {
               display: "flex", justifyContent: "space-between",
               color: "var(--c-accent)", fontSize: "var(--fs-xs)",
             }}>
-              <span aria-hidden="true">SYSTEM.TRIVIA_MODULE</span>
+              <span aria-hidden="true">Quiz</span>
               <span>Pregunta {currentQ + 1} / {questions.length}</span>
             </div>
 
