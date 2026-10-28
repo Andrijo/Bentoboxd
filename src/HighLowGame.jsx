@@ -87,7 +87,8 @@ const labelStyle = (color) => ({
   bottom: 0,
   width: "100%",
   padding: "20px 10px",
-  color: color,
+  // Las cartas siempre son oscuras: el acento del tema claro no se leería.
+  color: color === "var(--c-accent)" ? "#00e5ff" : color,
   fontFamily: "var(--font-display)",
   display: "flex",
   flexDirection: "column",
@@ -135,7 +136,15 @@ function GuessControls({ disabled, onGuess }) {
         </svg>
       </button>
 
-      <div className="rd-hlg-vs" aria-hidden="true">VS</div>
+      <div className="rd-hlg-vs" aria-hidden="true">
+        <svg viewBox="0 0 100 100">
+          <mask id="rd-hlg-vs-mask">
+            <rect width="100" height="100" fill="#fff" />
+            <text x="50" y="50" textAnchor="middle" dominantBaseline="central" fill="#000">VS</text>
+          </mask>
+          <circle cx="50" cy="50" r="50" fill="#333333" mask="url(#rd-hlg-vs-mask)" />
+        </svg>
+      </div>
 
       <button
         onClick={() => onGuess("lower")}
@@ -236,7 +245,7 @@ function GameHeader({ category, streak, onCategoryChange }) {
                   ? CAT_CONFIG[cat.id].color
                   : "rgb(var(--fg-rgb) / 0.05)",
               color:
-                category === cat.id ? "#000" : "var(--c-text-muted)",
+                category === cat.id ? (cat.id === "rating" ? "var(--c-on-text)" : "#000") : "var(--c-text-muted)",
               border:
                 category === cat.id
                   ? `1px solid ${CAT_CONFIG[cat.id].color}`
