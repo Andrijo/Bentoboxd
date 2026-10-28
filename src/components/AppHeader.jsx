@@ -24,19 +24,6 @@ export default function AppHeader({ page, showTabs, theme, onNavigate, onReset, 
 
   return (
     <header className="rd-header-bar">
-      <div
-        aria-hidden="true"
-        style={{
-          position: "absolute",
-          top: 0,
-          left: 0,
-          right: 0,
-          height: "1px",
-          background:
-            "linear-gradient(90deg, transparent, rgb(var(--fg-rgb) / 0.3), transparent)",
-        }}
-      />
-
       <h1
         className="rd-header-title"
         style={{
@@ -60,7 +47,7 @@ export default function AppHeader({ page, showTabs, theme, onNavigate, onReset, 
 
       <div className="rd-header-actions" style={{ display: "flex", gap: "12px", alignItems: "center" }}>
         {showTabs && (
-          <nav aria-label="Secciones" style={{ display: "flex", gap: "12px", flex: 1 }}>
+          <nav aria-label="Secciones" className="rd-header-nav" style={{ display: "flex", gap: "12px", flex: 1 }}>
             {TABS.map(({ page: tab, label }) => {
               const active = page === tab
               return (
