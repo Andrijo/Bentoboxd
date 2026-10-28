@@ -12,9 +12,9 @@
 
 ## Descripción
 
-Bentoboxd es una aplicación web que convierte el feed de Letterboxd de cualquier usuario en un panel de visualización interactivo con estética cyberpunk/HUD. Ingresa un usuario y obtén métricas, gráficos y vistas alternativas de su actividad cinematográfica reciente.
+Bentoboxd es una aplicación web que convierte el feed de Letterboxd de cualquier usuario en un panel de visualización interactivo con una estética editorial minimalista de paleta restringida. Ingresa un usuario y obtén métricas, gráficos y vistas alternativas de su actividad cinematográfica reciente.
 
-Nace como un experimento personal para explorar visualización de datos, integración de APIs y animaciones CSS, todo envuelto en una interfaz oscura con temática de interfaz de máquina. Sin frameworks de UI, sin TypeScript, sin dependencias pesadas — solo React, Vite y CSS.
+Nace como un experimento personal para explorar visualización de datos, integración de APIs y animaciones CSS, todo en una interfaz sobria de cinco tonos. Sin frameworks de UI, sin TypeScript, sin dependencias pesadas — solo React, Vite y CSS.
 
 ## Características
 
@@ -36,6 +36,8 @@ Nace como un experimento personal para explorar visualización de datos, integra
   - **Higher or Lower** (`#higher-lower`) — Adivina si la siguiente película tiene mayor/menor rating, popularidad o año
   - **Quiz** (`#quiz`) — 5 preguntas sobre año de estreno o calificación
 - **Skeleton loading** mientras cargan el feed y los metadatos de TMDB
+- **Tema claro y oscuro** — Botón de cambio en la cabecera; respeta `prefers-color-scheme` en la primera visita y recuerda tu elección en localStorage (sin parpadeo al cargar)
+- **Paleta de cinco tonos** — Todos los colores salen de tokens CSS (tintas y crema); los gráficos usan rampas derivadas de ellos
 - **Diseño responsive** con layout adaptado a móvil
 - **Accesibilidad** — Etiquetas ARIA, anuncios en vivo para los juegos y enlaces externos señalados para lectores de pantalla
 - **Enlaces compartibles** — El perfil va en la URL (`?user=<usuario>`, combinable con `#quiz` o `#higher-lower`): se puede compartir, recargar y navegar con atrás/adelante entre perfiles
@@ -49,6 +51,8 @@ Nace como un experimento personal para explorar visualización de datos, integra
 | Vite                 | 7                       |
 | ESLint (flat config) | 9                       |
 | CSS                  | Vanilla + design tokens |
+| Tipografías          | Milker, Carmine, DM Sans (autoalojadas) |
+| Tests                | Vitest 3 + Testing Library |
 | APIs                 | Letterboxd RSS, TMDB v3 |
 
 ## Requisitos
@@ -132,6 +136,7 @@ src/
 │   ├── SearchSection.jsx    # Búsqueda de usuario
 │   ├── RecentProfiles.jsx   # Perfiles recientes
 │   ├── EmptyLanding.jsx     # Pantalla inicial sin perfil
+│   ├── Panel/               # Panel, SegmentedControl y PanelError compartidos
 │   ├── MovieViews.jsx       # Bento / Timeline / Terminal
 │   ├── DataPanels.jsx       # Contenedor de paneles de análisis
 │   ├── Skeleton.jsx         # Placeholders de carga
@@ -151,6 +156,7 @@ src/
 │   ├── useTMDBMetadata.js   # Fetch de metadatos TMDB
 │   ├── useHashRoute.js      # Páginas por hash (#quiz, #higher-lower)
 │   ├── useGridColumns.js    # Columnas según el ancho disponible
+│   ├── useTheme.js          # Tema claro/oscuro con persistencia
 │   └── useOverscrollColor.js # Color del rebote de overscroll
 ├── services/                # Servicios API
 │   ├── letterboxd.js        # Parseo de RSS
