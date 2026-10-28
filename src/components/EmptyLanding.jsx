@@ -49,7 +49,7 @@ export default function EmptyLanding({
           <FilmIcon />
           <h2 className="rd-landing-title">Tu Letterboxd, en un dashboard</h2>
           <p className="rd-landing-lead">
-            Escribe un usuario y convierte sus últimas películas vístas en
+            Escribe un usuario y convierte sus últimas películas vistas en
             estadísticas, gráficos y minijuegos.
           </p>
 

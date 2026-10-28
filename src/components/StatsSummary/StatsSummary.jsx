@@ -76,7 +76,7 @@ export default function StatsSummary({ movies, loading }) {
     hoursTile = (
       <StatTile
         label="Tiempo viendo"
-        value={`${Math.round(stats.runtimeMinutes / 60)} h`}
+        value={formatDuration(stats.runtimeMinutes)}
         detail={`${formatDuration(stats.runtimeMinutes / stats.runtimeCount)} por película · ${formatMovieCount(stats.runtimeCount)}`}
       />
     )
@@ -109,7 +109,7 @@ export default function StatsSummary({ movies, loading }) {
           detail={`${Math.round((stats.likedCount / stats.total) * 100)}% de las vistas`}
         />
         <StatTile
-          label="Revisiones"
+          label="Repeticiones"
           value={stats.rewatchCount}
           detail={stats.rewatchCount === 1 ? "Película vista otra vez" : "Películas vistas otra vez"}
         />

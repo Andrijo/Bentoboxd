@@ -24,7 +24,7 @@ const CAT_CONFIG = {
     unit: "Estreno",
     color: "#4ade80",
     title: "Línea de Tiempo",
-    desc: "Adivina qué película se estrenó más recientemente (Higher = Más Nueva).",
+    desc: "Adivina qué película se estrenó más recientemente (Higher = más nueva).",
     sub: "Basado en la fecha de estreno oficial en cines.",
   },
 }
@@ -221,7 +221,7 @@ function GameHeader({ category, streak, onCategoryChange }) {
         aria-label="Categoría"
         style={{ display: "flex", flexWrap: "wrap", gap: "10px", justifyContent: "center" }}>
         {[
-          { id: "rating", label: "Rating" },
+          { id: "rating", label: "Calificación" },
           { id: "popularity", label: "Popularidad" },
           { id: "year", label: "Año" },
         ].map((cat) => (

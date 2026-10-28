@@ -29,6 +29,15 @@ function yearOptions(correctYear, currentYear, random) {
   return shuffle(candidates, random).slice(0, OPTION_COUNT - 1)
 }
 
+// Calificaciones y años de menor a mayor; "Sin calificar" al final.
+function sortOptions(options) {
+  return [...options].sort((a, b) => {
+    if (a === UNRATED) return 1
+    if (b === UNRATED) return -1
+    return Number(a) - Number(b)
+  })
+}
+
 function ratingOptions(correct, random) {
   return shuffle(
     POSSIBLE_RATINGS.filter((rating) => rating !== correct),
@@ -60,7 +69,7 @@ export function generateQuestions(
       return {
         movie,
         qText,
-        options: shuffle([correct, ...distractors], random),
+        options: sortOptions([correct, ...distractors]),
         correct,
         isYear,
       }

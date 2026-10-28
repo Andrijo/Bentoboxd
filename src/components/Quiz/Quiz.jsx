@@ -56,7 +56,7 @@ export default function Quiz({ movies, onBack }) {
     return (
       <section className="rd-page" aria-label="Quiz">
         <div className="rd-page-notice">
-          No hay suficientes películas calificadas para armar un quiz.
+          No hay suficientes películas para armar un quiz.
         </div>
       </section>
     )
@@ -159,7 +159,7 @@ export default function Quiz({ movies, onBack }) {
                       }}>
                       {opt}{" "}
                       {opt !== "Sin calificar" && !current.isYear && (
-                        <span role="img" aria-label="estrellas">⭐</span>
+                        <span role="img" aria-label="estrellas">★</span>
                       )}
                     </button>
                   )
