@@ -237,11 +237,11 @@ input:focus-visible { outline: none; }
   .rd-segmented > button { flex: 1 1 30%; text-align: center; justify-content: center; }
 }
 .rd-terminal-row:hover, .rd-terminal-row:focus-visible { background: rgb(var(--accent-rgb) / 0.08); }
-.rd-landing { padding: clamp(32px, 8vw, 72px) var(--gutter); display: flex; flex-direction: column; align-items: center; text-align: center; }
-.rd-landing-title { font-family: var(--font-display); font-size: clamp(1.8rem, 5vw, 3rem); font-weight: normal; letter-spacing: 2px; line-height: 1.1; color: var(--c-text-bright); }
+.rd-landing { padding: clamp(16px, 3vw, 24px) var(--gutter); display: flex; flex-direction: column; align-items: center; text-align: center; }
+.rd-landing-title { font-family: var(--font-display); font-size: clamp(1.5rem, 4vw, 2.25rem); font-weight: normal; letter-spacing: 2px; line-height: 1.1; color: var(--c-text-bright); }
 .rd-landing-lead { max-width: 480px; margin-top: 12px; font-size: var(--fs-sm); line-height: 1.6; color: var(--c-text); }
-.rd-landing-features { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 560px; margin-top: 24px; }
+.rd-landing-features { list-style: none; display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; max-width: 760px; margin-top: 16px; }
 .rd-landing-features li { padding: 4px 12px; border: 1px solid rgb(var(--fg-rgb) / 0.1); border-radius: 999px; background: rgb(var(--fg-rgb) / 0.03); font-size: var(--fs-xs); letter-spacing: 1px; color: var(--c-text-muted); }
-.rd-landing-example { margin-top: 28px; padding: 10px 20px; border-radius: var(--radius-md); font-family: var(--font-mono); font-size: var(--fs-xs); letter-spacing: 1px; }
+.rd-landing-example { margin-top: 20px; padding: 10px 20px; border-radius: var(--radius-md); font-family: var(--font-mono); font-size: var(--fs-xs); letter-spacing: 1px; }
 .rd-opinion-row { display: flex; align-items: center; gap: 12px; padding: 8px; border: 1px solid rgb(var(--fg-rgb) / 0.05); border-radius: var(--radius-md); background: var(--c-inset); text-decoration: none; color: inherit; transition: background 0.2s; }
 .rd-opinion-row:hover, .rd-opinion-row:focus-visible { background: rgb(var(--accent-rgb) / 0.05); }

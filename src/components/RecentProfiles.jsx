@@ -2,7 +2,7 @@ export default function RecentProfiles({ profiles, onSelect }) {
   if (profiles.length === 0) return null
 
   return (
-    <div style={{ marginTop: "40px", animation: "fadeSlideIn 0.8s ease both" }}>
+    <div style={{ marginTop: "24px", animation: "fadeSlideIn 0.8s ease both" }}>
       <h2
         id="rd-recent-title"
         style={{
