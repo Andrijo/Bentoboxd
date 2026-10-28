@@ -117,6 +117,13 @@ En local solo necesitas `TMDB_API_KEY` en `.env`: `npm run dev` usa los proxies 
 
 > En otro hosting, apunta `VITE_RSS_PROXY_URL` a tu propio proxy. Por defecto se le pasa `?user=<usuario>`; si la URL contiene `{user}`, se usa en modo path-style.
 
+### Seguridad
+
+- **Cabeceras** (`vercel.json`): CSP estricta (solo scripts propios; imágenes de Letterboxd, TMDB y flagcdn), `frame-ancestors 'none'`, `nosniff`, `Referrer-Policy` y `Permissions-Policy`. El script que aplica el tema vive en `public/theme-init.js` para no necesitar `'unsafe-inline'`.
+- **API** (`api/*`): las respuestas llevan `Content-Security-Policy: default-src 'none'; sandbox` y un límite de peticiones por IP (20/min en el RSS, 240/min en TMDB). El límite es en memoria por instancia: para algo estricto, añade una regla de rate limit en el firewall de Vercel.
+- **CORS**: `/api/rss` solo responde al mismo origen. Si sirves el frontend desde otro dominio, define `RSS_ALLOWED_ORIGIN` con ese origen.
+- Si mueves algún proxy a otro dominio (`VITE_RSS_PROXY_URL` o `VITE_TMDB_PROXY_URL` absolutos), añádelo a `connect-src` en la CSP de `vercel.json`.
+
 ## Estructura
 
 ```
