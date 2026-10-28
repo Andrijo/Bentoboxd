@@ -22,7 +22,7 @@ export default function PlatformsPanel({ platformsData, movies, loading, error }
       subtitle="Disponible por suscripción en México"
       actions={selectedPlatform && (
         <button onClick={() => setSelectedPlatform(null)} type="button" style={{
-          background: "none", border: "1px solid rgba(255,255,255,0.2)", color: "var(--c-text)",
+          background: "none", border: "1px solid rgb(var(--fg-rgb) / 0.2)", color: "var(--c-text)",
           fontSize: "var(--fs-xs)", padding: "4px 10px", cursor: "pointer",
           borderRadius: "var(--radius-sm)",
         }}>
@@ -55,14 +55,14 @@ export default function PlatformsPanel({ platformsData, movies, loading, error }
                 style={{
                   font: "inherit", color: "inherit", textAlign: "left",
                   display: "flex", alignItems: "center", gap: "12px",
-                  background: selectedPlatform === name ? "rgba(255,255,255,0.06)" : "var(--c-inset-strong)",
+                  background: selectedPlatform === name ? "rgb(var(--fg-rgb) / 0.06)" : "var(--c-inset-strong)",
                   padding: "10px", borderRadius: "var(--radius-md)",
-                  border: `1px solid ${selectedPlatform === name ? "rgba(255,255,255,0.3)" : "rgba(255,255,255,0.05)"}`,
+                  border: `1px solid ${selectedPlatform === name ? "rgb(var(--fg-rgb) / 0.3)" : "rgb(var(--fg-rgb) / 0.05)"}`,
                   cursor: "pointer", transition: "background 0.2s, border-color 0.2s",
                 }}>
                 <img src={logos[name]} alt=""
                   loading="lazy" decoding="async"
-                  style={{ width: "30px", height: "30px", borderRadius: "var(--radius-sm)", border: "1px solid rgba(255,255,255,0.1)" }} />
+                  style={{ width: "30px", height: "30px", borderRadius: "var(--radius-sm)", border: "1px solid rgb(var(--fg-rgb) / 0.1)" }} />
                 <div style={{ overflow: "hidden" }}>
                   <div style={{ fontSize: "var(--fs-xs)", color: "var(--c-text)", fontWeight: "bold", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
                     {name}
@@ -75,12 +75,12 @@ export default function PlatformsPanel({ platformsData, movies, loading, error }
 
           {selectedPlatform && (
             <div role="region" aria-label={`Películas en ${selectedPlatform}`} style={{
-              background: "var(--c-inset)", border: "1px solid rgba(255,255,255,0.08)",
+              background: "var(--c-inset)", border: "1px solid rgb(var(--fg-rgb) / 0.08)",
               padding: "16px", borderRadius: "var(--radius-md)", animation: "fadeSlideIn 0.3s ease both",
             }}>
               <div style={{
                 fontSize: "var(--fs-xs)", color: "var(--c-text-muted)", letterSpacing: "2px",
-                marginBottom: "12px", borderBottom: "1px solid rgba(255,255,255,0.08)", paddingBottom: "8px",
+                marginBottom: "12px", borderBottom: "1px solid rgb(var(--fg-rgb) / 0.08)", paddingBottom: "8px",
               }}>
                 Películas en {selectedPlatform}
               </div>

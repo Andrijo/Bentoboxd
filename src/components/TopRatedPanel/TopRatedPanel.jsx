@@ -19,12 +19,12 @@ function RankedList({ title, items }) {
         {items.map(({ name, average, count }, i) => (
           <li key={name} style={{
             display: "flex", alignItems: "center", gap: "12px", padding: "8px 14px",
-            border: "1px solid rgba(255,255,255,0.05)", borderRadius: "var(--radius-md)",
+            border: "1px solid rgb(var(--fg-rgb) / 0.05)", borderRadius: "var(--radius-md)",
             background: "var(--c-inset)",
           }}>
             <span aria-hidden="true" style={{
               fontFamily: "var(--font-display)", fontSize: "var(--fs-md)",
-              color: "rgba(255,255,255,0.3)", width: "20px",
+              color: "rgb(var(--fg-rgb) / 0.3)", width: "20px",
             }}>
               {i + 1}
             </span>

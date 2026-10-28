@@ -3,7 +3,7 @@ export default function SegmentedControl({ label, options, value, onChange }) {
     <div role="group" className="rd-segmented" aria-label={label} style={{
       display: "flex", flexWrap: "wrap", gap: "4px", background: "var(--c-inset)",
       borderRadius: "var(--radius-md)", padding: "3px",
-      border: "1px solid rgba(255,255,255,0.07)",
+      border: "1px solid rgb(var(--fg-rgb) / 0.07)",
     }}>
       {options.map(({ key, label: optionLabel }) => (
         <button
@@ -12,9 +12,9 @@ export default function SegmentedControl({ label, options, value, onChange }) {
           type="button"
           aria-pressed={value === key}
           style={{
-            background: value === key ? "rgba(255,255,255,0.08)" : "transparent",
+            background: value === key ? "rgb(var(--fg-rgb) / 0.08)" : "transparent",
             border: value === key
-              ? "1px solid rgba(255,255,255,0.2)"
+              ? "1px solid rgb(var(--fg-rgb) / 0.2)"
               : "1px solid transparent",
             color: value === key ? "var(--c-text-bright)" : "var(--c-text-muted)",
             padding: "5px 12px", borderRadius: "var(--radius-sm)", cursor: "pointer",

@@ -37,7 +37,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
             style={{
               fontSize: "var(--fs-2xs)",
               letterSpacing: "3px",
-              color: "#fafafa",
+              color: "var(--c-text-bright)",
             }}>
             @{username} — {movies.length < allMovies.length
               ? `${movies.length} de ${allMovies.length}`
@@ -95,7 +95,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                 style={{
                   fontFamily: "var(--font-display)",
                   fontSize: "var(--fs-2xl)",
-                  color: "rgba(255,255,255,0.1)",
+                  color: "rgb(var(--fg-rgb) / 0.1)",
                   width: "40px",
                   textAlign: "center",
                 }}>
@@ -108,7 +108,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                   width: "50px",
                   height: "75px",
                   flexShrink: 0,
-                  background: "#111",
+                  background: "var(--c-inset-strong)",
                   borderRadius: "var(--radius-sm)",
                   overflow: "hidden",
                 }}>
@@ -170,7 +170,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                   {movie.rewatch && (
                     <span style={{
                       fontSize: "var(--fs-2xs)", letterSpacing: "1px",
-                      color: "rgba(0,229,255,0.8)", border: "1px solid rgba(0,229,255,0.3)",
+                      color: "rgb(var(--accent-rgb) / 0.8)", border: "1px solid rgb(var(--accent-rgb) / 0.3)",
                       borderRadius: "var(--radius-sm)", padding: "1px 6px",
                     }}>
                       Revisión
@@ -204,7 +204,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
       )}
 
       {movieViewMode === "terminal" && (
-        <div className="rd-terminal-box">
+        <div className="rd-terminal-box rd-keep-dark">
           <div className="rd-terminal-overlay" aria-hidden="true" />
 
           <div
@@ -234,7 +234,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                   justifyContent: "space-between",
                   textDecoration: "none",
                   padding: "6px 0",
-                  borderBottom: "1px dashed rgba(0,229,255,0.15)",
+                  borderBottom: "1px dashed rgb(var(--accent-rgb) / 0.15)",
                   fontSize: "var(--fs-xs)",
                   color: "var(--c-accent)",
                   animation: "fadeSlideIn 0.1s ease both",

@@ -66,7 +66,7 @@ const cardStyle = {
   aspectRatio: "2/3",
   borderRadius: "var(--radius-lg)",
   overflow: "hidden",
-  border: "1px solid rgba(255,255,255,0.1)",
+  border: "1px solid rgb(var(--fg-rgb) / 0.1)",
   boxShadow: "0 10px 40px rgba(0,0,0,0.8)",
 }
 const imgStyle = {
@@ -162,7 +162,7 @@ function GameHeader({ category, streak, onCategoryChange }) {
         flexDirection: "column",
         gap: "15px",
         paddingBottom: "20px",
-        borderBottom: "1px solid rgba(255,255,255,0.06)",
+        borderBottom: "1px solid rgb(var(--fg-rgb) / 0.06)",
       }}>
       <div
         style={{
@@ -203,7 +203,7 @@ function GameHeader({ category, streak, onCategoryChange }) {
 
         <div
           style={{
-            color: "#f59e0b",
+            color: "var(--c-warning)",
             fontSize: "clamp(1.1rem, 4vw, 1.8rem)",
             fontFamily: "var(--font-display)",
             letterSpacing: "2px",
@@ -236,13 +236,13 @@ function GameHeader({ category, streak, onCategoryChange }) {
               background:
                 category === cat.id
                   ? CAT_CONFIG[cat.id].color
-                  : "rgba(255,255,255,0.05)",
+                  : "rgb(var(--fg-rgb) / 0.05)",
               color:
                 category === cat.id ? "#000" : "var(--c-text-muted)",
               border:
                 category === cat.id
                   ? `1px solid ${CAT_CONFIG[cat.id].color}`
-                  : "1px solid rgba(255,255,255,0.1)",
+                  : "1px solid rgb(var(--fg-rgb) / 0.1)",
               padding: "8px clamp(12px, 4vw, 24px)",
               borderRadius: "var(--radius-md)",
               cursor: "pointer",
@@ -288,7 +288,7 @@ function GamePlayArea({
           <h2
             style={{
               fontSize: "clamp(2.5rem, 12vw, 4rem)",
-              color: "#ff4444",
+              color: "var(--c-danger)",
               fontFamily: "var(--font-display)",
             }}>
             GAME OVER
@@ -376,7 +376,7 @@ function GamePlayArea({
                     justifyContent: "center",
                     fontSize: "clamp(3rem, 15vw, 6rem)",
                     color:
-                      feedback === "correct" ? "#4ade80" : "#ff4444",
+                      feedback === "correct" ? "var(--c-success)" : "var(--c-danger)",
                     textShadow: "0 0 40px rgba(0,0,0,1)",
                   }}>
                   {feedback === "correct" ? "✓" : "✕"}

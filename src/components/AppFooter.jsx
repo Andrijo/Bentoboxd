@@ -1,5 +1,5 @@
 const linkStyle = {
-  color: "rgba(0,229,255,0.85)",
+  color: "rgb(var(--accent-rgb) / 0.85)",
   textDecoration: "underline",
   textUnderlineOffset: "3px",
 }

@@ -16,7 +16,7 @@ const formatRating = (value) => value.toFixed(1)
 function StatTile({ label, value, detail }) {
   return (
     <div style={{
-      background: "var(--c-inset)", border: "1px solid rgba(255,255,255,0.05)",
+      background: "var(--c-inset)", border: "1px solid rgb(var(--fg-rgb) / 0.05)",
       borderRadius: "var(--radius-md)", padding: "14px 16px",
       display: "flex", flexDirection: "column", gap: "6px", minWidth: 0,
     }}>

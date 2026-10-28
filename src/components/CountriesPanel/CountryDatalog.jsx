@@ -20,8 +20,8 @@ export default function CountryDatalog({ countries }) {
           }}>
             <div style={{
               width: "40px", height: "30px", flexShrink: 0, borderRadius: "2px",
-              overflow: "hidden", background: "rgba(255,255,255,0.02)",
-              border: "1px solid rgba(255,255,255,0.05)",
+              overflow: "hidden", background: "rgb(var(--fg-rgb) / 0.02)",
+              border: "1px solid rgb(var(--fg-rgb) / 0.05)",
             }}>
               {flagUrl ? (
                 <img src={flagUrl} alt=""
@@ -42,7 +42,7 @@ export default function CountryDatalog({ countries }) {
             </span>
             <span style={{
               fontSize: "var(--fs-xs)", color: "var(--c-text-muted)", fontFamily: "var(--font-mono)",
-              letterSpacing: "1px", background: "rgba(255,255,255,0.05)",
+              letterSpacing: "1px", background: "rgb(var(--fg-rgb) / 0.05)",
               padding: "4px 8px", borderRadius: "var(--radius-sm)",
             }}>
               {formatMovieCount(count)}

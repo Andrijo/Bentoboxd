@@ -13,7 +13,7 @@ export default function ActorsGrid({ actors }) {
         return (
           <div key={name} style={{
             display: "flex", alignItems: "center",
-            background: "var(--c-inset-strong)", border: "1px solid rgba(255,255,255,0.05)",
+            background: "var(--c-inset-strong)", border: "1px solid rgb(var(--fg-rgb) / 0.05)",
             padding: "12px 16px",
             borderRadius: "var(--radius-md)", animation: "fadeSlideIn 0.3s ease both",
             animationDelay: `${i * 50}ms`,

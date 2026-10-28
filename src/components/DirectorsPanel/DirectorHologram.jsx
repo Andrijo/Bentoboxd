@@ -37,12 +37,12 @@ export default function DirectorHologram({ directors }) {
               <div style={{
                 position: "absolute", bottom: 0, left: "50%",
                 transform: "translateX(-50%)", width: "1px", height: "100%",
-                background: "rgba(255,255,255,0.3)",
+                background: "rgb(var(--fg-rgb) / 0.3)",
               }} />
             </div>
             <div style={{
               fontSize: "var(--fs-xs)", textAlign: "center",
-              color: "rgba(255,255,255,0.7)", letterSpacing: "1px", height: "30px",
+              color: "rgb(var(--fg-rgb) / 0.7)", letterSpacing: "1px", height: "30px",
             }}>
               {name.split(" ").map((word) => (
                 <div key={word}>{word}</div>

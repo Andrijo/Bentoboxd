@@ -21,7 +21,7 @@ function OpinionRow({ movie, diff, sign }) {
         className="rd-opinion-row">
         <span style={{
           position: "relative", width: "40px", height: "60px", flexShrink: 0,
-          borderRadius: "var(--radius-sm)", overflow: "hidden", background: "#111",
+          borderRadius: "var(--radius-sm)", overflow: "hidden", background: "var(--c-inset-strong)",
         }}>
           {movie.poster && (
             <PosterImage
