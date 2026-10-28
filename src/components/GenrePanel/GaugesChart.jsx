@@ -45,7 +45,7 @@ export default function GaugesChart({ genres }) {
               />
 
               <text x="50" y="58" textAnchor="middle" fontSize="26"
-                style={{ fontFamily: "var(--font-display)" }} fill="#F0EDE5">
+                style={{ fontFamily: "var(--font-display)" }} fill="var(--c-text-bright)">
                 {count}
               </text>
             </svg>
@@ -58,7 +58,7 @@ export default function GaugesChart({ genres }) {
                 {k}
               </div>
               <div style={{
-                fontSize: "var(--fs-xs)", color: "rgba(255,255,255,0.55)",
+                fontSize: "var(--fs-xs)", color: "var(--c-text-muted)",
                 fontFamily: "var(--font-mono)", marginTop: "2px",
               }}>
                 {Math.round(percent * 100)}% del máximo

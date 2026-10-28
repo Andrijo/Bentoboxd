@@ -97,7 +97,7 @@ export default function DonutChart({ genres }) {
               style={{ fontFamily: "var(--font-mono)" }} fontWeight="bold">
               {formatMovieCount(hoveredSlice.count)}
             </text>
-            <text x={cx} y={cy + 18} textAnchor="middle" fontSize="8" fill="rgba(255,255,255,0.55)"
+            <text x={cx} y={cy + 18} textAnchor="middle" fontSize="8" fill="var(--c-text-muted)"
               style={{ fontFamily: "var(--font-mono)" }}>
               {Math.round(hoveredSlice.fraction * 100)}%
             </text>
@@ -108,7 +108,7 @@ export default function DonutChart({ genres }) {
               style={{ fontFamily: "var(--font-display)" }} letterSpacing="2">
               {total}
             </text>
-            <text x={cx} y={cy + 10} textAnchor="middle" fontSize="7" fill="rgba(255,255,255,0.55)"
+            <text x={cx} y={cy + 10} textAnchor="middle" fontSize="7" fill="var(--c-text-muted)"
               style={{ fontFamily: "var(--font-mono)" }} letterSpacing="1">
               Films
             </text>

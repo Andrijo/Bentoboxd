@@ -32,3 +32,21 @@ export function formatWatchedDate(isoDate) {
   const [, y, m, d] = match.map(Number)
   return watchedDateFormat.format(new Date(y, m - 1, d))
 }
+
+/** 125 → "2 h 5 min"; 120 → "2 h"; 45 → "45 min". */
+export function formatDuration(minutes) {
+  const total = Math.round(minutes)
+  const hours = Math.floor(total / 60)
+  const rest = total % 60
+  if (hours === 0) return `${rest} min`
+  return rest === 0 ? `${hours} h` : `${hours} h ${rest} min`
+}
+
+const weekdayFormat = new Intl.DateTimeFormat("es-MX", { weekday: "long" })
+
+/** 0 (domingo) – 6 (sábado) → "Domingo" … "Sábado". */
+export function weekdayName(day) {
+  // El 4 de enero de 2026 es domingo.
+  const name = weekdayFormat.format(new Date(2026, 0, 4 + day))
+  return name.charAt(0).toUpperCase() + name.slice(1)
+}

@@ -1,9 +1,10 @@
 import { useState } from "react"
 import { PanelSkeleton } from "../Skeleton.jsx"
+import PanelError from "../Panel/PanelError.jsx"
 import Panel from "../Panel/Panel.jsx"
 import { formatMovieCount } from "../../utils/formatters.js"
 
-export default function PlatformsPanel({ platformsData, movies, loading }) {
+export default function PlatformsPanel({ platformsData, movies, loading, error }) {
   const [selectedPlatform, setSelectedPlatform] = useState(null)
   const { counts, logos } = platformsData || { counts: {}, logos: {} }
 
@@ -21,7 +22,7 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
       subtitle="Disponible por suscripción en México"
       actions={selectedPlatform && (
         <button onClick={() => setSelectedPlatform(null)} type="button" style={{
-          background: "none", border: "1px solid rgba(255,255,255,0.2)", color: "#DBD5CA",
+          background: "none", border: "1px solid rgba(255,255,255,0.2)", color: "var(--c-text)",
           fontSize: "var(--fs-xs)", padding: "4px 10px", cursor: "pointer",
           borderRadius: "var(--radius-sm)",
         }}>
@@ -31,10 +32,12 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
       style={{ fontFamily: "var(--font-mono)" }}>
       {loading ? (
         <PanelSkeleton variant="tiles" label="Buscando plataformas…" />
+      ) : error ? (
+        <PanelError message={error} />
       ) : topPlatforms.length === 0 ? (
         <div style={{
           textAlign: "center", fontSize: "var(--fs-xs)",
-          color: "rgba(255,255,255,0.55)", fontFamily: "var(--font-mono)",
+          color: "var(--c-text-muted)", fontFamily: "var(--font-mono)",
         }}>
           Ninguna de tus películas está en streaming por suscripción en México
         </div>
@@ -52,7 +55,7 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
                 style={{
                   font: "inherit", color: "inherit", textAlign: "left",
                   display: "flex", alignItems: "center", gap: "12px",
-                  background: selectedPlatform === name ? "rgba(255,255,255,0.06)" : "rgba(0,0,0,0.4)",
+                  background: selectedPlatform === name ? "rgba(255,255,255,0.06)" : "var(--c-inset-strong)",
                   padding: "10px", borderRadius: "var(--radius-md)",
                   border: `1px solid ${selectedPlatform === name ? "rgba(255,255,255,0.3)" : "rgba(255,255,255,0.05)"}`,
                   cursor: "pointer", transition: "background 0.2s, border-color 0.2s",
@@ -61,10 +64,10 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
                   loading="lazy" decoding="async"
                   style={{ width: "30px", height: "30px", borderRadius: "var(--radius-sm)", border: "1px solid rgba(255,255,255,0.1)" }} />
                 <div style={{ overflow: "hidden" }}>
-                  <div style={{ fontSize: "var(--fs-xs)", color: "#DBD5CA", fontWeight: "bold", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
+                  <div style={{ fontSize: "var(--fs-xs)", color: "var(--c-text)", fontWeight: "bold", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
                     {name}
                   </div>
-                  <div style={{ fontSize: "var(--fs-xs)", color: "rgba(255,255,255,0.5)" }}>{formatMovieCount(count)}</div>
+                  <div style={{ fontSize: "var(--fs-xs)", color: "var(--c-text-muted)" }}>{formatMovieCount(count)}</div>
                 </div>
               </button>
             ))}
@@ -72,11 +75,11 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
 
           {selectedPlatform && (
             <div role="region" aria-label={`Películas en ${selectedPlatform}`} style={{
-              background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.08)",
+              background: "var(--c-inset)", border: "1px solid rgba(255,255,255,0.08)",
               padding: "16px", borderRadius: "var(--radius-md)", animation: "fadeSlideIn 0.3s ease both",
             }}>
               <div style={{
-                fontSize: "var(--fs-xs)", color: "rgba(255,255,255,0.5)", letterSpacing: "2px",
+                fontSize: "var(--fs-xs)", color: "var(--c-text-muted)", letterSpacing: "2px",
                 marginBottom: "12px", borderBottom: "1px solid rgba(255,255,255,0.08)", paddingBottom: "8px",
               }}>
                 Películas en {selectedPlatform}
@@ -84,11 +87,11 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
               <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
                 {filteredMovies.map((m) => (
                   <div key={m.link} style={{
-                    fontSize: "var(--fs-xs)", color: "#F0EDE5",
+                    fontSize: "var(--fs-xs)", color: "var(--c-text-bright)",
                     display: "flex", justifyContent: "space-between",
                   }}>
                     <span><span aria-hidden="true">&gt; </span>{m.title}</span>
-                    <span style={{ color: "rgba(255,255,255,0.55)" }}>{m.year}</span>
+                    <span style={{ color: "var(--c-text-muted)" }}>{m.year}</span>
                   </div>
                 ))}
               </div>

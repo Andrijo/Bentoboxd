@@ -43,7 +43,7 @@ export default function ActorsSpectrum({ actors }) {
             </div>
             <div style={{
               fontSize: "var(--fs-xs)", textAlign: "center",
-              color: "rgba(255,255,255,0.5)", writingMode: "vertical-rl",
+              color: "var(--c-text-muted)", writingMode: "vertical-rl",
               transform: "rotate(180deg)", height: "60px", letterSpacing: "1px",
             }}>
               {name}

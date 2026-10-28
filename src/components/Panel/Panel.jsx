@@ -16,7 +16,7 @@ export default function Panel({ id, area, title, subtitle, actions, style, bodyS
           </h2>
           {subtitle && (
             <div style={{
-              fontSize: "var(--fs-2xs)", color: "rgba(255,255,255,0.55)",
+              fontSize: "var(--fs-2xs)", color: "var(--c-text-muted)",
               letterSpacing: "2px", marginTop: "4px", fontFamily: "var(--font-mono)",
             }}>
               {subtitle}

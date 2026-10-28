@@ -14,7 +14,7 @@ export default function CountryDatalog({ countries }) {
         return (
           <div key={code} style={{
             display: "flex", alignItems: "center", gap: "16px",
-            background: "rgba(0,0,0,0.4)", padding: "12px 20px",
+            background: "var(--c-inset-strong)", padding: "12px 20px",
             borderRadius: "var(--radius-md)",
             animation: "fadeSlideIn 0.3s ease both", animationDelay: `${i * 60}ms`,
           }}>
@@ -41,7 +41,7 @@ export default function CountryDatalog({ countries }) {
               {fullName}
             </span>
             <span style={{
-              fontSize: "var(--fs-xs)", color: "rgba(255,255,255,0.5)", fontFamily: "var(--font-mono)",
+              fontSize: "var(--fs-xs)", color: "var(--c-text-muted)", fontFamily: "var(--font-mono)",
               letterSpacing: "1px", background: "rgba(255,255,255,0.05)",
               padding: "4px 8px", borderRadius: "var(--radius-sm)",
             }}>

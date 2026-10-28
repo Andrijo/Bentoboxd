@@ -3,6 +3,7 @@ import DirectorCards from "./DirectorCards.jsx"
 import DirectorHologram from "./DirectorHologram.jsx"
 import DirectorOrbit from "./DirectorOrbit.jsx"
 import { PanelSkeleton } from "../Skeleton.jsx"
+import PanelError from "../Panel/PanelError.jsx"
 import Panel from "../Panel/Panel.jsx"
 import SegmentedControl from "../Panel/SegmentedControl.jsx"
 
@@ -12,7 +13,7 @@ const VIEW_OPTIONS = [
   { key: "orbit", label: "Órbita" },
 ]
 
-export default function DirectorsPanel({ directors, loading }) {
+export default function DirectorsPanel({ directors, loading, error }) {
   const [viewMode, setViewMode] = useState("cards")
 
   const topDirectors = Object.entries(directors || {})
@@ -32,7 +33,9 @@ export default function DirectorsPanel({ directors, loading }) {
       bodyStyle={{ minHeight: "220px" }}>
       {loading && <PanelSkeleton variant="rows" label="Analizando directores…" />}
 
-      {!loading && hasData && (
+      {!loading && error && <PanelError message={error} />}
+
+      {!loading && !error && hasData && (
         <>
           {viewMode === "cards" && <DirectorCards directors={directors} />}
           {viewMode === "hologram" && <DirectorHologram directors={directors} />}
@@ -40,10 +43,10 @@ export default function DirectorsPanel({ directors, loading }) {
         </>
       )}
 
-      {!loading && !hasData && (
+      {!loading && !error && !hasData && (
         <div style={{
           textAlign: "center", fontSize: "var(--fs-xs)",
-          color: "rgba(255,255,255,0.55)", marginTop: "20px",
+          color: "var(--c-text-muted)", marginTop: "20px",
           fontFamily: "var(--font-mono)",
         }}>
           Sin datos de directores disponibles

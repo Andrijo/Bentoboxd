@@ -18,6 +18,7 @@ function detailsResponse(overrides = {}) {
   return {
     vote_average: 8.4,
     popularity: 100,
+    runtime: 148,
     release_date: "2010-07-15",
     production_countries: [{ iso_3166_1: "US" }],
     credits: {
@@ -80,6 +81,7 @@ describe("fetchMetadataFromTMDB", () => {
       countries: ["US"],
       globalRating: "4.2",
       popularity: 100,
+      runtime: 148,
       releaseDate: "2010-07-15",
     })
   })

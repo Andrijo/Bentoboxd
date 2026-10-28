@@ -4,13 +4,23 @@ export const RATING_STEPS = [0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5]
 // Diferencias menores a esto se consideran "igual que TMDB".
 const SAME_AS_TMDB = 0.1
 
+const DAY_MS = 24 * 60 * 60 * 1000
+const WEEK_DAYS = 7
+
+/** "2026-03-12" → medianoche local, para que el día de la semana no se corra. */
+const parseLocalDate = (isoDate) => {
+  const [y, m, d] = isoDate.split("-").map(Number)
+  return new Date(y, m - 1, d)
+}
+
 const mean = (values) =>
   values.length ? values.reduce((a, b) => a + b, 0) / values.length : null
 
 /**
  * Resumen del feed: calificaciones, comparación con TMDB, me gusta,
- * revisiones, década favorita y rango de fechas vistas.
- * `metrics.rating` (promedio de TMDB, 0–5) solo existe tras cargar metadatos.
+ * revisiones, década favorita, rango de fechas, horas vistas, ritmo semanal y día favorito.
+ * `metrics.rating` (promedio de TMDB, 0–5) y `metrics.runtime` (minutos) solo
+ * existen tras cargar metadatos.
  */
 export function computeProfileStats(movies) {
   const rated = movies.filter((m) => m.rating > 0)
@@ -24,6 +34,11 @@ export function computeProfileStats(movies) {
     .filter((m) => m.metrics?.rating > 0)
     .map((m) => m.rating - m.metrics.rating)
   const tmdbDiff = mean(diffs)
+
+  const runtimes = movies
+    .map((m) => m.metrics?.runtime)
+    .filter((minutes) => minutes > 0)
+  const runtimeMinutes = runtimes.reduce((a, b) => a + b, 0)
 
   const decades = {}
   for (const m of movies) {
@@ -41,6 +56,24 @@ export function computeProfileStats(movies) {
   // Fechas ISO (AAAA-MM-DD): el orden de texto es el cronológico.
   const dates = movies.map((m) => m.watchedDate).filter(Boolean).sort()
 
+  // Ritmo: películas por semana sobre el periodo cubierto (mínimo una semana,
+  // para que unos pocos días seguidos no inflen el promedio).
+  const watchDays = dates.map(parseLocalDate)
+  const spanDays = watchDays.length
+    ? Math.round((watchDays[watchDays.length - 1] - watchDays[0]) / DAY_MS) + 1
+    : 0
+  const perWeek = watchDays.length
+    ? watchDays.length / (Math.max(spanDays, WEEK_DAYS) / WEEK_DAYS)
+    : null
+
+  // Día favorito (0 = domingo). Empate: el primero de la semana, lunes primero.
+  const weekdayCounts = Array(WEEK_DAYS).fill(0)
+  for (const day of watchDays) weekdayCounts[day.getDay()] += 1
+  const topWeekdayCount = Math.max(0, ...weekdayCounts)
+  const topWeekday = topWeekdayCount
+    ? [1, 2, 3, 4, 5, 6, 0].find((day) => weekdayCounts[day] === topWeekdayCount)
+    : null
+
   return {
     total: movies.length,
     ratedCount: rated.length,
@@ -57,10 +90,17 @@ export function computeProfileStats(movies) {
           : tmdbDiff > 0
             ? "kinder"
             : "harsher",
+    runtimeMinutes,
+    runtimeCount: runtimes.length,
     likedCount: movies.filter((m) => m.liked).length,
     rewatchCount: movies.filter((m) => m.rewatch).length,
     topDecade,
     topDecadeCount,
+    datedCount: dates.length,
+    spanDays,
+    perWeek,
+    topWeekday,
+    topWeekdayCount,
     firstWatched: dates[0] || null,
     lastWatched: dates[dates.length - 1] || null,
   }

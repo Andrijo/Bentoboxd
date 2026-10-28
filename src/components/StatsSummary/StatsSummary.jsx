@@ -2,7 +2,7 @@ import { useMemo } from "react"
 import RatingHistogram from "./RatingHistogram.jsx"
 import { Skeleton } from "../Skeleton.jsx"
 import { computeProfileStats } from "../../utils/profileStats.js"
-import { formatMovieCount, formatWatchedDate } from "../../utils/formatters.js"
+import { formatDuration, formatMovieCount, formatWatchedDate, weekdayName } from "../../utils/formatters.js"
 import Panel from "../Panel/Panel.jsx"
 
 const TMDB_VERDICT = {
@@ -16,18 +16,18 @@ const formatRating = (value) => value.toFixed(1)
 function StatTile({ label, value, detail }) {
   return (
     <div style={{
-      background: "rgba(0,0,0,0.3)", border: "1px solid rgba(255,255,255,0.05)",
+      background: "var(--c-inset)", border: "1px solid rgba(255,255,255,0.05)",
       borderRadius: "var(--radius-md)", padding: "14px 16px",
       display: "flex", flexDirection: "column", gap: "6px", minWidth: 0,
     }}>
-      <div style={{ fontSize: "var(--fs-xs)", color: "rgba(255,255,255,0.55)", letterSpacing: "1px" }}>
+      <div style={{ fontSize: "var(--fs-xs)", color: "var(--c-text-muted)", letterSpacing: "1px" }}>
         {label}
       </div>
-      <div style={{ fontSize: "var(--fs-lg)", color: "#F0EDE5", lineHeight: 1.1 }}>
+      <div style={{ fontSize: "var(--fs-lg)", color: "var(--c-text-bright)", lineHeight: 1.1 }}>
         {value}
       </div>
       {detail && (
-        <div style={{ fontSize: "var(--fs-xs)", color: "rgba(255,255,255,0.5)" }}>
+        <div style={{ fontSize: "var(--fs-xs)", color: "var(--c-text-muted)" }}>
           {detail}
         </div>
       )}
@@ -63,6 +63,25 @@ export default function StatsSummary({ movies, loading }) {
     )
   }
 
+  let hoursTile
+  if (loading) {
+    hoursTile = (
+      <StatTile
+        label="Tiempo viendo"
+        value={<Skeleton width="64px" height="1.4rem" />}
+        detail="Sumando duraciones…"
+      />
+    )
+  } else if (stats.runtimeCount > 0) {
+    hoursTile = (
+      <StatTile
+        label="Tiempo viendo"
+        value={`${Math.round(stats.runtimeMinutes / 60)} h`}
+        detail={`${formatDuration(stats.runtimeMinutes / stats.runtimeCount)} por película · ${formatMovieCount(stats.runtimeCount)}`}
+      />
+    )
+  }
+
   return (
     <Panel
       id="rd-panel-resumen"
@@ -82,6 +101,7 @@ export default function StatsSummary({ movies, loading }) {
               : `${formatMovieCount(stats.ratedCount)} calificadas`
           }
         />
+        {hoursTile}
         {tmdbTile}
         <StatTile
           label="Me gusta"
@@ -93,6 +113,20 @@ export default function StatsSummary({ movies, loading }) {
           value={stats.rewatchCount}
           detail={stats.rewatchCount === 1 ? "Película vista otra vez" : "Películas vistas otra vez"}
         />
+        {stats.perWeek !== null && (
+          <StatTile
+            label="Ritmo"
+            value={`${stats.perWeek.toFixed(1)} por semana`}
+            detail={`${formatMovieCount(stats.datedCount)} en ${stats.spanDays} día${stats.spanDays === 1 ? "" : "s"}`}
+          />
+        )}
+        {stats.topWeekday !== null && (
+          <StatTile
+            label="Día favorito"
+            value={weekdayName(stats.topWeekday)}
+            detail={formatMovieCount(stats.topWeekdayCount)}
+          />
+        )}
         {stats.topDecade !== null && (
           <StatTile
             label="Década favorita"

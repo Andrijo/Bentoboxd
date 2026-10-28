@@ -296,6 +296,7 @@ async function fetchOne({ title, year }, signal) {
     platforms,
     globalRating,
     popularity: detailsData.popularity || 0,
+    runtime: detailsData.runtime || 0,
     releaseDate: detailsData.release_date || null,
   }
 

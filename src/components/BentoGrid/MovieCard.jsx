@@ -81,7 +81,7 @@ export default function MovieCard({ movie, size, index }) {
           style={{
             fontFamily: "var(--font-display)",
             fontSize: size === 3 ? "var(--fs-xl)" : size === 1 ? "var(--fs-base)" : "var(--fs-md)",
-            color: "#F0EDE5",
+            color: "var(--c-text-bright)",
             lineHeight: 1.1,
             letterSpacing: "0.5px",
             marginBottom: "3px",
@@ -101,7 +101,7 @@ export default function MovieCard({ movie, size, index }) {
             <span
               style={{
                 fontSize: "var(--fs-xs)",
-                color: "rgba(255,255,255,0.55)",
+                color: "var(--c-text-muted)",
                 fontFamily: "var(--font-mono)",
               }}>
               {movie.year}

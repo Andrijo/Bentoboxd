@@ -156,10 +156,10 @@ ${listItem}${films.join("")}${listItem}
     expect(result.current.username).toBeNull()
   })
 
-  it("expone un error cuando el feed responde con fallo", async () => {
+  it("avisa que el usuario no existe cuando el feed responde 404", async () => {
     vi.stubGlobal(
       "fetch",
-      vi.fn(() => Promise.resolve({ ok: false })),
+      vi.fn(() => Promise.resolve({ ok: false, status: 404 })),
     )
 
     const { result } = renderHook(() => useLetterboxdFeed())
@@ -168,8 +168,38 @@ ${listItem}${films.join("")}${listItem}
       await result.current.fetchMovies("user")
     })
 
-    expect(result.current.error).toMatch(/No se pudo obtener el feed/)
+    expect(result.current.error).toMatch(/No encontramos a @user/)
     expect(result.current.movies).toEqual([])
+  })
+
+  it("avisa que Letterboxd falló cuando el feed responde con otro error", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() => Promise.resolve({ ok: false, status: 502 })),
+    )
+
+    const { result } = renderHook(() => useLetterboxdFeed())
+
+    await act(async () => {
+      await result.current.fetchMovies("user")
+    })
+
+    expect(result.current.error).toMatch(/Letterboxd no responde/)
+  })
+
+  it("avisa de un problema de conexión cuando fetch falla", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() => Promise.reject(new TypeError("Failed to fetch"))),
+    )
+
+    const { result } = renderHook(() => useLetterboxdFeed())
+
+    await act(async () => {
+      await result.current.fetchMovies("user")
+    })
+
+    expect(result.current.error).toMatch(/Sin conexión/)
   })
 
   it("expone un error cuando el feed no trae películas", async () => {
