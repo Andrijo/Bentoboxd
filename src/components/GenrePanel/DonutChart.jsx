@@ -44,7 +44,7 @@ export default function DonutChart({ genres }) {
         role="img"
         aria-label={`Gráfico de pastel: ${slices.map((s) => `${s.k} ${s.count}`).join(", ")}`}
         viewBox="0 0 360 360"
-        style={{ width: "100%", maxWidth: "480px", overflow: "visible" }}>
+        style={{ width: "100%", maxWidth: "380px", overflow: "visible" }}>
         {slices.map((s, i) => {
           const isHovered = hovered === i
           const gap = 2
@@ -79,11 +79,11 @@ export default function DonutChart({ genres }) {
 
         {hoveredSlice ? (
           <>
-            <text x={cx} y={cy - 20} textAnchor="middle" fontSize="18" fill={hoveredSlice.cfg.color}
+            <text x={cx} y={cy - 18} textAnchor="middle" fontSize="18" fill={hoveredSlice.cfg.color}
               style={{ fontFamily: "var(--font-mono)" }} letterSpacing="0.5">
               {hoveredSlice.k}
             </text>
-            <text x={cx} y={cy + 8} textAnchor="middle" fontSize="22" fill="var(--c-text-bright)"
+            <text x={cx} y={cy + 10} textAnchor="middle" fontSize="22" fill="var(--c-text-bright)"
               style={{ fontFamily: "var(--font-mono)" }} fontWeight="bold">
               {formatMovieCount(hoveredSlice.count)}
             </text>
@@ -94,11 +94,11 @@ export default function DonutChart({ genres }) {
           </>
         ) : (
           <>
-            <text x={cx} y={cy - 6} textAnchor="middle" fontSize="48" fill="rgb(var(--fg-rgb) / 0.8)"
+            <text x={cx} y={cy + 4} textAnchor="middle" fontSize="48" fill="rgb(var(--fg-rgb) / 0.8)"
               style={{ fontFamily: "var(--font-display)" }} letterSpacing="2">
               {total}
             </text>
-            <text x={cx} y={cy + 24} textAnchor="middle" fontSize="15" fill="var(--c-text-muted)"
+            <text x={cx} y={cy + 32} textAnchor="middle" fontSize="15" fill="var(--c-text-muted)"
               style={{ fontFamily: "var(--font-mono)" }} letterSpacing="1">
               Films
             </text>
