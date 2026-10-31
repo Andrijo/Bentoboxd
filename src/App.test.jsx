@@ -195,7 +195,7 @@ describe("App", () => {
 
     search("user")
 
-    expect(await screen.findByText("2 h 35 min")).toBeInTheDocument()
+    expect(await screen.findByText("2 h 35 min por película")).toBeInTheDocument()
     expect(fetchMetadataFromTMDB.mock.calls[0][0]).toEqual([
       { title: "Dune", year: "2021", tmdbId: 438631 },
     ])

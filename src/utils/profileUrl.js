@@ -10,6 +10,12 @@ export function readProfileParam() {
   return user && isValidUsername(user) ? user : null
 }
 
+/** Enlace para compartir un perfil: siempre abre en la página del perfil. */
+export function profileLink(user) {
+  const { origin, pathname } = window.location
+  return `${origin}${pathname}?${PARAM}=${encodeURIComponent(user)}`
+}
+
 /**
  * Pone (o quita, con null) el usuario en la URL sin tocar el hash.
  * Por defecto crea una entrada de historial para que "atrás" vuelva al perfil

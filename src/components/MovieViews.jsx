@@ -32,18 +32,16 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
           gap: "16px",
           marginBottom: "24px",
         }}>
-        {username && (
-          <div
-            style={{
-              fontSize: "var(--fs-2xs)",
-              letterSpacing: "3px",
-              color: "var(--c-text-bright)",
-            }}>
-            @{username} — {movies.length < allMovies.length
-              ? `${movies.length} de ${allMovies.length}`
-              : movies.length} películas recientes
-          </div>
-        )}
+        <div
+          style={{
+            fontSize: "var(--fs-2xs)",
+            letterSpacing: "3px",
+            color: "var(--c-text-bright)",
+          }}>
+          {movies.length < allMovies.length
+            ? `${movies.length} de ${allMovies.length}`
+            : movies.length} películas recientes
+        </div>
 
         <SegmentedControl
           label="Vista de películas"

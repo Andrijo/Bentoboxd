@@ -44,7 +44,7 @@ export default function DataPanels({
         <p className="rd-coverage-note">{coverageMessage(coverage)}</p>
       )}
       <div className="rd-bento-panels" data-partial={genreError ? "" : undefined}>
-        <StatsSummary movies={movies} loading={loadingGenres} />
+        <StatsSummary movies={movies} />
         {!genreError && (
           <>
             {/* En el orden visual de la cuadrícula: el foco sigue la lectura. */}

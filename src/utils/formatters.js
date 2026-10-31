@@ -47,6 +47,11 @@ export function formatDuration(minutes) {
   return rest === 0 ? `${hours} h` : `${hours} h ${rest} min`
 }
 
+/** 5146 → "86 h"; 45 → "45 min". Cabe en una tarjeta, a costa de redondear. */
+export function formatHours(minutes) {
+  return minutes < 60 ? formatDuration(minutes) : `${Math.round(minutes / 60)} h`
+}
+
 const weekdayFormat = new Intl.DateTimeFormat("es-MX", { weekday: "long" })
 
 /** 0 (domingo) – 6 (sábado) → "Domingo" … "Sábado". */

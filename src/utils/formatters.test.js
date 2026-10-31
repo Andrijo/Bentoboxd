@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import { countryName, formatDuration, formatMovieCount, formatPercent, formatWatchedDate, weekdayName } from "./formatters.js"
+import { countryName, formatDuration, formatHours, formatMovieCount, formatPercent, formatWatchedDate, weekdayName } from "./formatters.js"
 
 describe("formatPercent", () => {
   it("redondea sobre la base dada y no divide entre cero", () => {
@@ -48,6 +48,14 @@ describe("formatDuration", () => {
     expect(formatDuration(120)).toBe("2 h")
     expect(formatDuration(45)).toBe("45 min")
     expect(formatDuration(0)).toBe("0 min")
+  })
+})
+
+describe("formatHours", () => {
+  it("redondea a horas y conserva los minutos si no llega a una", () => {
+    expect(formatHours(5146)).toBe("86 h")
+    expect(formatHours(60)).toBe("1 h")
+    expect(formatHours(45)).toBe("45 min")
   })
 })
 

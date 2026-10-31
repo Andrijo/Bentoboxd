@@ -5,6 +5,7 @@ import AppHeader from "./components/AppHeader.jsx"
 import AppFooter from "./components/AppFooter.jsx"
 import SearchSection from "./components/SearchSection.jsx"
 import MovieViews from "./components/MovieViews.jsx"
+import ProfileOverview from "./components/ProfileOverview.jsx"
 import DataPanels from "./components/DataPanels.jsx"
 import EmptyLanding from "./components/EmptyLanding.jsx"
 import ErrorNotice from "./components/ErrorNotice.jsx"
@@ -264,12 +265,15 @@ export default function App() {
         {feedLoading && !hasMovies && <BentoSkeleton />}
 
         {hasMovies && (
-          <MovieViews
-            movies={movies}
-            movieViewMode={movieViewMode}
-            username={username}
-            onViewModeChange={setMovieViewMode}
-          />
+          <>
+            <ProfileOverview movies={movies} username={username} loading={metaLoading} />
+            <MovieViews
+              movies={movies}
+              movieViewMode={movieViewMode}
+              username={username}
+              onViewModeChange={setMovieViewMode}
+            />
+          </>
         )}
 
         <DataPanels
