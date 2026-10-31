@@ -16,25 +16,15 @@ function ExternalLink({ href, children }) {
 export default function AppFooter() {
   return (
     <footer className="rd-footer">
-      <p
-        style={{
-          fontFamily: "var(--font-display)",
-          fontSize: "var(--fs-md)",
-          letterSpacing: "2px",
-          color: "var(--c-text-bright)",
-        }}>
-        BENTOBOXD
-      </p>
-
-      {/* TMDB exige su logo y atribución visible, y citar a JustWatch como fuente del streaming. */}
+      {/* TMDB exige su logo y este aviso, y citar a JustWatch como fuente del streaming. */}
       <p>
-        Datos de diario de <ExternalLink href="https://letterboxd.com">Letterboxd</ExternalLink>,
-        metadatos de <ExternalLink href="https://www.themoviedb.org">TMDB</ExternalLink> y
-        streaming de <ExternalLink href="https://www.justwatch.com">JustWatch</ExternalLink>.
-        Este producto usa la API de TMDB, pero no está avalado ni certificado por TMDB.
+        Datos de <ExternalLink href="https://letterboxd.com">Letterboxd</ExternalLink>,{" "}
+        <ExternalLink href="https://www.themoviedb.org">TMDB</ExternalLink> y{" "}
+        <ExternalLink href="https://www.justwatch.com">JustWatch</ExternalLink>.
+        Proyecto no oficial, sin relación con Letterboxd.
       </p>
 
-      <p>Proyecto no oficial, sin relación con Letterboxd Ltd.</p>
+      <p>Este producto usa la API de TMDB, pero no está avalado ni certificado por TMDB.</p>
 
       <img src="/tmdb-logo.svg" alt="Logo de TMDB" className="rd-footer-tmdb" />
     </footer>
