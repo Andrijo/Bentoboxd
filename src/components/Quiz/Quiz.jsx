@@ -18,14 +18,23 @@ function QuizReview({ questions, answers }) {
         return (
           <li key={i}>
             {q.movie?.poster && (
-              <img className="rd-quiz-review-poster" src={q.movie.poster} alt="" loading="lazy" />
+              <img
+                className="rd-quiz-review-poster"
+                src={q.movie.poster}
+                alt=""
+                loading="lazy"
+              />
             )}
             <div className="rd-quiz-review-text">
               <div>{q.qText}</div>
-              <div className="rd-quiz-review-answer">Tu respuesta: {answers[i]}</div>
+              <div className="rd-quiz-review-answer">
+                Tu respuesta: {answers[i]}
+              </div>
               {!right && <div>Correcta: {q.correct}</div>}
             </div>
-            <span className="rd-quiz-review-mark" aria-hidden="true">{right ? "✓" : "✕"}</span>
+            <span className="rd-quiz-review-mark" aria-hidden="true">
+              {right ? "✓" : "✕"}
+            </span>
             <span className="rd-sr-only">{right ? "Acertada" : "Fallada"}</span>
           </li>
         )
@@ -113,23 +122,36 @@ function QuizRound({ movies, onBack }) {
 
         <div className="rd-quiz-card">
           <p className="rd-sr-only" role="status" aria-live="polite">
-            {showResult ? `Quiz completado: ${score} de ${questions.length}` : feedback}
+            {showResult
+              ? `Quiz completado: ${score} de ${questions.length}`
+              : feedback}
           </p>
           {showResult ? (
             <div className="rd-quiz-result">
-              <h2 ref={resultRef} tabIndex={-1} className="rd-quiz-result-title">
-                QUIZ COMPLETADO
+              <h2
+                ref={resultRef}
+                tabIndex={-1}
+                className="rd-quiz-result-title">
+                Resultados
               </h2>
               <div className="rd-quiz-score">
                 Puntuación: <strong>{score}</strong> / {questions.length}
-                <div className="rd-quiz-message">{resultMessage(score, questions.length)}</div>
+                <div className="rd-quiz-message">
+                  {resultMessage(score, questions.length)}
+                </div>
               </div>
               <QuizReview questions={questions} answers={answers} />
               <div className="rd-quiz-actions">
-                <button onClick={restart} type="button" className="rd-btn-solid rd-quiz-btn">
+                <button
+                  onClick={restart}
+                  type="button"
+                  className="rd-btn-solid rd-quiz-btn">
                   Jugar de nuevo
                 </button>
-                <button onClick={onBack} type="button" className="rd-btn-solid rd-quiz-btn">
+                <button
+                  onClick={onBack}
+                  type="button"
+                  className="rd-btn-solid rd-quiz-btn">
                   Volver al perfil
                 </button>
               </div>
@@ -137,19 +159,30 @@ function QuizRound({ movies, onBack }) {
           ) : (
             <div className="rd-quiz-body">
               {current.type === "poster" && current.movie?.poster && (
-                <div className="rd-quiz-poster" data-blurred={selected === null}>
+                <div
+                  className="rd-quiz-poster"
+                  data-blurred={selected === null}>
                   <PosterImage
                     src={current.movie.poster}
                     alt="Póster de la película a adivinar"
-                    style={{ transition: "filter 0.4s ease, transform 0.4s ease" }}
+                    style={{
+                      transition: "filter 0.4s ease, transform 0.4s ease",
+                    }}
                   />
                 </div>
               )}
-              <h2 id="rd-quiz-question" ref={questionRef} tabIndex={-1} className="rd-quiz-question">
+              <h2
+                id="rd-quiz-question"
+                ref={questionRef}
+                tabIndex={-1}
+                className="rd-quiz-question">
                 {current.qText}
               </h2>
 
-              <div role="group" aria-labelledby="rd-quiz-question" className="rd-quiz-options">
+              <div
+                role="group"
+                aria-labelledby="rd-quiz-question"
+                className="rd-quiz-options">
                 {current.options.map((opt) => {
                   const state =
                     selected === null
@@ -159,7 +192,8 @@ function QuizRound({ movies, onBack }) {
                         : opt === selected
                           ? "wrong"
                           : undefined
-                  const mark = state === "correct" ? "✓ " : state === "wrong" ? "✕ " : ""
+                  const mark =
+                    state === "correct" ? "✓ " : state === "wrong" ? "✕ " : ""
 
                   return (
                     <button
@@ -169,9 +203,12 @@ function QuizRound({ movies, onBack }) {
                       type="button"
                       data-state={state}
                       className="rd-quiz-option">
-                      {mark}{opt}{" "}
+                      {mark}
+                      {opt}{" "}
                       {current.type === "rating" && opt !== UNRATED && (
-                        <span role="img" aria-label="estrellas">★</span>
+                        <span role="img" aria-label="estrellas">
+                          ★
+                        </span>
                       )}
                     </button>
                   )
@@ -180,8 +217,14 @@ function QuizRound({ movies, onBack }) {
 
               {selected !== null && (
                 <div className="rd-quiz-actions">
-                  <button ref={nextRef} onClick={handleNext} type="button" className="rd-btn-solid rd-quiz-btn">
-                    {currentQ < questions.length - 1 ? "Siguiente" : "Ver resultado"}
+                  <button
+                    ref={nextRef}
+                    onClick={handleNext}
+                    type="button"
+                    className="rd-btn-solid rd-quiz-btn">
+                    {currentQ < questions.length - 1
+                      ? "Siguiente"
+                      : "Ver resultado"}
                   </button>
                 </div>
               )}

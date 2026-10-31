@@ -52,8 +52,8 @@ function gameReducer(state, action) {
 const cardStyle = {
   position: "relative",
   // En móvil el ancho manda para que ambas cartas quepan lado a lado.
-  height: "min(55vh, 46vw)",
-  maxHeight: "400px",
+  height: "min(46vh, 40vw)",
+  maxHeight: "330px",
   aspectRatio: "2/3",
   borderRadius: "var(--radius-lg)",
   overflow: "hidden",
@@ -130,9 +130,22 @@ function GuessControls({ disabled, onGuess }) {
         <svg viewBox="0 0 100 100">
           <mask id="rd-hlg-vs-mask">
             <rect width="100" height="100" fill="#fff" />
-            <text x="50" y="50" textAnchor="middle" dominantBaseline="central" fill="#000">VS</text>
+            <text
+              x="50"
+              y="50"
+              textAnchor="middle"
+              dominantBaseline="central"
+              fill="#000">
+              VS
+            </text>
           </mask>
-          <circle cx="50" cy="50" r="50" fill="#333333" mask="url(#rd-hlg-vs-mask)" />
+          <circle
+            cx="50"
+            cy="50"
+            r="50"
+            fill="#333333"
+            mask="url(#rd-hlg-vs-mask)"
+          />
         </svg>
       </div>
 
@@ -177,6 +190,7 @@ function GameHeader({ category, streak, onCategoryChange }) {
               lineHeight: 1,
               color: "var(--c-text-bright)",
               marginBottom: "8px",
+              marginTop: "-36px",
             }}>
             HIGHER OR LOWER
           </h2>
@@ -216,7 +230,12 @@ function GameHeader({ category, streak, onCategoryChange }) {
         role="group"
         className="rd-segmented"
         aria-label="Categoría"
-        style={{ display: "flex", flexWrap: "wrap", gap: "10px", justifyContent: "center" }}>
+        style={{
+          display: "flex",
+          flexWrap: "wrap",
+          gap: "10px",
+          justifyContent: "center",
+        }}>
         {[
           { id: "rating", label: "Calificación" },
           { id: "popularity", label: "Popularidad" },
@@ -235,7 +254,9 @@ function GameHeader({ category, streak, onCategoryChange }) {
                   ? "var(--c-text-bright)"
                   : "rgb(var(--fg-rgb) / 0.05)",
               color:
-                category === cat.id ? "var(--c-on-text)" : "var(--c-text-muted)",
+                category === cat.id
+                  ? "var(--c-on-text)"
+                  : "var(--c-text-muted)",
               border:
                 category === cat.id
                   ? "1px solid var(--c-text-bright)"
@@ -246,7 +267,8 @@ function GameHeader({ category, streak, onCategoryChange }) {
               fontWeight: "bold",
               fontSize: "var(--fs-xs)",
               fontFamily: "var(--font-mono)",
-              transition: "background 0.3s, color 0.3s, border 0.3s, box-shadow 0.3s",
+              transition:
+                "background 0.3s, color 0.3s, border 0.3s, box-shadow 0.3s",
             }}>
             {cat.label}
           </button>
@@ -273,17 +295,17 @@ function GamePlayArea({
         flexWrap: "wrap",
         justifyContent: "center",
         alignItems: "center",
-        gap: "4vw",
+        gap: "clamp(12px, 4vw, 40px)",
         padding: "20px 0",
       }}>
       {gameOver ? (
         <div style={{ textAlign: "center" }}>
           <h2
             style={{
-              fontSize: "clamp(2.5rem, 12vw, 4rem)",
+              fontSize: "clamp(1.75rem, 8vw, 2.5rem)",
               color: "var(--c-text-bright)",
               fontFamily: "var(--font-display)",
-              marginBottom: "16px",
+              marginBottom: "28px",
             }}>
             GAME OVER
           </h2>
@@ -318,7 +340,11 @@ function GamePlayArea({
               <div style={darkOverlayStyle} />
 
               <div style={labelStyle}>
-                <div style={{ fontSize: "clamp(2rem, 9vw, 3.5rem)", lineHeight: 1 }}>
+                <div
+                  style={{
+                    fontSize: "clamp(2rem, 8vw, 2.75rem)",
+                    lineHeight: 1,
+                  }}>
                   {formatMetric(category, movieA.metrics[category])}
                 </div>
                 <div style={{ fontSize: "var(--fs-sm)", opacity: 0.9 }}>
@@ -326,7 +352,9 @@ function GamePlayArea({
                 </div>
               </div>
             </div>
-            <div style={titleStyle} title={movieA.title}>{movieA.title}</div>
+            <div style={titleStyle} title={movieA.title}>
+              {movieA.title}
+            </div>
           </div>
 
           <GuessControls disabled={!!feedback} onGuess={onGuess} />
@@ -348,8 +376,14 @@ function GamePlayArea({
               <div style={darkOverlayStyle} />
 
               <div style={labelStyle}>
-                <div style={{ fontSize: "clamp(2rem, 9vw, 3.5rem)", lineHeight: 1 }}>
-                  {feedback ? formatMetric(category, movieB.metrics[category]) : (
+                <div
+                  style={{
+                    fontSize: "clamp(2rem, 8vw, 2.75rem)",
+                    lineHeight: 1,
+                  }}>
+                  {feedback ? (
+                    formatMetric(category, movieB.metrics[category])
+                  ) : (
                     <>
                       <span aria-hidden="true">?</span>
                       <span className="rd-sr-only">Valor oculto</span>
@@ -370,7 +404,7 @@ function GamePlayArea({
                     display: "flex",
                     alignItems: "center",
                     justifyContent: "center",
-                    fontSize: "clamp(3rem, 15vw, 6rem)",
+                    fontSize: "clamp(3rem, 13vw, 4.5rem)",
                     color: "#f6f4ee",
                     textShadow: "0 0 40px rgba(17,17,17,1)",
                   }}>
@@ -378,7 +412,9 @@ function GamePlayArea({
                 </div>
               )}
             </div>
-            <div style={titleStyle} title={movieB.title}>{movieB.title}</div>
+            <div style={titleStyle} title={movieB.title}>
+              {movieB.title}
+            </div>
           </div>
         </>
       )}
@@ -478,7 +514,9 @@ export default function HighLowGame({ movies, loading }) {
           onRestart={restart}
         />
       ) : (
-        <div className="rd-page-notice" role="status">{notice}</div>
+        <div className="rd-page-notice" role="status">
+          {notice}
+        </div>
       )}
     </section>
   )
