@@ -1,5 +1,53 @@
 import { describe, it, expect } from "vitest"
-import { moviesWith } from "./movieFilters.js"
+import { NO_FILTERS, filterMovies, filterOptions, moviesWith } from "./movieFilters.js"
+
+const DIARY = [
+  { title: "A", year: "2021", rating: 4.5, liked: true },
+  { title: "B", year: "2021", rating: 3, liked: false },
+  { title: "C", year: "1999", rating: 4.5, liked: false },
+  { title: "D", year: "1999", rating: null, liked: true },
+]
+const titles = (movies) => movies.map((m) => m.title)
+
+describe("filterMovies", () => {
+  it("sin filtros deja el diario intacto", () => {
+    expect(filterMovies(DIARY, NO_FILTERS)).toEqual(DIARY)
+  })
+
+  it("combina me gusta, nota y año", () => {
+    expect(titles(filterMovies(DIARY, { ...NO_FILTERS, liked: true }))).toEqual(["A", "D"])
+    expect(titles(filterMovies(DIARY, { ...NO_FILTERS, rating: "4.5" }))).toEqual(["A", "C"])
+    expect(titles(filterMovies(DIARY, { ...NO_FILTERS, year: "1999" }))).toEqual(["C", "D"])
+    expect(titles(filterMovies(DIARY, { liked: true, rating: "4.5", year: "2021" }))).toEqual(["A"])
+  })
+
+  it("permite buscar las que no tienen calificación", () => {
+    const { ratings } = filterOptions(DIARY)
+    const unrated = ratings[ratings.length - 1]
+
+    expect(unrated.label).toBe("Sin calificar")
+    expect(titles(filterMovies(DIARY, { ...NO_FILTERS, rating: unrated.value }))).toEqual(["D"])
+  })
+})
+
+describe("filterOptions", () => {
+  it("ofrece solo notas y años presentes, de mayor a menor", () => {
+    expect(filterOptions(DIARY)).toEqual({
+      ratings: [
+        { value: "4.5", label: "4.5★" },
+        { value: "3", label: "3★" },
+        { value: "unrated", label: "Sin calificar" },
+      ],
+      years: ["2021", "1999"],
+    })
+  })
+
+  it("no ofrece «Sin calificar» si todo está calificado", () => {
+    const { ratings } = filterOptions(DIARY.filter((m) => m.rating))
+
+    expect(ratings.map((r) => r.value)).toEqual(["4.5", "3"])
+  })
+})
 
 describe("moviesWith", () => {
   it("devuelve las películas cuyo campo incluye el valor", () => {

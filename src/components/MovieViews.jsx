@@ -1,11 +1,13 @@
-import { useMemo } from "react"
+import { useMemo, useRef, useState } from "react"
 import MovieCard from "./BentoGrid/MovieCard.jsx"
+import MovieFilters from "./MovieFilters.jsx"
 import SegmentedControl from "./Panel/SegmentedControl.jsx"
 import StarRating from "./StarRating.jsx"
 import PosterImage from "./PosterImage.jsx"
 import { generateBentoLayout, VISIBLE_MOVIES } from "./BentoGrid/bentoPatterns.js"
 import { useGridColumns, rowHeight } from "../hooks/useGridColumns.js"
 import { formatWatchedDate } from "../utils/formatters.js"
+import { NO_FILTERS, filterMovies } from "../utils/movieFilters.js"
 
 const VIEW_OPTIONS = [
   { key: "bento", label: "Bento" },
@@ -13,9 +15,22 @@ const VIEW_OPTIONS = [
   { key: "terminal", label: "Terminal" },
 ]
 
+// Con la lista completa, el retraso de las últimas filas no debe sentirse.
+const staggerIndex = (index) => Math.min(index, VISIBLE_MOVIES)
+
 export default function MovieViews({ movies: allMovies, movieViewMode, username, onViewModeChange }) {
-  const movies = allMovies.slice(0, VISIBLE_MOVIES)
+  const [showAll, setShowAll] = useState(false)
+  const [filters, setFilters] = useState(NO_FILTERS)
+  const listTopRef = useRef(null)
+  const canShowAll = allMovies.length > VISIBLE_MOVIES
+  const movies = showAll ? filterMovies(allMovies, filters) : allMovies.slice(0, VISIBLE_MOVIES)
   const [gridRef, columns, compact] = useGridColumns()
+
+  const showRecent = () => {
+    setShowAll(false)
+    setFilters(NO_FILTERS)
+    listTopRef.current?.scrollIntoView()
+  }
 
   const bentoLayout = useMemo(
     () => generateBentoLayout(columns, movies.length, { compact }),
@@ -33,16 +48,20 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
           marginBottom: "24px",
         }}>
         <div
+          ref={listTopRef}
           id="rd-section-peliculas"
           className="rd-section-anchor"
+          aria-live="polite"
           style={{
             fontSize: "var(--fs-2xs)",
             letterSpacing: "3px",
             color: "var(--c-text-bright)",
           }}>
-          {movies.length < allMovies.length
-            ? `${movies.length} de ${allMovies.length}`
-            : movies.length} películas recientes
+          {showAll
+            ? `${movies.length} de ${allMovies.length} películas`
+            : `${movies.length < allMovies.length
+              ? `${movies.length} de ${allMovies.length}`
+              : movies.length} películas recientes`}
         </div>
 
         <SegmentedControl
@@ -53,7 +72,13 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
         />
       </div>
 
-      {movieViewMode === "bento" && (
+      {showAll && <MovieFilters movies={allMovies} filters={filters} onChange={setFilters} />}
+
+      {movies.length === 0 && (
+        <p className="rd-movies-empty">Ninguna película coincide con estos filtros.</p>
+      )}
+
+      {movieViewMode === "bento" && movies.length > 0 && (
         <div
           ref={gridRef}
           style={{
@@ -73,7 +98,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
         </div>
       )}
 
-      {movieViewMode === "timeline" && (
+      {movieViewMode === "timeline" && movies.length > 0 && (
         <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
           {movies.map((movie, i) => (
             <a
@@ -86,7 +111,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                 textDecoration: "none",
                 color: "inherit",
                 animation: "fadeSlideIn 0.4s ease both",
-                animationDelay: `${i * 40}ms`,
+                animationDelay: `${staggerIndex(i) * 40}ms`,
               }}
 >
               <div
@@ -203,7 +228,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
         </div>
       )}
 
-      {movieViewMode === "terminal" && (
+      {movieViewMode === "terminal" && movies.length > 0 && (
         <div className="rd-terminal-box rd-keep-dark">
           <div className="rd-terminal-overlay" aria-hidden="true" />
 
@@ -238,7 +263,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                   fontSize: "var(--fs-xs)",
                   color: "var(--c-accent)",
                   animation: "fadeSlideIn 0.1s ease both",
-                  animationDelay: `${i * 20}ms`,
+                  animationDelay: `${staggerIndex(i) * 20}ms`,
                 }}>
                 <span style={{ display: "flex", gap: "12px", overflow: "hidden", whiteSpace: "nowrap" }}>
                   <span style={{ color: "var(--c-text-muted)" }}>
@@ -270,6 +295,17 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
           <div aria-hidden="true" style={{ color: "var(--c-accent)", marginTop: "12px", animation: "pulse 1s infinite" }}>
             _
           </div>
+        </div>
+      )}
+
+      {canShowAll && (
+        <div className="rd-movies-more">
+          <button
+            type="button"
+            className="rd-btn-outline"
+            onClick={showAll ? showRecent : () => setShowAll(true)}>
+            {showAll ? "Ver solo las recientes" : `Ver todas (${allMovies.length})`}
+          </button>
         </div>
       )}
     </div>

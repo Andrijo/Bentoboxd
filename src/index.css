@@ -454,6 +454,14 @@ input:focus-visible {
 .rd-drilldown a:hover .rd-drilldown-name, .rd-drilldown a:focus-visible .rd-drilldown-name { text-decoration: underline; }
 .rd-drilldown-name { min-width: 0; overflow-wrap: anywhere; }
 .rd-drilldown-meta { flex-shrink: 0; color: var(--c-text-muted); font-variant-numeric: tabular-nums; }
+.rd-movie-filters { display: flex; flex-wrap: wrap; align-items: center; gap: 8px 16px; margin-bottom: 24px; }
+.rd-movie-filters .rd-btn-outline[aria-pressed="true"] { background: var(--c-text-bright); border-color: var(--c-text-bright); color: var(--c-on-text); }
+.rd-filter { display: inline-flex; align-items: center; gap: 8px; font-size: var(--fs-xs); letter-spacing: 1px; color: var(--c-text-muted); }
+.rd-filter select { min-height: 40px; padding: 0 8px; background: var(--c-card); border: 1px solid rgb(var(--fg-rgb) / 0.3); border-radius: var(--radius-md); color: var(--c-text-bright); font-family: var(--font-mono); font-size: var(--fs-xs); cursor: pointer; }
+/* iOS acerca la pantalla al enfocar controles de menos de 16px. */
+@media (max-width: 640px) { .rd-filter select { font-size: 16px; } }
+.rd-movies-empty { padding: 32px 0; text-align: center; font-size: var(--fs-xs); color: var(--c-text-muted); }
+.rd-movies-more { margin-top: 24px; text-align: center; }
 .rd-section-nav { position: sticky; top: 0; z-index: 10; margin-top: 20px; padding: 8px var(--gutter); display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; background: var(--bg-top) linear-gradient(to bottom, var(--bg-top), var(--bg-bottom)) fixed; border-block: 1px solid rgb(var(--fg-rgb) / 0.06); }
 .rd-section-nav::-webkit-scrollbar { display: none; }
 .rd-section-nav button { flex-shrink: 0; min-height: 40px; padding: 0 12px; background: none; border: none; border-radius: var(--radius-sm); color: var(--c-text-muted); font-family: var(--font-mono); font-size: var(--fs-xs); letter-spacing: 1px; white-space: nowrap; cursor: pointer; transition: color 0.2s; }

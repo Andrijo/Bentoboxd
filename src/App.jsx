@@ -272,6 +272,7 @@ export default function App() {
             <ProfileOverview movies={movies} username={username} loading={metaLoading} />
             <SectionNav showTmdbSections={!genreError} />
             <MovieViews
+              key={username}
               movies={movies}
               movieViewMode={movieViewMode}
               username={username}

@@ -1,7 +1,7 @@
 import { useState } from "react"
 import StarRating from "../StarRating.jsx"
 import PosterImage from "../PosterImage.jsx"
-import { TILE_SPANS } from "./bentoPatterns.js"
+import { TILE_SPANS, VISIBLE_MOVIES } from "./bentoPatterns.js"
 
 export default function MovieCard({ movie, size, index }) {
   const [hovered, setHovered] = useState(false)
@@ -21,7 +21,7 @@ export default function MovieCard({ movie, size, index }) {
         transition: "border 0.3s ease, transform 0.3s ease",
         transform: hovered ? "scale(1.015)" : "scale(1)",
         animation: `fadeSlideIn 0.5s ease both`,
-        animationDelay: `${index * 60}ms`,
+        animationDelay: `${Math.min(index, VISIBLE_MOVIES) * 60}ms`,
       }}>
       {movie.poster ? (
         <PosterImage
