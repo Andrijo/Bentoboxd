@@ -27,9 +27,22 @@ const CAT_CONFIG = {
   },
 }
 
-// El índice de popularidad de TMDB llega con muchos decimales.
-const formatMetric = (category, value) =>
-  category === "popularity" ? Math.round(value * 10) / 10 : value
+// El índice de popularidad de TMDB no significa nada por sí solo: solo se dice cuál gana.
+function cardMetric(category, movie, rival, revealed) {
+  const { unit } = CAT_CONFIG[category]
+  if (category !== "popularity") return { value: movie.metrics[category], unit }
+  if (!revealed) return { value: null, unit }
+  return {
+    value: movie.metrics.popularity > rival.metrics.popularity ? "Más" : "Menos",
+    unit: "popular",
+  }
+}
+
+function revealMessage(category, movieA, movieB) {
+  if (category !== "popularity") return `${movieB.title}: ${movieB.metrics[category]}`
+  const verdict = movieB.metrics.popularity > movieA.metrics.popularity ? "más" : "menos"
+  return `${movieB.title} es ${verdict} popular que ${movieA.title}`
+}
 
 const initialGameState = {
   streak: 0,
@@ -303,6 +316,9 @@ function GamePlayArea({
     if (feedback && !gameOver) nextRef.current?.focus()
   }, [feedback, gameOver])
 
+  const metricA = cardMetric(category, movieA, movieB, Boolean(feedback))
+  const metricB = cardMetric(category, movieB, movieA, Boolean(feedback))
+
   return (
     <div
       style={{
@@ -335,10 +351,10 @@ function GamePlayArea({
                     fontSize: "clamp(2rem, 8vw, 2.75rem)",
                     lineHeight: 1,
                   }}>
-                  {formatMetric(category, movieA.metrics[category])}
+                  {metricA.value}
                 </div>
                 <div style={{ fontSize: "var(--fs-sm)", opacity: 0.9 }}>
-                  {CAT_CONFIG[category].unit}
+                  {metricA.unit}
                 </div>
               </div>
             </div>
@@ -372,7 +388,7 @@ function GamePlayArea({
                     lineHeight: 1,
                   }}>
                   {feedback ? (
-                    formatMetric(category, movieB.metrics[category])
+                    metricB.value
                   ) : (
                     <>
                       <span aria-hidden="true">?</span>
@@ -381,7 +397,7 @@ function GamePlayArea({
                   )}
                 </div>
                 <div style={{ fontSize: "var(--fs-sm)", opacity: 0.9 }}>
-                  {CAT_CONFIG[category].unit}
+                  {metricB.unit}
                 </div>
               </div>
 
@@ -440,6 +456,7 @@ export default function HighLowGame({ movies, loading, active = true }) {
   const movieA = gameDeck[state.currentIndex]
   const movieB = gameDeck[state.currentIndex + 1]
   const hasNextCard = state.currentIndex + 2 < gameDeck.length
+  const reveal = state.feedback && movieB ? revealMessage(category, movieA, movieB) : ""
 
   const handleNext = () => {
     const correct = state.feedback === "correct"
@@ -491,9 +508,9 @@ export default function HighLowGame({ movies, loading, active = true }) {
         {state.gameOver
           ? `${state.won ? "¡Has completado el juego!" : "Fin del juego"}. Racha final: ${state.streak}.`
           : state.feedback === "correct"
-            ? `Correcto. ${movieB?.title}: ${formatMetric(category, movieB?.metrics[category])}. Racha: ${state.streak}.`
+            ? `Correcto. ${reveal}. Racha: ${state.streak}.`
             : state.feedback === "wrong"
-              ? `Incorrecto. ${movieB?.title}: ${formatMetric(category, movieB?.metrics[category])}.`
+              ? `Incorrecto. ${reveal}.`
               : ""}
       </p>
 

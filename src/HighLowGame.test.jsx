@@ -67,6 +67,30 @@ describe("HighLowGame", () => {
     expect(higher()).toBeEnabled()
   })
 
+  it("en popularidad muestra cuál gana, no el índice", () => {
+    render(<HighLowGame movies={movies} loading={false} />)
+    fireEvent.click(button("Popularidad"))
+
+    expect(screen.queryByText("10")).not.toBeInTheDocument()
+
+    fireEvent.click(higher())
+
+    expect(screen.getByText("Más")).toBeInTheDocument()
+    expect(screen.getByText("Menos")).toBeInTheDocument()
+    expect(screen.queryByText("10")).not.toBeInTheDocument()
+    expect(screen.queryByText("20")).not.toBeInTheDocument()
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "Correcto. Película 2 es más popular que Película 1. Racha: 1.",
+    )
+  })
+
+  it("en las demás categorías revela el valor", () => {
+    render(<HighLowGame movies={movies} loading={false} />)
+    fireEvent.click(lower())
+
+    expect(screen.getByRole("status")).toHaveTextContent("Incorrecto. Película 2: 2.")
+  })
+
   it("ignora los atajos mientras está oculto", () => {
     const { rerender } = render(
       <HighLowGame movies={movies} loading={false} active={false} />,
