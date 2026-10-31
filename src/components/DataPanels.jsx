@@ -30,9 +30,10 @@ export default function DataPanels({
         <StatsSummary movies={movies} loading={loadingGenres} />
         {!genreError && (
           <>
+            {/* En el orden visual de la cuadrícula: el foco sigue la lectura. */}
+            <GenrePanel genres={genres} movieCount={movies.length} loadingGenres={loadingGenres} />
             <PlatformsPanel platformsData={platforms} movies={movies} loading={loadingGenres} />
             <OpinionsPanel movies={movies} loading={loadingGenres} />
-            <GenrePanel genres={genres} movieCount={movies.length} loadingGenres={loadingGenres} />
             <DirectorsPanel directors={directors} loading={loadingGenres} />
             <ActorsPanel actors={actors} loading={loadingGenres} />
             <TopRatedPanel movies={movies} loading={loadingGenres} />

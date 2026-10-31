@@ -121,4 +121,21 @@ describe("App", () => {
     expect(screen.getByRole("heading", { name: "TOP GÉNEROS" })).toBeInTheDocument()
     consoleError.mockRestore()
   })
+
+  it("recorre los paneles en el mismo orden en que se ven", async () => {
+    fetchMetadataFromTMDB.mockResolvedValue(METADATA)
+    render(<App />)
+
+    search("user")
+    await screen.findByRole("heading", { name: "TOP GÉNEROS" })
+
+    const titles = screen
+      .getAllByRole("heading", { level: 2 })
+      .map((heading) => heading.textContent)
+
+    expect(titles.indexOf("TOP GÉNEROS")).toBeLessThan(titles.indexOf("STREAMING"))
+    expect(titles.indexOf("STREAMING")).toBeLessThan(
+      titles.indexOf("OPINIONES IMPOPULARES"),
+    )
+  })
 })
