@@ -3,15 +3,12 @@ import MovieDrilldown from "../MovieDrilldown.jsx"
 import { formatMovieCount } from "../../utils/formatters.js"
 import { moviesWith } from "../../utils/movieFilters.js"
 
-export default function DirectorCards({ directors, movies = [] }) {
+export default function DirectorCards({ ranking, movies = [] }) {
   const [openDirector, setOpenDirector] = useState(null)
-  const topDirectors = Object.entries(directors || {})
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 5)
 
   return (
     <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
-      {topDirectors.map(([name, count], i) => (
+      {ranking.map(([name, count], i) => (
         <div key={name} style={{
           animation: "fadeSlideIn 0.4s ease both", animationDelay: `${i * 100}ms`,
         }}>
