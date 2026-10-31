@@ -307,7 +307,7 @@ function GamePlayArea({
               fontFamily: "var(--font-display)",
               marginBottom: "28px",
             }}>
-            GAME OVER
+            JUEGO TERMINADO
           </h2>
           <button
             onClick={onRestart}
@@ -406,7 +406,6 @@ function GamePlayArea({
                     justifyContent: "center",
                     fontSize: "clamp(3rem, 13vw, 4.5rem)",
                     color: "#f6f4ee",
-                    textShadow: "0 0 40px rgba(17,17,17,1)",
                   }}>
                   {feedback === "correct" ? "✓" : "✕"}
                 </div>
