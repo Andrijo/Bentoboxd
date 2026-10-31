@@ -4,6 +4,9 @@ export default function SearchSection({ url, loading, onUrlChange, onFetch, onCa
   const [showHint, setShowHint] = useState(false)
   const inputRef = useRef(null)
 
+  // El valor también cambia desde fuera (perfiles recientes, enlace, ejemplo).
+  if (showHint && url.trim()) setShowHint(false)
+
   return (
     <form
       role="search"
@@ -33,10 +36,7 @@ export default function SearchSection({ url, loading, onUrlChange, onFetch, onCa
         id="rd-profile-input"
         type="text"
         value={url}
-        onChange={(e) => {
-          setShowHint(false)
-          onUrlChange(e.target.value)
-        }}
+        onChange={(e) => onUrlChange(e.target.value)}
         autoComplete="off"
         spellCheck={false}
         placeholder="letterboxd.com/tu-usuario o solo tu usuario"
