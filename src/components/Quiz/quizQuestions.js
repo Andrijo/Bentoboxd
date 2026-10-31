@@ -78,7 +78,7 @@ const QUESTION_TYPES = [
     type: "rating",
     available: () => true,
     build: (movie) => ({
-      qText: `¿Qué calificación le diste a "${movie.title}"?`,
+      qText: `¿Qué calificación recibió "${movie.title}" en este perfil?`,
       correct: movie.rating ? `${movie.rating}` : UNRATED,
     }),
     distractors: ({ correct, random }) => ratingOptions(correct, random),

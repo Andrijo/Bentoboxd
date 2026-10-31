@@ -5,8 +5,8 @@ import Panel from "../Panel/Panel.jsx"
 import { computeDivergences } from "../../utils/divergences.js"
 
 const GROUPS = [
-  { key: "above", title: "Te gustaron más que a la mayoría", sign: "+" },
-  { key: "below", title: "Te gustaron menos que a la mayoría", sign: "−" },
+  { key: "above", title: "Por encima del público", sign: "+" },
+  { key: "below", title: "Por debajo del público", sign: "−" },
 ]
 
 const formatRating = (value) => value.toFixed(1)
@@ -44,7 +44,7 @@ function OpinionRow({ movie, diff, sign }) {
             display: "block", marginTop: "4px", fontSize: "var(--fs-xs)",
             color: "var(--c-text-muted)",
           }}>
-            Tú {formatRating(movie.rating)} · Media {formatRating(movie.metrics.rating)}
+            Perfil {formatRating(movie.rating)} · Público {formatRating(movie.metrics.rating)}
           </span>
         </span>
 
@@ -69,7 +69,7 @@ export default function OpinionsPanel({ movies, loading }) {
       id="rd-panel-opiniones"
       area="opinions"
       title="OPINIONES IMPOPULARES"
-      subtitle={!loading && compared > 0 && "Donde más te alejas de la media del público (TMDB)"}>
+      subtitle={!loading && compared > 0 && "Mayores diferencias con el público (TMDB)"}>
       {loading && <PanelSkeleton variant="rows" label="Comparando con el público…" />}
 
       {!loading && hasData && (
@@ -100,8 +100,8 @@ export default function OpinionsPanel({ movies, loading }) {
           marginTop: "20px", fontFamily: "var(--font-mono)",
         }}>
           {compared > 0
-            ? "Tus calificaciones van en línea con las del público: ninguna se aleja media estrella o más."
-            : "Califica algunas películas para compararlas con las del público."}
+            ? "Las calificaciones van en línea con las del público (TMDB): ninguna se aleja media estrella o más."
+            : "Este perfil aún no tiene calificaciones para comparar con las del público (TMDB)."}
         </div>
       )}
     </Panel>

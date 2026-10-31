@@ -6,9 +6,9 @@ import { formatDuration, formatMovieCount, formatWatchedDate, weekdayName } from
 import Panel from "../Panel/Panel.jsx"
 
 const TMDB_VERDICT = {
-  kinder: "Más generoso que el promedio",
-  harsher: "Más exigente que el promedio",
-  same: "En línea con el promedio",
+  kinder: "Más alto que el público",
+  harsher: "Más bajo que el público",
+  same: "En línea con el público",
 }
 
 const formatRating = (value) => value.toFixed(1)
@@ -47,7 +47,7 @@ export default function StatsSummary({ movies, loading }) {
   if (loading) {
     tmdbTile = (
       <StatTile
-        label="Contra el consenso"
+        label="Frente al público (TMDB)"
         value={<Skeleton width="64px" height="1.4rem" />}
         detail="Comparando…"
       />
@@ -56,7 +56,7 @@ export default function StatsSummary({ movies, loading }) {
     const sign = stats.tmdbDiff > 0 ? "+" : stats.tmdbDiff < 0 ? "−" : ""
     tmdbTile = (
       <StatTile
-        label="Contra el consenso"
+        label="Frente al público (TMDB)"
         value={`${sign}${formatRating(Math.abs(stats.tmdbDiff))}`}
         detail={`${TMDB_VERDICT[stats.tmdbVerdict]} (${formatMovieCount(stats.tmdbCompared)})`}
       />
@@ -93,7 +93,7 @@ export default function StatsSummary({ movies, loading }) {
         display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "12px",
       }}>
         <StatTile
-          label="Tu promedio"
+          label="Promedio"
           value={stats.average === null ? "—" : formatRating(stats.average)}
           detail={
             stats.unratedCount > 0
@@ -109,9 +109,9 @@ export default function StatsSummary({ movies, loading }) {
           detail={`${Math.round((stats.likedCount / stats.total) * 100)}% de las vistas`}
         />
         <StatTile
-          label="Repeticiones"
+          label="Vistas otra vez"
           value={stats.rewatchCount}
-          detail={stats.rewatchCount === 1 ? "Película vista otra vez" : "Películas vistas otra vez"}
+          detail={`${Math.round((stats.rewatchCount / stats.total) * 100)}% de las vistas`}
         />
         {stats.perWeek !== null && (
           <StatTile
@@ -122,14 +122,14 @@ export default function StatsSummary({ movies, loading }) {
         )}
         {stats.topWeekday !== null && (
           <StatTile
-            label="Día favorito"
+            label="Día más activo"
             value={weekdayName(stats.topWeekday)}
             detail={formatMovieCount(stats.topWeekdayCount)}
           />
         )}
         {stats.topDecade !== null && (
           <StatTile
-            label="Década favorita"
+            label="Década más vista"
             value={`${stats.topDecade}s`}
             detail={formatMovieCount(stats.topDecadeCount)}
           />

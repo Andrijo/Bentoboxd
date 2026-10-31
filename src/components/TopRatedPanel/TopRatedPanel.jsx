@@ -70,9 +70,9 @@ export default function TopRatedPanel({ movies, loading }) {
     <Panel
       id="rd-panel-mejor-calificados"
       area="toprated"
-      title="MEJOR CALIFICADOS POR TI"
-      subtitle={!loading && hasData && "Promedio de tus calificaciones, con al menos 2 películas"}>
-      {loading && <PanelSkeleton variant="rows" label="Calculando tus favoritos…" />}
+      title="MEJOR CALIFICADOS"
+      subtitle={!loading && hasData && "Promedio de calificaciones del perfil, con al menos 2 películas"}>
+      {loading && <PanelSkeleton variant="rows" label="Calculando los mejor calificados…" />}
 
       {!loading && hasData && (
         <div style={{

@@ -25,8 +25,8 @@ Nace como un experimento personal para explorar visualización de datos, integra
   - **Terminal** — Listado estilo terminal retro
 - **Paneles de análisis:**
   - **Resumen** — Promedio, comparación con TMDB, me gusta, revisiones, década favorita, tiempo viendo, ritmo semanal y día favorito
-  - **Opiniones impopulares** — Las películas donde más te alejas del promedio de TMDB, a favor y en contra
-  - **Mejor calificados por ti** — Géneros y directores con el mejor promedio de tus calificaciones (mínimo 2 películas)
+  - **Opiniones impopulares** — Las películas con mayor diferencia frente al público (TMDB), a favor y en contra
+  - **Mejor calificados** — Géneros y directores con el mejor promedio de calificaciones del perfil (mínimo 2 películas)
   - **Géneros** — 5 tipos de gráfico (Donut, Radar, Barras, Matriz, Gauges)
   - **Directores** — Vista de tarjetas, holograma u órbita
   - **Actores** — Cuadrícula, espectro o constelación

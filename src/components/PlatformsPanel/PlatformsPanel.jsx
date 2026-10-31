@@ -34,7 +34,7 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
           textAlign: "center", fontSize: "var(--fs-xs)",
           color: "var(--c-text-muted)", fontFamily: "var(--font-mono)",
         }}>
-          Ninguna de tus películas está en streaming por suscripción en México
+          Ninguna de estas películas está en streaming por suscripción en México
         </div>
       ) : (
         <>

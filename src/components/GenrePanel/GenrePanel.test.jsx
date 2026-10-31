@@ -23,7 +23,7 @@ describe("GenrePanel", () => {
     renderPanel()
 
     fireEvent.click(screen.getByRole("img", { name: /^Drama:/ }))
-    expect(screen.getByText("54% de tus películas")).toBeInTheDocument()
+    expect(screen.getByText("54% de las películas")).toBeInTheDocument()
 
     fireEvent.click(screen.getByRole("button", { name: "Matriz" }))
     expect(screen.getByText("Drama: 27 (54%)")).toBeInTheDocument()

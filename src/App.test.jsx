@@ -111,7 +111,7 @@ describe("App", () => {
     const alerts = await screen.findAllByRole("alert")
 
     expect(alerts).toHaveLength(1)
-    expect(screen.queryByText(/Califica algunas películas/)).not.toBeInTheDocument()
+    expect(screen.queryByText(/aún no tiene calificaciones/)).not.toBeInTheDocument()
 
     fireEvent.click(screen.getByRole("button", { name: "Reintentar" }))
 
