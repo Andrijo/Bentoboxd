@@ -251,6 +251,11 @@ input:focus-visible {
   line-height: 1.6;
   color: rgb(var(--fg-rgb) / 0.6);
 }
+.rd-footer-tmdb {
+  align-self: flex-start;
+  height: 12px;
+  margin-top: 6px;
+}
 .rd-panel-title {
   font-family: var(--font-display);
   font-size: var(--fs-2xl);

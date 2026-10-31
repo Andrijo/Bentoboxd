@@ -18,7 +18,7 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
       id="rd-panel-streaming"
       area="platforms"
       title="STREAMING"
-      subtitle="Disponible por suscripción en México"
+      subtitle="Disponible por suscripción en México · Datos de JustWatch"
       actions={selectedPlatform && (
         <button onClick={() => setSelectedPlatform(null)} type="button" className="rd-btn-solid" style={{
           fontSize: "var(--fs-xs)", padding: "4px 10px", borderRadius: "var(--radius-sm)",
