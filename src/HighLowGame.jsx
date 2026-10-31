@@ -466,9 +466,9 @@ export default function HighLowGame({ movies, loading, active = true }) {
     dispatch({ type: "RESTART", seed: randomSeed() })
   }
 
-  // Atajos: ↑ higher, ↓ lower.
+  // Atajos: ↑ higher, ↓ lower. Sin pregunta abierta, las flechas hacen scroll.
   useEffect(() => {
-    if (!active || !movieA || !movieB) return
+    if (!active || !movieA || !movieB || state.feedback || state.gameOver) return
     const onKey = (e) => {
       if (e.key !== "ArrowUp" && e.key !== "ArrowDown") return
       // No secuestrar las flechas dentro de campos de texto.
