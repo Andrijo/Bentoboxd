@@ -3,7 +3,6 @@ import ActorsGrid from "./ActorsGrid.jsx"
 import ActorsSpectrum from "./ActorsSpectrum.jsx"
 import ActorsConstellation from "./ActorsConstellation.jsx"
 import { PanelSkeleton } from "../Skeleton.jsx"
-import PanelError from "../Panel/PanelError.jsx"
 import Panel from "../Panel/Panel.jsx"
 import SegmentedControl from "../Panel/SegmentedControl.jsx"
 
@@ -13,7 +12,7 @@ const VIEW_OPTIONS = [
   { key: "constellation", label: "Mapa" },
 ]
 
-export default function ActorsPanel({ actors, loading, error }) {
+export default function ActorsPanel({ actors, loading }) {
   const [viewMode, setViewMode] = useState("grid")
 
   const topActors = Object.entries(actors || {})
@@ -33,9 +32,7 @@ export default function ActorsPanel({ actors, loading, error }) {
       bodyStyle={{ minHeight: "200px" }}>
       {loading && <PanelSkeleton variant="rows" label="Explorando apariciones…" />}
 
-      {!loading && error && <PanelError message={error} />}
-
-      {!loading && !error && hasData && (
+      {!loading && hasData && (
         <>
           {viewMode === "grid" && <ActorsGrid actors={actors} />}
           {viewMode === "spectrum" && <ActorsSpectrum actors={actors} />}
@@ -43,7 +40,7 @@ export default function ActorsPanel({ actors, loading, error }) {
         </>
       )}
 
-      {!loading && !error && !hasData && (
+      {!loading && !hasData && (
         <div style={{
           textAlign: "center", fontSize: "var(--fs-xs)",
           color: "var(--c-text-muted)", marginTop: "20px",

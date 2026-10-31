@@ -6,6 +6,7 @@ import GenrePanel from "./GenrePanel/GenrePanel.jsx"
 import DirectorsPanel from "./DirectorsPanel/DirectorsPanel.jsx"
 import ActorsPanel from "./ActorsPanel/ActorsPanel.jsx"
 import CountriesPanel from "./CountriesPanel/CountriesPanel.jsx"
+import ErrorNotice from "./ErrorNotice.jsx"
 
 export default function DataPanels({
   showGenrePanel,
@@ -17,19 +18,28 @@ export default function DataPanels({
   platforms,
   loadingGenres,
   genreError,
+  onRetryMetadata,
 }) {
   if (!showGenrePanel) return null
 
+  // Sin TMDB solo el resumen tiene datos: el resto mostraría vacíos engañosos.
   return (
-    <div className="rd-bento-panels">
-      <StatsSummary movies={movies} loading={loadingGenres} />
-      <PlatformsPanel platformsData={platforms} movies={movies} loading={loadingGenres} error={genreError} />
-      <OpinionsPanel movies={movies} loading={loadingGenres} />
-      <GenrePanel genres={genres} movieCount={movies.length} loadingGenres={loadingGenres} genreError={genreError} />
-      <DirectorsPanel directors={directors} loading={loadingGenres} error={genreError} />
-      <ActorsPanel actors={actors} loading={loadingGenres} error={genreError} />
-      <TopRatedPanel movies={movies} loading={loadingGenres} />
-      <CountriesPanel countries={countries} loading={loadingGenres} error={genreError} />
-    </div>
+    <>
+      {genreError && <ErrorNotice message={genreError} onRetry={onRetryMetadata} />}
+      <div className="rd-bento-panels" data-partial={genreError ? "" : undefined}>
+        <StatsSummary movies={movies} loading={loadingGenres} />
+        {!genreError && (
+          <>
+            <PlatformsPanel platformsData={platforms} movies={movies} loading={loadingGenres} />
+            <OpinionsPanel movies={movies} loading={loadingGenres} />
+            <GenrePanel genres={genres} movieCount={movies.length} loadingGenres={loadingGenres} />
+            <DirectorsPanel directors={directors} loading={loadingGenres} />
+            <ActorsPanel actors={actors} loading={loadingGenres} />
+            <TopRatedPanel movies={movies} loading={loadingGenres} />
+            <CountriesPanel countries={countries} loading={loadingGenres} />
+          </>
+        )}
+      </div>
+    </>
   )
 }

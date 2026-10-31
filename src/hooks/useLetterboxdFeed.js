@@ -22,10 +22,18 @@ function letterboxdField(item, name) {
   )
 }
 
+/** Error que no cambia al repetir la misma búsqueda. */
+function permanentError(message) {
+  const error = new Error(message)
+  error.retryable = false
+  return error
+}
+
 export function useLetterboxdFeed() {
   const [movies, setMovies] = useState([])
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
+  const [canRetry, setCanRetry] = useState(false)
   const [username, setUsername] = useState(null)
   const requestIdRef = useRef(0)
 
@@ -37,18 +45,15 @@ export function useLetterboxdFeed() {
 
     setLoading(true)
     setError(null)
-    setMovies([])
 
     try {
       const user = parseUsername(url)
 
       // Evita una petición que el proxy rechazaría de todos modos.
       if (!isValidUsername(user))
-        throw new Error(
+        throw permanentError(
           "Usuario inválido. Usa solo letras, números, guiones o guiones bajos.",
         )
-
-      setUsername(user)
 
       const rssUrl = buildRssUrl(user)
       let res
@@ -59,7 +64,7 @@ export function useLetterboxdFeed() {
       }
       if (requestId !== requestIdRef.current) return []
       if (res.status === 404)
-        throw new Error(
+        throw permanentError(
           `No encontramos a @${user} en Letterboxd. Revisa el nombre o que el perfil sea público.`,
         )
       if (res.status === 429)
@@ -78,7 +83,7 @@ export function useLetterboxdFeed() {
         .slice(0, FEED_LIMIT)
 
       if (items.length === 0)
-        throw new Error("No se encontraron películas. Verifica el usuario.")
+        throw permanentError("No se encontraron películas. Verifica el usuario.")
 
       const parsed = items.map((item) => {
         const rawTitleNode = item.querySelector("title")?.textContent || ""
@@ -121,11 +126,14 @@ export function useLetterboxdFeed() {
         }
       })
 
+      // Lo anterior sigue en pantalla hasta tener un feed válido que lo reemplace.
+      setUsername(user)
       setMovies(parsed)
       return parsed
     } catch (e) {
       if (requestId === requestIdRef.current) {
         setError(e.message || "Error inesperado")
+        setCanRetry(e.retryable !== false)
       }
       return []
     } finally {
@@ -143,5 +151,5 @@ export function useLetterboxdFeed() {
     setLoading(false)
   }, [])
 
-  return { movies, loading, error, username, fetchMovies, resetFeed, setMovies }
+  return { movies, loading, error, canRetry, username, fetchMovies, resetFeed, setMovies }
 }

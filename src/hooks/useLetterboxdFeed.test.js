@@ -217,6 +217,58 @@ ${listItem}${films.join("")}${listItem}
     expect(result.current.error).toMatch(/No se encontraron películas/)
   })
 
+  it("conserva el perfil cargado si la siguiente búsqueda falla", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi
+        .fn()
+        .mockResolvedValueOnce({ ok: true, text: async () => RSS })
+        .mockResolvedValueOnce({ ok: false, status: 404 }),
+    )
+
+    const { result } = renderHook(() => useLetterboxdFeed())
+
+    await act(async () => {
+      await result.current.fetchMovies("user")
+    })
+    await act(async () => {
+      await result.current.fetchMovies("no valido")
+    })
+
+    expect(result.current.error).toMatch(/Usuario inválido/)
+    expect(result.current.movies).toHaveLength(2)
+
+    await act(async () => {
+      await result.current.fetchMovies("otro")
+    })
+
+    expect(result.current.error).toMatch(/No encontramos a @otro/)
+    expect(result.current.movies).toHaveLength(2)
+    expect(result.current.username).toBe("user")
+  })
+
+  it("solo permite reintentar los errores que pueden cambiar", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi
+        .fn()
+        .mockResolvedValueOnce({ ok: false, status: 404 })
+        .mockResolvedValueOnce({ ok: false, status: 502 }),
+    )
+
+    const { result } = renderHook(() => useLetterboxdFeed())
+
+    await act(async () => {
+      await result.current.fetchMovies("user")
+    })
+    expect(result.current.canRetry).toBe(false)
+
+    await act(async () => {
+      await result.current.fetchMovies("user")
+    })
+    expect(result.current.canRetry).toBe(true)
+  })
+
   it("resetFeed limpia el estado", async () => {
     vi.stubGlobal(
       "fetch",
