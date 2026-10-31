@@ -31,7 +31,7 @@ Nace como un experimento personal para explorar visualización de datos, integra
   - **Directores** — Vista de tarjetas, holograma u órbita
   - **Actores** — Cuadrícula, espectro o constelación
   - **Países de producción** — Tabla o sectores con banderas
-  - **Plataformas de streaming** — Disponibilidad en México
+  - **Plataformas de streaming** — Disponibilidad en México (datos de JustWatch)
 - **Juegos** (páginas propias, enlazables y compatibles con el botón atrás):
   - **Higher or Lower** (`#higher-lower`) — Adivina si la siguiente película tiene mayor/menor rating, popularidad o año
   - **Quiz** (`#quiz`) — 5 preguntas sobre año de estreno o calificación

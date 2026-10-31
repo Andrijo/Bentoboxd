@@ -90,6 +90,38 @@ describe("generateQuestions", () => {
       expect(seen).toEqual(new Set(["rating", "year", "director", "poster"]))
     })
 
+    it("no usa a un codirector de la película como opción falsa", () => {
+      const coDirected = {
+        ...rich[0],
+        title: "Fargo",
+        directors: ["Joel Coen", "Ethan Coen"],
+      }
+      runMany(() => {
+        generateQuestions([coDirected, ...rich.slice(1)], { currentYear: 2026 })
+          .filter((q) => q.type === "director" && q.movie.title === "Fargo")
+          .forEach((q) => {
+            expect(q.correct).toBe("Joel Coen")
+            expect(q.options).not.toContain("Ethan Coen")
+          })
+      })
+    })
+
+    it("no pregunta por un director si los codirectores agotan los distractores", () => {
+      const coDirected = rich.slice(0, 4).map((movie) => ({
+        ...movie,
+        directors: ["Ana", "Luis", "Eva"],
+      }))
+      coDirected.push({ ...rich[4], directors: ["Otro"] })
+
+      runMany(() => {
+        generateQuestions(coDirected, { currentYear: 2026 })
+          .filter((q) => q.movie.directors.length > 1)
+          .forEach((q) => {
+            expect(q.type).not.toBe("director")
+          })
+      })
+    })
+
     it("no pregunta por director ni póster sin datos o sin distractores suficientes", () => {
       const few = rich.slice(0, 3)
       runMany(() => {

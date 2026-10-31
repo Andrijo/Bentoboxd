@@ -47,13 +47,13 @@ export default function GenrePanel({ genres, movieCount, loadingGenres }) {
           {chartType === "donut" && <DonutChart genres={genres} movieCount={movieCount} />}
           {chartType === "radar" && <RadarChart genres={genres} />}
           {chartType === "bar" && <BarChart genres={genres} />}
-          {chartType === "matrix" && <MatrixChart genres={genres} />}
+          {chartType === "matrix" && <MatrixChart genres={genres} movieCount={movieCount} />}
           {chartType === "gauges" && <GaugesChart genres={genres} />}
         </div>
       )}
 
       {!loadingGenres && hasData && (
-        <GenreList genres={genres} />
+        <GenreList genres={genres} movieCount={movieCount} />
       )}
 
       {!loadingGenres && !hasData && (

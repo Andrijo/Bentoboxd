@@ -1,15 +1,15 @@
 import { useState } from "react"
 import { GENRE_KEYS, GENRE_CONFIG } from "../../constants/genres.js"
+import { formatPercent } from "../../utils/formatters.js"
 
 const mixAlpha = (color, pct) => `color-mix(in srgb, ${color} ${pct}%, transparent)`
 
-export default function MatrixChart({ genres }) {
+export default function MatrixChart({ genres, movieCount }) {
   const [hoveredGenre, setHoveredGenre] = useState(null)
 
   const sortedGenres = GENRE_KEYS.filter((k) => (genres[k] || 0) > 0).sort(
     (a, b) => genres[b] - genres[a],
   )
-  const totalNodes = Object.values(genres).reduce((a, b) => a + b, 0)
 
   const blocks = []
   sortedGenres.forEach((genre) => {
@@ -27,7 +27,7 @@ export default function MatrixChart({ genres }) {
       <ul className="rd-sr-only">
         {sortedGenres.map((genre) => (
           <li key={genre}>
-            {genre}: {genres[genre]} ({((genres[genre] / totalNodes) * 100).toFixed(1)}%)
+            {genre}: {genres[genre]} ({formatPercent(genres[genre], movieCount)})
           </li>
         ))}
       </ul>
@@ -83,7 +83,7 @@ export default function MatrixChart({ genres }) {
               color: "var(--c-text-muted)",
             }}>
               {genres[hoveredGenre]} nodos detectados (
-              {((genres[hoveredGenre] / totalNodes) * 100).toFixed(1)}%)
+              {formatPercent(genres[hoveredGenre], movieCount)})
             </div>
           </>
         ) : (

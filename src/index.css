@@ -69,8 +69,8 @@ html[data-edge="bottom"] {
   --c-surface: rgb(var(--fg-rgb) / 0.03);
   --c-card: #111111;
   --c-terminal: #111111;
-  --c-arrow: #333333;
-  --c-arrow-hover: #beb8ad;
+  --c-arrow: #beb8ad;
+  --c-arrow-hover: #f6f4ee;
   --ramp-1: color-mix(in srgb, #f6f4ee 100%, #333333);
   --ramp-2: color-mix(in srgb, #f6f4ee 91%, #333333);
   --ramp-3: color-mix(in srgb, #f6f4ee 82%, #333333);
@@ -251,6 +251,16 @@ input:focus-visible {
   line-height: 1.6;
   color: rgb(var(--fg-rgb) / 0.6);
 }
+.rd-footer-tmdb {
+  align-self: flex-start;
+  height: 12px;
+  margin-top: 6px;
+}
+.rd-coverage-note {
+  margin: 0 var(--gutter) 16px;
+  font-size: var(--fs-xs);
+  color: var(--c-text-muted);
+}
 .rd-panel-title {
   font-family: var(--font-display);
   font-size: var(--fs-2xl);
@@ -366,6 +376,7 @@ input:focus-visible {
 .rd-error-retry:hover { opacity: 0.85; }
 .rd-header-bar { padding: clamp(16px, 4vw, 40px) var(--gutter) 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
 .rd-header-title { font-family: var(--font-display); letter-spacing: 2px; line-height: 1; margin: 0; cursor: pointer; color: var(--c-text-bright); }
+.rd-header-actions { display: flex; gap: 12px; align-items: center; }
 .rd-btn-solid, .rd-theme-toggle, .rd-landing-example { background: var(--c-text-bright); border: 1px solid var(--c-text-bright); color: var(--c-on-text); cursor: pointer; transition: opacity 0.2s; }
 .rd-btn-solid:hover, .rd-theme-toggle:hover, .rd-landing-example:hover, .rd-landing-example:focus-visible { opacity: 0.85; }
 .rd-btn-solid:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -468,6 +479,15 @@ input:focus-visible {
     flex: 1 1 30%;
     text-align: center;
     justify-content: center;
+  }
+}
+/* El logo y el toggle no caben en una fila con el tamaño mínimo del título. */
+@media (max-width: 359px) {
+  .rd-header-bar {
+    gap: 12px;
+  }
+  .rd-header-title {
+    font-size: 2.2rem !important;
   }
 }
 .rd-terminal-row:hover,

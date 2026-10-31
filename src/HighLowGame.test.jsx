@@ -79,4 +79,22 @@ describe("HighLowGame", () => {
     fireEvent.keyDown(window, { key: "ArrowUp" })
     expect(higher()).toBeDisabled()
   })
+
+  it("devuelve las flechas al navegador si no hay pregunta abierta", () => {
+    render(<HighLowGame movies={movies} loading={false} />)
+    // fireEvent devuelve false si el manejador llamó a preventDefault.
+    const scrolls = () => fireEvent.keyDown(window, { key: "ArrowDown" })
+
+    fireEvent.click(lower())
+    expect(scrolls()).toBe(true)
+
+    fireEvent.click(button("Ver resultado"))
+    expect(scrolls()).toBe(true)
+  })
+
+  it("captura las flechas mientras hay pregunta abierta", () => {
+    render(<HighLowGame movies={movies} loading={false} />)
+
+    expect(fireEvent.keyDown(window, { key: "ArrowUp" })).toBe(false)
+  })
 })

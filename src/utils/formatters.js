@@ -19,7 +19,12 @@ export function formatMovieCount(count) {
   return `${count} película${count === 1 ? "" : "s"}`
 }
 
-const watchedDateFormat = new Intl.DateTimeFormat("es-MX", {
+/** 27 de 50 → "54%". Base 0 → "0%". */
+export function formatPercent(count, total) {
+  return `${total ? Math.round((count / total) * 100) : 0}%`
+}
+
+const watchedDateFormat =new Intl.DateTimeFormat("es-MX", {
   day: "numeric",
   month: "short",
   year: "numeric",

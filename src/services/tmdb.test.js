@@ -134,6 +134,50 @@ describe("fetchMetadataFromTMDB", () => {
     expect(result.rawResults).toEqual([null])
     expect(result.genres["Otro"]).toBe(0)
     expect(Object.keys(result.directors)).toHaveLength(0)
+    expect(result.coverage).toEqual({ total: 1, matched: 0, failed: 0 })
+  })
+
+  it("cuenta aparte las películas con fallo transitorio y las reintenta", async () => {
+    let tmdbUp = false
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((url) => {
+        if (url.includes("query=Inception")) {
+          return jsonResponse({ results: [{ id: 1, genre_ids: [18] }] })
+        }
+        if (url.includes("/search/movie")) {
+          return tmdbUp
+            ? jsonResponse({ results: [{ id: 2, genre_ids: [18] }] })
+            : jsonResponse({}, 404)
+        }
+        return jsonResponse(detailsResponse())
+      }),
+    )
+
+    const first = await fetchMetadataFromTMDB(["Inception", "Dune"])
+    expect(first.coverage).toEqual({ total: 2, matched: 1, failed: 1 })
+
+    tmdbUp = true
+    const retry = await fetchMetadataFromTMDB(["Inception", "Dune"])
+    expect(retry.coverage).toEqual({ total: 2, matched: 2, failed: 0 })
+  })
+
+  it("cuenta una sola vez la película repetida en el diario", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn((url) =>
+        url.includes("/search/movie")
+          ? jsonResponse({ results: [{ id: 1, genre_ids: [18] }] })
+          : jsonResponse(detailsResponse()),
+      ),
+    )
+
+    const result = await fetchMetadataFromTMDB([
+      { title: "Inception", year: 2010 },
+      { title: "Inception", year: 2010 },
+    ])
+
+    expect(result.coverage).toEqual({ total: 1, matched: 1, failed: 0 })
   })
 
   it("no rompe si la petición falla", async () => {

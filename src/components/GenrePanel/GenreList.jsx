@@ -1,7 +1,7 @@
 import { GENRE_KEYS, GENRE_CONFIG } from "../../constants/genres.js"
+import { formatPercent } from "../../utils/formatters.js"
 
-export default function GenreList({ genres }) {
-  const total = Object.values(genres).reduce((a, b) => a + b, 0) || 1
+export default function GenreList({ genres, movieCount }) {
   const ranked = GENRE_KEYS.filter((k) => (genres[k] || 0) > 0).sort(
     (a, b) => genres[b] - genres[a],
   )
@@ -35,7 +35,7 @@ export default function GenreList({ genres }) {
               fontSize: "var(--fs-xs)", fontFamily: "var(--font-mono)",
               color: "var(--c-text-muted)",
             }}>
-              {Math.round((count / total) * 100)}%
+              {formatPercent(count, movieCount)}
             </span>
             <span style={{
               minWidth: "24px", textAlign: "right", fontSize: "var(--fs-sm)",

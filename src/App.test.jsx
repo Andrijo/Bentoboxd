@@ -121,4 +121,75 @@ describe("App", () => {
     expect(screen.getByRole("heading", { name: "TOP GÉNEROS" })).toBeInTheDocument()
     consoleError.mockRestore()
   })
+
+  it("avisa de un fallo parcial de TMDB y permite reintentar", async () => {
+    fetchMetadataFromTMDB
+      .mockResolvedValueOnce({
+        ...METADATA,
+        coverage: { total: 2, matched: 1, failed: 1 },
+      })
+      .mockResolvedValueOnce({
+        ...METADATA,
+        coverage: { total: 2, matched: 2, failed: 0 },
+      })
+    render(<App />)
+
+    search("user")
+    const alert = await screen.findByRole("alert")
+
+    expect(alert).toHaveTextContent(
+      "Estadísticas basadas en 1 de 2 películas: TMDB no respondió para 1.",
+    )
+
+    fireEvent.click(screen.getByRole("button", { name: "Reintentar" }))
+
+    await waitFor(() => {
+      expect(screen.queryByRole("alert")).not.toBeInTheDocument()
+    })
+    expect(fetchMetadataFromTMDB).toHaveBeenCalledTimes(2)
+  })
+
+  it("explica sin alarmar ni ofrecer reintento las películas que TMDB no tiene", async () => {
+    fetchMetadataFromTMDB.mockResolvedValue({
+      ...METADATA,
+      coverage: { total: 2, matched: 1, failed: 0 },
+    })
+    render(<App />)
+
+    search("user")
+
+    expect(await screen.findByText(/el resto no aparece en TMDB/)).toBeInTheDocument()
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument()
+    expect(screen.queryByRole("button", { name: "Reintentar" })).not.toBeInTheDocument()
+  })
+
+  it("no menciona la cobertura si TMDB encontró todas las películas", async () => {
+    fetchMetadataFromTMDB.mockResolvedValue({
+      ...METADATA,
+      coverage: { total: 1, matched: 1, failed: 0 },
+    })
+    render(<App />)
+
+    search("user")
+    await screen.findByRole("heading", { name: "TOP GÉNEROS" })
+
+    expect(screen.queryByText(/Estadísticas basadas en/)).not.toBeInTheDocument()
+  })
+
+  it("recorre los paneles en el mismo orden en que se ven", async () => {
+    fetchMetadataFromTMDB.mockResolvedValue(METADATA)
+    render(<App />)
+
+    search("user")
+    await screen.findByRole("heading", { name: "TOP GÉNEROS" })
+
+    const titles = screen
+      .getAllByRole("heading", { level: 2 })
+      .map((heading) => heading.textContent)
+
+    expect(titles.indexOf("TOP GÉNEROS")).toBeLessThan(titles.indexOf("STREAMING"))
+    expect(titles.indexOf("STREAMING")).toBeLessThan(
+      titles.indexOf("OPINIONES IMPOPULARES"),
+    )
+  })
 })
