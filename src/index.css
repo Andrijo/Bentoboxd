@@ -158,6 +158,9 @@ input {
   from { background-position: 200% 0; }
   to   { background-position: -200% 0; }
 }
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
 @keyframes pulse {
   0%, 100% { opacity: 1; }
   50%       { opacity: 0.4; }
@@ -207,6 +210,7 @@ input:focus-visible { outline: none; }
 .rd-btn-solid, .rd-theme-toggle, .rd-landing-example { background: var(--c-text-bright); border: 1px solid var(--c-text-bright); color: var(--c-on-text); cursor: pointer; transition: opacity 0.2s; }
 .rd-btn-solid:hover, .rd-theme-toggle:hover, .rd-landing-example:hover, .rd-landing-example:focus-visible { opacity: 0.85; }
 .rd-btn-solid:disabled { opacity: 0.5; cursor: not-allowed; }
+.rd-spinner { display: inline-block; vertical-align: middle; width: 14px; height: 14px; border: 2px solid color-mix(in srgb, currentColor 25%, transparent); border-top-color: currentColor; border-radius: 50%; animation: spin 0.7s linear infinite; }
 .rd-theme-toggle { flex-shrink: 0; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-md); }
 .rd-page { padding: 32px var(--gutter) 48px; animation: fadeSlideIn 0.3s ease both; }
 .rd-page-notice { padding: 48px 0; text-align: center; font-size: var(--fs-xs); letter-spacing: 2px; color: rgb(var(--fg-rgb) / 0.65); }

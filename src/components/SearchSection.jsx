@@ -31,8 +31,16 @@ export default function SearchSection({ url, loading, onUrlChange, onFetch }) {
       <button
         disabled={loading}
         type="submit"
+        aria-busy={loading}
         className="rd-search-btn rd-btn-solid">
-        {loading ? "Cargando..." : "Generar"}
+        {loading ? (
+          <>
+            <span className="rd-spinner" aria-hidden="true" />
+            <span className="rd-sr-only">Cargando</span>
+          </>
+        ) : (
+          "Generar"
+        )}
       </button>
     </form>
   )
