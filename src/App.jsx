@@ -55,6 +55,7 @@ export default function App() {
     actors,
     countries,
     platforms,
+    coverage,
     loading: metaLoading,
     error: genreError,
     fetchMetadata,
@@ -261,6 +262,7 @@ export default function App() {
           actors={actors}
           countries={countries}
           platforms={platforms}
+          coverage={coverage}
           loadingGenres={metaLoading}
           genreError={genreError}
           onRetryMetadata={() => loadMetadata(movies)}

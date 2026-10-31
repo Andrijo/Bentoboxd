@@ -362,6 +362,12 @@ export async function fetchMetadataFromTMDB(movies, { signal } = {}) {
     },
   )
 
+  // Solo lo no encontrado queda en caché: el resto vale la pena reintentarlo.
+  const keys = [...uniqueMovies.keys()]
+  const failed = results.filter(
+    (item, i) => !item && !metadataCache.has(keys[i]),
+  ).length
+
   const directorCounts = {}
   const actorCounts = {}
   const countryCounts = {}
@@ -405,5 +411,10 @@ export async function fetchMetadataFromTMDB(movies, { signal } = {}) {
       logos: Object.fromEntries(platformLogoCache),
     },
     rawResults: results,
+    coverage: {
+      total: results.length,
+      matched: results.filter(Boolean).length,
+      failed,
+    },
   }
 }

@@ -7,6 +7,7 @@ export function useTMDBMetadata() {
   const [actors, setActors] = useState({})
   const [countries, setCountries] = useState({})
   const [platforms, setPlatforms] = useState({})
+  const [coverage, setCoverage] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const controllerRef = useRef(null)
@@ -30,6 +31,7 @@ export function useTMDBMetadata() {
 
     setLoading(true)
     setError(null)
+    setCoverage(null)
 
     try {
       const metadata = await fetchMetadataFromTMDB(movies, {
@@ -40,6 +42,7 @@ export function useTMDBMetadata() {
       setActors(metadata.actors)
       setCountries(metadata.countries)
       setPlatforms(metadata.platforms)
+      setCoverage(metadata.coverage)
       return metadata
     } catch (e) {
       if (e.name === "AbortError") return null
@@ -63,12 +66,13 @@ export function useTMDBMetadata() {
     setActors({})
     setCountries({})
     setPlatforms({})
+    setCoverage(null)
     setError(null)
     setLoading(false)
   }, [])
 
   return {
-    genres, directors, actors, countries, platforms,
+    genres, directors, actors, countries, platforms, coverage,
     loading, error, fetchMetadata, resetMetadata,
     setGenres, setDirectors, setActors, setCountries, setPlatforms,
   }

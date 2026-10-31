@@ -1,5 +1,5 @@
 import { useState } from "react"
-import { formatMovieCount } from "../../utils/formatters.js"
+import { formatMovieCount, formatPercent } from "../../utils/formatters.js"
 import { GENRE_KEYS, GENRE_CONFIG } from "../../constants/genres.js"
 
 const polarToCartesian = (cx, cy, r, angleDeg) => {
@@ -107,7 +107,7 @@ export default function DonutChart({ genres, movieCount }) {
             </text>
             <text x={cx} y={cy + 32} textAnchor="middle" fontSize="16" fill="var(--c-text-muted)"
               style={{ fontFamily: "var(--font-mono)" }}>
-              {Math.round((hoveredSlice.count / films) * 100)}% de tus películas
+              {formatPercent(hoveredSlice.count, films)} de tus películas
             </text>
           </>
         ) : (

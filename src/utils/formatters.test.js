@@ -1,5 +1,13 @@
 import { describe, it, expect } from "vitest"
-import { countryName, formatDuration, formatMovieCount, formatWatchedDate, weekdayName } from "./formatters.js"
+import { countryName, formatDuration, formatMovieCount, formatPercent, formatWatchedDate, weekdayName } from "./formatters.js"
+
+describe("formatPercent", () => {
+  it("redondea sobre la base dada y no divide entre cero", () => {
+    expect(formatPercent(27, 50)).toBe("54%")
+    expect(formatPercent(1, 3)).toBe("33%")
+    expect(formatPercent(1, 0)).toBe("0%")
+  })
+})
 
 describe("formatMovieCount", () => {
   it("usa singular solo para 1", () => {
