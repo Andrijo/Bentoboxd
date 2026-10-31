@@ -33,6 +33,8 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
           marginBottom: "24px",
         }}>
         <div
+          id="rd-section-peliculas"
+          className="rd-section-anchor"
           style={{
             fontSize: "var(--fs-2xs)",
             letterSpacing: "3px",

@@ -71,11 +71,12 @@ export default function ProfileOverview({ movies, username, loading }) {
     tmdbTile = <StatTile label="Frente al público (TMDB)" value={pending} detail="Comparando…" />
   } else if (stats.tmdbDiff !== null) {
     const sign = stats.tmdbDiff > 0 ? "+" : stats.tmdbDiff < 0 ? "−" : ""
+    const partial = stats.tmdbCompared < stats.ratedCount
     tmdbTile = (
       <StatTile
         label="Frente al público (TMDB)"
         value={`${sign}${Math.abs(stats.tmdbDiff).toFixed(1)}`}
-        detail={`${TMDB_VERDICT[stats.tmdbVerdict]} (${formatMovieCount(stats.tmdbCompared)})`}
+        detail={`${TMDB_VERDICT[stats.tmdbVerdict]}${partial ? ` (${formatMovieCount(stats.tmdbCompared)})` : ""}`}
       />
     )
   }
