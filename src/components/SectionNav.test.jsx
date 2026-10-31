@@ -28,6 +28,7 @@ describe("SectionNav", () => {
     expect(screen.getAllByRole("button").map((b) => b.textContent)).toEqual([
       "Películas",
       "Resumen",
+      "Evolución",
     ])
   })
 })

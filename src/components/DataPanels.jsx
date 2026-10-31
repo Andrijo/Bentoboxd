@@ -1,4 +1,5 @@
 import StatsSummary from "./StatsSummary/StatsSummary.jsx"
+import MonthlyPanel from "./MonthlyPanel/MonthlyPanel.jsx"
 import PlatformsPanel from "./PlatformsPanel/PlatformsPanel.jsx"
 import OpinionsPanel from "./OpinionsPanel/OpinionsPanel.jsx"
 import TopRatedPanel from "./TopRatedPanel/TopRatedPanel.jsx"
@@ -45,6 +46,7 @@ export default function DataPanels({
       )}
       <div className="rd-bento-panels" data-partial={genreError ? "" : undefined}>
         <StatsSummary movies={movies} />
+        <MonthlyPanel movies={movies} />
         {!genreError && (
           <>
             {/* En el orden visual de la cuadrícula: el foco sigue la lectura. */}

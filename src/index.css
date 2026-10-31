@@ -277,19 +277,19 @@ input:focus-visible {
 .rd-bento-panels {
   display: grid;
   grid-template-columns: minmax(0, 1fr);
-  grid-template-areas: "stats" "genres" "platforms" "opinions" "directors" "actors" "toprated" "countries";
+  grid-template-areas: "stats" "monthly" "genres" "platforms" "opinions" "directors" "actors" "toprated" "countries";
   gap: 24px;
   margin: 0 var(--gutter) 40px;
 }
 @media (min-width: 900px) {
   .rd-bento-panels {
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    grid-template-areas: "stats genres" "platforms genres" "opinions opinions" "directors actors" "toprated countries";
+    grid-template-areas: "stats genres" "monthly genres" "platforms genres" "opinions opinions" "directors actors" "toprated countries";
   }
 }
 .rd-bento-panels[data-partial] {
   grid-template-columns: minmax(0, 1fr);
-  grid-template-areas: "stats";
+  grid-template-areas: "stats" "monthly";
 }
 .rd-sr-only {
   position: absolute;
@@ -462,6 +462,28 @@ input:focus-visible {
 @media (max-width: 640px) { .rd-filter select { font-size: 16px; } }
 .rd-movies-empty { padding: 32px 0; text-align: center; font-size: var(--fs-xs); color: var(--c-text-muted); }
 .rd-movies-more { margin-top: 24px; text-align: center; }
+.rd-monthly-readout { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 16px; font-size: var(--fs-xs); color: var(--c-text-muted); }
+.rd-monthly-readout-values { font-size: var(--fs-base); color: var(--c-text-bright); }
+.rd-monthly-plot { position: relative; padding-left: 28px; }
+.rd-monthly-label { margin-bottom: 8px; font-size: var(--fs-xs); letter-spacing: 1px; color: var(--c-text-muted); }
+.rd-monthly-bars { height: 96px; margin-bottom: 16px; display: flex; gap: 2px; border-bottom: 1px solid rgb(var(--fg-rgb) / 0.12); }
+.rd-monthly-bars > div { flex: 1; min-width: 0; display: flex; flex-direction: column; align-items: center; justify-content: flex-end; }
+.rd-monthly-bars span { font-size: var(--fs-xs); line-height: 20px; color: var(--c-text-bright); }
+.rd-monthly-bars i { display: block; width: 100%; max-width: 24px; border-radius: 4px 4px 0 0; background: rgb(var(--accent-rgb) / 0.35); transition: background 0.15s; }
+.rd-monthly-bars i[data-lit] { background: var(--c-accent); }
+.rd-monthly-line { position: relative; height: 72px; margin-bottom: 8px; border-block: 1px solid rgb(var(--fg-rgb) / 0.12); }
+.rd-monthly-line svg { position: absolute; inset: 0; width: 100%; height: 100%; overflow: visible; }
+.rd-monthly-line polyline { fill: none; stroke: var(--c-accent); stroke-width: 2px; stroke-linecap: round; stroke-linejoin: round; }
+.rd-monthly-tick { position: absolute; left: -28px; transform: translateY(-50%); font-size: var(--fs-xs); color: var(--c-text-muted); font-variant-numeric: tabular-nums; }
+.rd-monthly-dot { position: absolute; width: 8px; height: 8px; margin: -4px 0 0 -4px; border-radius: 50%; background: var(--c-accent); box-shadow: 0 0 0 2px var(--bg-top); transition: transform 0.15s; }
+.rd-monthly-dot[data-lit] { transform: scale(1.5); }
+.rd-monthly-end { position: absolute; transform: translate(-50%, -24px); font-size: var(--fs-xs); color: var(--c-text-bright); }
+.rd-monthly-axis { display: flex; gap: 2px; }
+.rd-monthly-axis span { flex: 1; min-width: 0; display: flex; justify-content: center; white-space: nowrap; font-size: var(--fs-xs); color: var(--c-text-muted); }
+.rd-monthly-hits { position: absolute; inset: 0 0 0 28px; display: flex; gap: 2px; }
+.rd-monthly-hits button { flex: 1; min-width: 0; padding: 0; background: none; border: none; border-radius: var(--radius-sm); cursor: pointer; }
+.rd-monthly-hits button[data-active] { background: rgb(var(--fg-rgb) / 0.05); }
+.rd-monthly-note { margin-top: 16px; font-size: var(--fs-xs); color: var(--c-text-muted); }
 .rd-section-nav { position: sticky; top: 0; z-index: 10; margin-top: 20px; padding: 8px var(--gutter); display: flex; gap: 4px; overflow-x: auto; scrollbar-width: none; background: var(--bg-top) linear-gradient(to bottom, var(--bg-top), var(--bg-bottom)) fixed; border-block: 1px solid rgb(var(--fg-rgb) / 0.06); }
 .rd-section-nav::-webkit-scrollbar { display: none; }
 .rd-section-nav button { flex-shrink: 0; min-height: 40px; padding: 0 12px; background: none; border: none; border-radius: var(--radius-sm); color: var(--c-text-muted); font-family: var(--font-mono); font-size: var(--fs-xs); letter-spacing: 1px; white-space: nowrap; cursor: pointer; transition: color 0.2s; }

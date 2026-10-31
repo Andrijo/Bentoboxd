@@ -1,5 +1,6 @@
 const MOVIES_SECTION = { id: "rd-section-peliculas", label: "Películas" }
 const SUMMARY_SECTION = { id: "rd-panel-resumen", label: "Resumen" }
+const MONTHLY_SECTION = { id: "rd-panel-evolucion", label: "Evolución" }
 
 // En el orden de la cuadrícula. Sin TMDB estos paneles no se muestran.
 const TMDB_SECTIONS = [
@@ -26,6 +27,7 @@ export default function SectionNav({ showTmdbSections }) {
   const sections = [
     MOVIES_SECTION,
     SUMMARY_SECTION,
+    MONTHLY_SECTION,
     ...(showTmdbSections ? TMDB_SECTIONS : []),
   ]
 

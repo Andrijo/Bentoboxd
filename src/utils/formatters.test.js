@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import { countryName, formatDuration, formatHours, formatMovieCount, formatPercent, formatWatchedDate, weekdayName } from "./formatters.js"
+import { countryName, formatDuration, formatHours, formatMonth, formatMonthYear, formatMovieCount, formatPercent, formatWatchedDate, weekdayName } from "./formatters.js"
 
 describe("formatPercent", () => {
   it("redondea sobre la base dada y no divide entre cero", () => {
@@ -48,6 +48,13 @@ describe("formatDuration", () => {
     expect(formatDuration(120)).toBe("2 h")
     expect(formatDuration(45)).toBe("45 min")
     expect(formatDuration(0)).toBe("0 min")
+  })
+})
+
+describe("formatMonth", () => {
+  it("nombra el mes sin correr la fecha por zona horaria", () => {
+    expect(formatMonth("2026-03")).toBe("mar")
+    expect(formatMonthYear("2026-01")).toBe("ene 2026")
   })
 })
 
