@@ -413,7 +413,9 @@ function GamePlayArea({
                 onClick={onNext}
                 type="button"
                 className="rd-btn-solid rd-hlg-btn">
-                {feedback === "correct" && hasNextCard ? "Siguiente" : "Ver resultado"}
+                {feedback === "correct" && hasNextCard
+                  ? "Siguiente"
+                  : "Ver resultado"}
               </button>
             ) : (
               <p className="rd-hlg-shortcuts">Atajos: ↑ Higher · ↓ Lower</p>
@@ -487,7 +489,7 @@ export default function HighLowGame({ movies, loading, active = true }) {
     <section className="rd-page rd-hlg" aria-label="Higher or Lower">
       <p className="rd-sr-only" role="status" aria-live="polite">
         {state.gameOver
-          ? `${state.won ? "Baraja completa" : "Fin del juego"}. Racha final: ${state.streak}.`
+          ? `${state.won ? "¡Has completado el juego!" : "Fin del juego"}. Racha final: ${state.streak}.`
           : state.feedback === "correct"
             ? `Correcto. ${movieB?.title}: ${formatMetric(category, movieB?.metrics[category])}. Racha: ${state.streak}.`
             : state.feedback === "wrong"
