@@ -1,55 +1,74 @@
-import { describe, it, expect, vi, beforeEach, afterEach } from "vitest"
-import { render, screen, fireEvent, act } from "@testing-library/react"
+import { describe, it, expect, vi } from "vitest"
+import { render, screen, fireEvent } from "@testing-library/react"
 import HighLowGame from "./HighLowGame.jsx"
 
-const movies = [1, 2, 3, 4, 5, 6].map((n) => ({
+// Sin barajar, cada carta tiene más estrellas que la anterior: "higher" siempre acierta.
+vi.mock("./utils/shuffle.js", () => ({
+  shuffle: (items) => [...items],
+  seededRandom: () => () => 0,
+  randomSeed: () => 1,
+}))
+
+const movies = [1, 2, 3].map((n) => ({
   title: `Película ${n}`,
   link: `https://letterboxd.com/film/${n}/`,
   poster: `https://a.ltrbxd.com/${n}.jpg`,
   metrics: { rating: n, popularity: n * 10, year: 2000 + n },
 }))
 
-// Con dos cartas cualquier respuesta acaba la partida, sea cual sea el orden.
-const twoMovies = movies.slice(0, 2)
-
-const higher = () => screen.getByRole("button", { name: /Higher/ })
-
-beforeEach(() => {
-  vi.useFakeTimers()
-})
-
-afterEach(() => {
-  vi.useRealTimers()
-})
+const button = (name) => screen.getByRole("button", { name })
+const higher = () => button(/Higher/)
+const lower = () => button(/Lower/)
 
 describe("HighLowGame", () => {
-  it("termina la partida después de mostrar el resultado", () => {
-    render(<HighLowGame movies={twoMovies} loading={false} />)
+  it("espera a que el usuario avance tras cada respuesta", () => {
+    render(<HighLowGame movies={movies} loading={false} />)
     fireEvent.click(higher())
 
-    act(() => {
-      vi.advanceTimersByTime(2000)
-    })
+    expect(screen.getByText("Racha: 1")).toBeInTheDocument()
+    expect(higher()).toBeDisabled()
+    expect(button("Siguiente")).toHaveFocus()
 
-    expect(screen.getByText("JUEGO TERMINADO")).toBeInTheDocument()
+    fireEvent.click(button("Siguiente"))
+    expect(higher()).toBeEnabled()
   })
 
-  it("cambiar de categoría cancela el avance pendiente", () => {
-    render(<HighLowGame movies={twoMovies} loading={false} />)
+  it("distingue completar la baraja de perder", () => {
+    const { unmount } = render(<HighLowGame movies={movies} loading={false} />)
     fireEvent.click(higher())
-    fireEvent.click(screen.getByRole("button", { name: "Popularidad" }))
+    fireEvent.click(button("Siguiente"))
+    fireEvent.click(higher())
+    fireEvent.click(button("Ver resultado"))
 
-    act(() => {
-      vi.advanceTimersByTime(2000)
-    })
+    expect(screen.getByRole("heading", { name: "¡BARAJA COMPLETA!" })).toBeInTheDocument()
+    expect(screen.getByText("Racha final: 2")).toBeInTheDocument()
+    expect(button("Jugar de nuevo")).toHaveFocus()
+    unmount()
 
-    expect(screen.queryByText("JUEGO TERMINADO")).not.toBeInTheDocument()
+    render(<HighLowGame movies={movies} loading={false} />)
+    fireEvent.click(lower())
+    fireEvent.click(button("Ver resultado"))
+
+    expect(screen.getByRole("heading", { name: "JUEGO TERMINADO" })).toBeInTheDocument()
+    expect(screen.getByText("Racha final: 0")).toBeInTheDocument()
+  })
+
+  it("avisa que cambiar de categoría reinicia la racha", () => {
+    render(<HighLowGame movies={movies} loading={false} />)
+    const note = screen.getByText(/reinicia la racha/)
+
+    expect(note).toHaveStyle({ visibility: "hidden" })
+
+    fireEvent.click(higher())
+    expect(note).toHaveStyle({ visibility: "visible" })
+
+    fireEvent.click(button("Popularidad"))
     expect(screen.getByText("Racha: 0")).toBeInTheDocument()
     expect(higher()).toBeEnabled()
   })
 
-  it("ignora los atajos oculto y no deja temporizadores al desmontar", () => {
-    const { rerender, unmount } = render(
+  it("ignora los atajos mientras está oculto", () => {
+    const { rerender } = render(
       <HighLowGame movies={movies} loading={false} active={false} />,
     )
 
@@ -59,8 +78,5 @@ describe("HighLowGame", () => {
     rerender(<HighLowGame movies={movies} loading={false} active />)
     fireEvent.keyDown(window, { key: "ArrowUp" })
     expect(higher()).toBeDisabled()
-
-    unmount()
-    expect(vi.getTimerCount()).toBe(0)
   })
 })

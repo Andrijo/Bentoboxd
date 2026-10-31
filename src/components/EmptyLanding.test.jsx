@@ -27,6 +27,21 @@ describe("EmptyLanding", () => {
     expect(screen.getByRole("button", { name: "@ana" })).toBeInTheDocument()
   })
 
+  it("permite quitar un perfil reciente", () => {
+    const onProfileRemove = vi.fn()
+    render(
+      <EmptyLanding
+        {...baseProps}
+        recentProfiles={["ana"]}
+        onProfileRemove={onProfileRemove}
+      />,
+    )
+
+    fireEvent.click(screen.getByRole("button", { name: "Quitar @ana de recientes" }))
+
+    expect(onProfileRemove).toHaveBeenCalledWith("ana")
+  })
+
   it("no se muestra mientras carga ni cuando ya hay películas", () => {
     const { container, rerender } = render(<EmptyLanding {...baseProps} loading />)
     expect(container).toBeEmptyDOMElement()

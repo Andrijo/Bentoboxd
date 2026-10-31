@@ -44,6 +44,7 @@ export default function App() {
     canRetry,
     username,
     fetchMovies: fetchFeed,
+    cancelFeed,
     resetFeed,
     setMovies,
   } = useLetterboxdFeed()
@@ -231,6 +232,7 @@ export default function App() {
           loading={feedLoading}
           onUrlChange={setUrl}
           onFetch={handleFetch}
+          onCancel={cancelFeed}
         />
 
         {error && (
@@ -272,6 +274,9 @@ export default function App() {
           onProfileSelect={(user) => {
             setUrl(user)
             handleFetch(user)
+          }}
+          onProfileRemove={(user) => {
+            setRecentProfiles((prev) => prev.filter((p) => p !== user))
           }}
         />
       </div>

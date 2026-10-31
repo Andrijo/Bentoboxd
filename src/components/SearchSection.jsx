@@ -1,9 +1,20 @@
-export default function SearchSection({ url, loading, onUrlChange, onFetch }) {
+import { useRef, useState } from "react"
+
+export default function SearchSection({ url, loading, onUrlChange, onFetch, onCancel }) {
+  const [showHint, setShowHint] = useState(false)
+  const inputRef = useRef(null)
+
   return (
     <form
       role="search"
+      noValidate
       onSubmit={(e) => {
         e.preventDefault()
+        if (!url.trim()) {
+          setShowHint(true)
+          inputRef.current?.focus()
+          return
+        }
         onFetch()
       }}
       style={{
@@ -18,13 +29,19 @@ export default function SearchSection({ url, loading, onUrlChange, onFetch }) {
         Usuario o URL de perfil de Letterboxd
       </label>
       <input
+        ref={inputRef}
         id="rd-profile-input"
         type="text"
         value={url}
-        onChange={(e) => onUrlChange(e.target.value)}
+        onChange={(e) => {
+          setShowHint(false)
+          onUrlChange(e.target.value)
+        }}
         autoComplete="off"
         spellCheck={false}
         placeholder="letterboxd.com/tu-usuario o solo tu usuario"
+        aria-invalid={showHint}
+        aria-describedby={showHint ? "rd-profile-hint" : undefined}
         className="rd-search-input"
       />
 
@@ -42,6 +59,18 @@ export default function SearchSection({ url, loading, onUrlChange, onFetch }) {
           "Generar"
         )}
       </button>
+
+      {loading && (
+        <button type="button" onClick={onCancel} className="rd-search-cancel">
+          Cancelar
+        </button>
+      )}
+
+      {showHint && (
+        <p id="rd-profile-hint" role="alert" className="rd-search-hint">
+          Escribe un usuario de Letterboxd o la URL de su perfil.
+        </p>
+      )}
     </form>
   )
 }

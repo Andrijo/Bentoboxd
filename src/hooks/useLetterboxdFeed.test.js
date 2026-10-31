@@ -44,6 +44,12 @@ function rssWith(title) {
 </rss>`
 }
 
+function hangingFetch(_, { signal }) {
+  return new Promise((_, reject) => {
+    signal.addEventListener("abort", () => reject(new DOMException("Aborted", "AbortError")))
+  })
+}
+
 afterEach(() => {
   vi.unstubAllGlobals()
 })
@@ -61,7 +67,9 @@ describe("useLetterboxdFeed", () => {
       await result.current.fetchMovies("https://letterboxd.com/user/")
     })
 
-    expect(fetchMock).toHaveBeenCalledWith("/rss-proxy/user/rss/")
+    expect(fetchMock).toHaveBeenCalledWith("/rss-proxy/user/rss/", {
+      signal: expect.anything(),
+    })
     expect(result.current.username).toBe("user")
     expect(result.current.error).toBeNull()
     expect(result.current.loading).toBe(false)
@@ -267,6 +275,47 @@ ${listItem}${films.join("")}${listItem}
       await result.current.fetchMovies("user")
     })
     expect(result.current.canRetry).toBe(true)
+  })
+
+  it("agota el tiempo de espera y permite reintentar", async () => {
+    vi.useFakeTimers()
+    vi.stubGlobal("fetch", vi.fn(hangingFetch))
+
+    const { result } = renderHook(() => useLetterboxdFeed())
+
+    act(() => {
+      result.current.fetchMovies("user")
+    })
+    expect(result.current.loading).toBe(true)
+
+    await act(async () => {
+      await vi.advanceTimersByTimeAsync(15000)
+    })
+    vi.useRealTimers()
+
+    expect(result.current.loading).toBe(false)
+    expect(result.current.error).toMatch(/tardó demasiado/)
+    expect(result.current.canRetry).toBe(true)
+  })
+
+  it("cancelFeed detiene la búsqueda sin mostrar un error", async () => {
+    const fetchMock = vi.fn(hangingFetch)
+    vi.stubGlobal("fetch", fetchMock)
+
+    const { result } = renderHook(() => useLetterboxdFeed())
+
+    let request
+    act(() => {
+      request = result.current.fetchMovies("user")
+    })
+    await act(async () => {
+      result.current.cancelFeed()
+      await request
+    })
+
+    expect(fetchMock.mock.calls[0][1].signal.aborted).toBe(true)
+    expect(result.current.loading).toBe(false)
+    expect(result.current.error).toBeNull()
   })
 
   it("resetFeed limpia el estado", async () => {

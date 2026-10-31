@@ -1,4 +1,4 @@
-export default function RecentProfiles({ profiles, onSelect }) {
+export default function RecentProfiles({ profiles, onSelect, onRemove }) {
   if (profiles.length === 0) return null
 
   return (
@@ -20,13 +20,22 @@ export default function RecentProfiles({ profiles, onSelect }) {
         aria-labelledby="rd-recent-title"
         style={{ display: "flex", gap: "10px", justifyContent: "center", flexWrap: "wrap" }}>
         {profiles.map((profile) => (
-          <button
-            key={profile}
-            onClick={() => onSelect(profile)}
-            type="button"
-            className="rd-profile-btn">
-            @{profile}
-          </button>
+          <span key={profile} className="rd-profile-chip">
+            <button
+              onClick={() => onSelect(profile)}
+              type="button"
+              className="rd-profile-btn">
+              @{profile}
+            </button>
+            <button
+              onClick={() => onRemove(profile)}
+              type="button"
+              aria-label={`Quitar @${profile} de recientes`}
+              title="Quitar de recientes"
+              className="rd-profile-remove">
+              <span aria-hidden="true">✕</span>
+            </button>
+          </span>
         ))}
       </div>
     </div>
