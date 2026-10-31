@@ -62,6 +62,30 @@ describe("generateQuestions", () => {
     expect(q.correct).toBe("Sin calificar")
   })
 
+  it("no ofrece 'Sin calificar' si todo el perfil está calificado", () => {
+    const rated = movies.map((movie) => ({ ...movie, rating: movie.rating || 3 }))
+
+    runMany(() => {
+      generateQuestions(rated, { currentYear: 2026 }).forEach((q) => {
+        expect(q.options).not.toContain("Sin calificar")
+      })
+    })
+  })
+
+  it("ofrece 'Sin calificar' como distractor si alguna película no tiene nota", () => {
+    let offered = false
+
+    runMany(() => {
+      generateQuestions(movies, { currentYear: 2026 })
+        .filter((q) => q.type === "rating" && q.movie.rating)
+        .forEach((q) => {
+          offered ||= q.options.includes("Sin calificar")
+        })
+    })
+
+    expect(offered).toBe(true)
+  })
+
   describe("preguntas de director y póster", () => {
     const rich = ["A", "B", "C", "D", "E", "F"].map((title, i) => ({
       title,
