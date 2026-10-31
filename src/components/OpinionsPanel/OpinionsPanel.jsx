@@ -9,7 +9,7 @@ const GROUPS = [
   { key: "below", title: "Te gustaron menos que a la mayoría", sign: "−" },
 ]
 
-const formatRating = (value) => Number(value.toFixed(1))
+const formatRating = (value) => value.toFixed(1)
 
 function OpinionRow({ movie, diff, sign }) {
   return (
