@@ -1,8 +1,22 @@
 import { useRef, useState } from "react"
+import RecentProfiles from "./RecentProfiles.jsx"
 
-export default function SearchSection({ url, loading, onUrlChange, onFetch, onCancel }) {
+export default function SearchSection({
+  url,
+  loading,
+  compact = false,
+  recentProfiles = [],
+  onUrlChange,
+  onFetch,
+  onCancel,
+  onProfileSelect,
+  onProfileRemove,
+}) {
   const [showHint, setShowHint] = useState(false)
+  const [showRecents, setShowRecents] = useState(false)
   const inputRef = useRef(null)
+  // Sin perfil cargado, la landing ya muestra los recientes.
+  const hasRecents = compact && recentProfiles.length > 0
 
   // El valor también cambia desde fuera (perfiles recientes, enlace, ejemplo).
   if (showHint && url.trim()) setShowHint(false)
@@ -11,6 +25,8 @@ export default function SearchSection({ url, loading, onUrlChange, onFetch, onCa
     <form
       role="search"
       noValidate
+      className="rd-search-form"
+      data-compact={compact ? "" : undefined}
       onSubmit={(e) => {
         e.preventDefault()
         if (!url.trim()) {
@@ -21,7 +37,6 @@ export default function SearchSection({ url, loading, onUrlChange, onFetch, onCa
         onFetch()
       }}
       style={{
-        padding: "20px var(--gutter)",
         display: "flex",
         gap: "12px",
         alignItems: "center",
@@ -31,19 +46,34 @@ export default function SearchSection({ url, loading, onUrlChange, onFetch, onCa
       <label htmlFor="rd-profile-input" className="rd-sr-only">
         Usuario o URL de perfil de Letterboxd
       </label>
-      <input
-        ref={inputRef}
-        id="rd-profile-input"
-        type="text"
-        value={url}
-        onChange={(e) => onUrlChange(e.target.value)}
-        autoComplete="off"
-        spellCheck={false}
-        placeholder="letterboxd.com/tu-usuario o solo tu usuario"
-        aria-invalid={showHint}
-        aria-describedby={showHint ? "rd-profile-hint" : undefined}
-        className="rd-search-input"
-      />
+      <div className="rd-search-field">
+        <input
+          ref={inputRef}
+          id="rd-profile-input"
+          type="text"
+          value={url}
+          onChange={(e) => onUrlChange(e.target.value)}
+          autoComplete="off"
+          spellCheck={false}
+          placeholder="letterboxd.com/tu-usuario o solo tu usuario"
+          aria-invalid={showHint}
+          aria-describedby={showHint ? "rd-profile-hint" : undefined}
+          className="rd-search-input"
+        />
+        {url && !loading && (
+          <button
+            type="button"
+            aria-label="Limpiar campo"
+            title="Limpiar campo"
+            className="rd-search-clear"
+            onClick={() => {
+              onUrlChange("")
+              inputRef.current?.focus()
+            }}>
+            <span aria-hidden="true">✕</span>
+          </button>
+        )}
+      </div>
 
       <button
         disabled={loading}
@@ -66,10 +96,33 @@ export default function SearchSection({ url, loading, onUrlChange, onFetch, onCa
         </button>
       )}
 
+      {hasRecents && (
+        <button
+          type="button"
+          aria-expanded={showRecents}
+          className="rd-btn-outline"
+          onClick={() => setShowRecents((open) => !open)}>
+          Recientes
+        </button>
+      )}
+
       {showHint && (
         <p id="rd-profile-hint" role="alert" className="rd-search-hint">
           Escribe un usuario de Letterboxd o la URL de su perfil.
         </p>
+      )}
+
+      {hasRecents && showRecents && (
+        <div className="rd-search-recents">
+          <RecentProfiles
+            profiles={recentProfiles}
+            onSelect={(profile) => {
+              setShowRecents(false)
+              onProfileSelect(profile)
+            }}
+            onRemove={onProfileRemove}
+          />
+        </div>
       )}
     </form>
   )

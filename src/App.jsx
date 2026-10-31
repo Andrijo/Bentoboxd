@@ -143,6 +143,18 @@ export default function App() {
     [url, fetchFeed, loadMetadata, resetMetadata],
   )
 
+  const selectProfile = useCallback(
+    (user) => {
+      setUrl(user)
+      handleFetch(user)
+    },
+    [handleFetch],
+  )
+
+  const removeRecentProfile = useCallback((user) => {
+    setRecentProfiles((prev) => prev.filter((p) => p !== user))
+  }, [])
+
   const clearProfile = useCallback(() => {
     requestIdRef.current += 1
     setUrl("")
@@ -233,9 +245,13 @@ export default function App() {
         <SearchSection
           url={url}
           loading={feedLoading}
+          compact={hasMovies}
+          recentProfiles={recentProfiles.filter((p) => p !== username)}
           onUrlChange={setUrl}
           onFetch={handleFetch}
           onCancel={cancelFeed}
+          onProfileSelect={selectProfile}
+          onProfileRemove={removeRecentProfile}
         />
 
         {error && (
@@ -275,13 +291,8 @@ export default function App() {
           movies={movies}
           error={error}
           recentProfiles={recentProfiles}
-          onProfileSelect={(user) => {
-            setUrl(user)
-            handleFetch(user)
-          }}
-          onProfileRemove={(user) => {
-            setRecentProfiles((prev) => prev.filter((p) => p !== user))
-          }}
+          onProfileSelect={selectProfile}
+          onProfileRemove={removeRecentProfile}
         />
       </div>
 
