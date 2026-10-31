@@ -1,10 +1,9 @@
 import { useState } from "react"
 import { PanelSkeleton } from "../Skeleton.jsx"
-import PanelError from "../Panel/PanelError.jsx"
 import Panel from "../Panel/Panel.jsx"
 import { formatMovieCount } from "../../utils/formatters.js"
 
-export default function PlatformsPanel({ platformsData, movies, loading, error }) {
+export default function PlatformsPanel({ platformsData, movies, loading }) {
   const [selectedPlatform, setSelectedPlatform] = useState(null)
   const { counts, logos } = platformsData || { counts: {}, logos: {} }
 
@@ -30,8 +29,6 @@ export default function PlatformsPanel({ platformsData, movies, loading, error }
       style={{ fontFamily: "var(--font-mono)" }}>
       {loading ? (
         <PanelSkeleton variant="tiles" label="Buscando plataformas…" />
-      ) : error ? (
-        <PanelError message={error} />
       ) : topPlatforms.length === 0 ? (
         <div style={{
           textAlign: "center", fontSize: "var(--fs-xs)",

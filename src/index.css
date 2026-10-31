@@ -272,6 +272,10 @@ input:focus-visible {
     grid-template-areas: "stats genres" "platforms genres" "opinions opinions" "directors actors" "toprated countries";
   }
 }
+.rd-bento-panels[data-partial] {
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-areas: "stats";
+}
 .rd-sr-only {
   position: absolute;
   width: 1px;

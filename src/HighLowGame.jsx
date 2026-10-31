@@ -421,7 +421,7 @@ function GamePlayArea({
   )
 }
 
-export default function HighLowGame({ movies, loading }) {
+export default function HighLowGame({ movies, loading, active = true }) {
   const [category, setCategory] = useState("rating")
   // La semilla se sortea por partida: mismo orden en cada render, otro al reiniciar.
   const [state, dispatch] = useReducer(gameReducer, undefined, () => ({
@@ -433,6 +433,19 @@ export default function HighLowGame({ movies, loading }) {
 
   const movieA = gameDeck[state.currentIndex]
   const movieB = gameDeck[state.currentIndex + 1]
+  const deckLength = gameDeck.length
+
+  // Al reiniciar o cambiar de categoría, la limpieza cancela el avance pendiente.
+  useEffect(() => {
+    if (!state.feedback) return
+    const correct = state.feedback === "correct"
+    const hasNextCard = state.currentIndex + 2 < deckLength
+    const id = setTimeout(
+      () => dispatch({ type: correct && hasNextCard ? "NEXT_CARD" : "GAME_OVER" }),
+      correct ? 1500 : 2000,
+    )
+    return () => clearTimeout(id)
+  }, [state.feedback, state.currentIndex, deckLength])
 
   const handleGuess = (guess) => {
     if (state.feedback || state.gameOver) return
@@ -443,19 +456,7 @@ export default function HighLowGame({ movies, loading }) {
       movieB.metrics[category],
     )
 
-    if (isCorrect) {
-      dispatch({ type: "CORRECT" })
-      setTimeout(() => {
-        if (state.currentIndex + 2 < gameDeck.length) {
-          dispatch({ type: "NEXT_CARD" })
-        } else {
-          dispatch({ type: "GAME_OVER" })
-        }
-      }, 1500)
-    } else {
-      dispatch({ type: "WRONG" })
-      setTimeout(() => dispatch({ type: "GAME_OVER" }), 2000)
-    }
+    dispatch({ type: isCorrect ? "CORRECT" : "WRONG" })
   }
 
   const restart = () => {
@@ -464,7 +465,7 @@ export default function HighLowGame({ movies, loading }) {
 
   // Atajos: ↑ higher, ↓ lower.
   useEffect(() => {
-    if (!movieA || !movieB) return
+    if (!active || !movieA || !movieB) return
     const onKey = (e) => {
       if (e.key !== "ArrowUp" && e.key !== "ArrowDown") return
       // No secuestrar las flechas dentro de campos de texto.

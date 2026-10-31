@@ -6,7 +6,6 @@ import MatrixChart from "./MatrixChart.jsx"
 import GaugesChart from "./GaugesChart.jsx"
 import GenreList from "./GenreList.jsx"
 import { PanelSkeleton } from "../Skeleton.jsx"
-import PanelError from "../Panel/PanelError.jsx"
 import Panel from "../Panel/Panel.jsx"
 import SegmentedControl from "../Panel/SegmentedControl.jsx"
 import { formatMovieCount } from "../../utils/formatters.js"
@@ -19,7 +18,7 @@ const CHART_OPTIONS = [
   { key: "gauges", label: "Medidores" },
 ]
 
-export default function GenrePanel({ genres, movieCount, loadingGenres, genreError }) {
+export default function GenrePanel({ genres, movieCount, loadingGenres }) {
   const [chartType, setChartType] = useState("donut")
 
   const total = Object.values(genres || {}).reduce((a, b) => a + b, 0)
@@ -43,9 +42,7 @@ export default function GenrePanel({ genres, movieCount, loadingGenres, genreErr
       }}>
       {loadingGenres && <PanelSkeleton variant="chart" label="Clasificando géneros…" />}
 
-      {genreError && !loadingGenres && <PanelError message={genreError} />}
-
-      {!loadingGenres && !genreError && hasData && (
+      {!loadingGenres && hasData && (
         <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
           {chartType === "donut" && <DonutChart genres={genres} movieCount={movieCount} />}
           {chartType === "radar" && <RadarChart genres={genres} />}
@@ -55,11 +52,11 @@ export default function GenrePanel({ genres, movieCount, loadingGenres, genreErr
         </div>
       )}
 
-      {!loadingGenres && !genreError && hasData && (
+      {!loadingGenres && hasData && (
         <GenreList genres={genres} />
       )}
 
-      {!loadingGenres && !genreError && !hasData && (
+      {!loadingGenres && !hasData && (
         <div style={{
           fontSize: "var(--fs-xs)", color: "var(--c-text-muted)",
           letterSpacing: "2px", fontFamily: "var(--font-mono)",

@@ -7,6 +7,8 @@ import SearchSection from "./components/SearchSection.jsx"
 import MovieViews from "./components/MovieViews.jsx"
 import DataPanels from "./components/DataPanels.jsx"
 import EmptyLanding from "./components/EmptyLanding.jsx"
+import ErrorNotice from "./components/ErrorNotice.jsx"
+import KeepAlive from "./components/KeepAlive.jsx"
 import { BentoSkeleton } from "./components/Skeleton.jsx"
 import { useLetterboxdFeed } from "./hooks/useLetterboxdFeed.js"
 import { useTMDBMetadata } from "./hooks/useTMDBMetadata.js"
@@ -39,6 +41,7 @@ export default function App() {
     movies,
     loading: feedLoading,
     error,
+    canRetry,
     username,
     fetchMovies: fetchFeed,
     resetFeed,
@@ -68,31 +71,13 @@ export default function App() {
     }
   }, [recentProfiles])
 
-  const handleFetch = useCallback(
-    async (input) => {
-      // SearchSection llama con el evento del click; los perfiles con un string.
-      const target = (typeof input === "string" ? input : url).trim()
-      if (!target) return
-
-      // Ignora respuestas de búsquedas que ya fueron reemplazadas.
+  const loadMetadata = useCallback(
+    async (feedMovies) => {
+      // Ignora respuestas de cargas que ya fueron reemplazadas.
       const requestId = ++requestIdRef.current
 
-      resetMetadata()
-
-      const parsed = await fetchFeed(target)
-      if (requestId !== requestIdRef.current) return
-      if (!parsed?.length) return
-
-      // Solo se recuerdan perfiles cuyo feed cargó.
-      const user = parseUsername(target)
-      setRecentProfiles((prev) =>
-        [user, ...prev.filter((p) => p !== user)].slice(0, 3),
-      )
-      // También solo entonces va a la URL, para poder compartirla o recargar.
-      writeProfileParam(user)
-
       const metadata = await fetchMetadata(
-        parsed.map((m) => ({ title: m.title, year: m.year })),
+        feedMovies.map((m) => ({ title: m.title, year: m.year })),
       )
       if (requestId !== requestIdRef.current) return
       if (!metadata) return
@@ -127,7 +112,31 @@ export default function App() {
         }),
       )
     },
-    [url, fetchFeed, fetchMetadata, resetMetadata, setMovies],
+    [fetchMetadata, setMovies],
+  )
+
+  const handleFetch = useCallback(
+    async (input) => {
+      // SearchSection llama con el evento del click; los perfiles con un string.
+      const target = (typeof input === "string" ? input : url).trim()
+      if (!target) return
+
+      // Vacío si falló o fue reemplazada: el perfil anterior sigue intacto.
+      const parsed = await fetchFeed(target)
+      if (!parsed?.length) return
+
+      // Solo se recuerdan perfiles cuyo feed cargó.
+      const user = parseUsername(target)
+      setRecentProfiles((prev) =>
+        [user, ...prev.filter((p) => p !== user)].slice(0, 3),
+      )
+      // También solo entonces va a la URL, para poder compartirla o recargar.
+      writeProfileParam(user)
+
+      resetMetadata()
+      await loadMetadata(parsed)
+    },
+    [url, fetchFeed, loadMetadata, resetMetadata],
   )
 
   const clearProfile = useCallback(() => {
@@ -225,17 +234,15 @@ export default function App() {
         />
 
         {error && (
-          <div className="rd-error-box" role="alert">
-            <span>⚠ {error}</span>
-            <button type="button" className="rd-error-retry" onClick={() => handleFetch(url)}>
-              Reintentar
-            </button>
-          </div>
+          <ErrorNotice
+            message={error}
+            onRetry={canRetry ? () => handleFetch(url) : undefined}
+          />
         )}
 
-        {feedLoading && <BentoSkeleton />}
+        {feedLoading && !hasMovies && <BentoSkeleton />}
 
-        {movies.length > 0 && (
+        {hasMovies && (
           <MovieViews
             movies={movies}
             movieViewMode={movieViewMode}
@@ -254,6 +261,7 @@ export default function App() {
           platforms={platforms}
           loadingGenres={metaLoading}
           genreError={genreError}
+          onRetryMetadata={() => loadMetadata(movies)}
         />
 
         <EmptyLanding
@@ -268,17 +276,25 @@ export default function App() {
         />
       </div>
 
-      {page === "higher-lower" && (
-        <HighLowGame key={username} movies={movies} loading={metaLoading} />
+      {/* Las partidas se conservan entre pestañas y se reinician por perfil. */}
+      {hasMovies && (
+        <KeepAlive key={`higher-lower:${username}`} active={page === "higher-lower"}>
+          <HighLowGame
+            movies={movies}
+            loading={metaLoading}
+            active={page === "higher-lower"}
+          />
+        </KeepAlive>
       )}
 
-      {page === "quiz" && (
-        <Quiz
-          key={username}
-          movies={movies}
-          loading={metaLoading}
-          onBack={() => navigate("profile")}
-        />
+      {hasMovies && (
+        <KeepAlive key={`quiz:${username}`} active={page === "quiz"}>
+          <Quiz
+            movies={movies}
+            loading={metaLoading}
+            onBack={() => navigate("profile")}
+          />
+        </KeepAlive>
       )}
       </main>
 

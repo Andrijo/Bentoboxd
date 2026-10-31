@@ -43,10 +43,8 @@ export function useTMDBMetadata() {
       return metadata
     } catch (e) {
       if (e.name === "AbortError") return null
-      setError(
-        "No se pudieron obtener los metadatos de TMDB: " +
-          (e.message || "Error inesperado"),
-      )
+      console.error(e)
+      setError("No pudimos cargar los datos de TMDB. Inténtalo de nuevo en unos minutos.")
       return null
     } finally {
       // Solo la petición vigente controla el estado de carga.

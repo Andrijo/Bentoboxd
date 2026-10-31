@@ -44,7 +44,8 @@ describe("useTMDBMetadata", () => {
     expect(result.current.error).toBeNull()
   })
 
-  it("expone un error si la petición falla", async () => {
+  it("expone un error legible si la petición falla", async () => {
+    const consoleError = vi.spyOn(console, "error").mockImplementation(() => {})
     fetchMetadataFromTMDB.mockRejectedValue(new Error("boom"))
 
     const { result } = renderHook(() => useTMDBMetadata())
@@ -53,8 +54,10 @@ describe("useTMDBMetadata", () => {
       await result.current.fetchMetadata(["A"])
     })
 
-    expect(result.current.error).toMatch(/boom/)
+    expect(result.current.error).toMatch(/No pudimos cargar los datos de TMDB/)
+    expect(result.current.error).not.toMatch(/boom/)
     expect(result.current.loading).toBe(false)
+    consoleError.mockRestore()
   })
 
   it("aborta la petición anterior y la del desmontaje", () => {

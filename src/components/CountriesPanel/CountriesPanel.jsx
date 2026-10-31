@@ -2,7 +2,6 @@ import { useState } from "react"
 import CountryDatalog from "./CountryDatalog.jsx"
 import CountrySectors from "./CountrySectors.jsx"
 import { PanelSkeleton } from "../Skeleton.jsx"
-import PanelError from "../Panel/PanelError.jsx"
 import Panel from "../Panel/Panel.jsx"
 import SegmentedControl from "../Panel/SegmentedControl.jsx"
 
@@ -11,7 +10,7 @@ const VIEW_OPTIONS = [
   { key: "nodes", label: "Sectores" },
 ]
 
-export default function CountriesPanel({ countries, loading, error }) {
+export default function CountriesPanel({ countries, loading }) {
   const [viewMode, setViewMode] = useState("list")
 
   const topCountryCodes = Object.entries(countries || {})
@@ -30,15 +29,14 @@ export default function CountriesPanel({ countries, loading, error }) {
       )}
       bodyStyle={{ minHeight: "150px" }}>
       {loading && <PanelSkeleton variant="rows" label="Rastreando países…" />}
-      {!loading && error && <PanelError message={error} />}
 
-      {!loading && !error && hasData && (
+      {!loading && hasData && (
         <>
           {viewMode === "list" && <CountryDatalog countries={countries} />}
           {viewMode === "nodes" && <CountrySectors countries={countries} />}
         </>
       )}
-      {!loading && !error && !hasData && (
+      {!loading && !hasData && (
         <div style={{
           textAlign: "center", fontSize: "var(--fs-xs)",
           color: "var(--c-text-muted)", marginTop: "20px",
