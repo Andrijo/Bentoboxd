@@ -54,12 +54,6 @@ export default function EmptyLanding({
             Escribe un usuario y convierte sus últimas películas vistas en
             estadísticas, gráficos y minijuegos.
           </p>
-
-          <p className="rd-landing-note">
-            Usamos las últimas {FEED_LIMIT} entradas del diario público, sin
-            iniciar sesión ni guardar tus datos. El streaming es el de México.
-          </p>
-
           <ul className="rd-landing-features" aria-label="Qué incluye">
             {FEATURES.map((feature) => (
               <li key={feature}>{feature}</li>
