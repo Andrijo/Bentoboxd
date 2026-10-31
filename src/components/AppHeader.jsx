@@ -45,7 +45,7 @@ export default function AppHeader({ page, showTabs, theme, onNavigate, onReset, 
         </button>
       </h1>
 
-      <div className="rd-header-actions" style={{ display: "flex", gap: "12px", alignItems: "center" }}>
+      <div className="rd-header-actions">
         {showTabs && (
           <nav aria-label="Secciones" className="rd-header-nav" style={{ display: "flex", gap: "12px", flex: 1 }}>
             {TABS.map(({ page: tab, label }) => {

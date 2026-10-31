@@ -371,6 +371,7 @@ input:focus-visible {
 .rd-error-retry:hover { opacity: 0.85; }
 .rd-header-bar { padding: clamp(16px, 4vw, 40px) var(--gutter) 20px; display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
 .rd-header-title { font-family: var(--font-display); letter-spacing: 2px; line-height: 1; margin: 0; cursor: pointer; color: var(--c-text-bright); }
+.rd-header-actions { display: flex; gap: 12px; align-items: center; }
 .rd-btn-solid, .rd-theme-toggle, .rd-landing-example { background: var(--c-text-bright); border: 1px solid var(--c-text-bright); color: var(--c-on-text); cursor: pointer; transition: opacity 0.2s; }
 .rd-btn-solid:hover, .rd-theme-toggle:hover, .rd-landing-example:hover, .rd-landing-example:focus-visible { opacity: 0.85; }
 .rd-btn-solid:disabled { opacity: 0.5; cursor: not-allowed; }
@@ -473,6 +474,15 @@ input:focus-visible {
     flex: 1 1 30%;
     text-align: center;
     justify-content: center;
+  }
+}
+/* El logo y el toggle no caben en una fila con el tamaño mínimo del título. */
+@media (max-width: 359px) {
+  .rd-header-bar {
+    gap: 12px;
+  }
+  .rd-header-title {
+    font-size: 2.2rem !important;
   }
 }
 .rd-terminal-row:hover,
