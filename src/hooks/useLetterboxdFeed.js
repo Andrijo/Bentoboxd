@@ -14,6 +14,7 @@ export const FEED_LIMIT = 50
 const FEED_TIMEOUT_MS = 15000
 
 const LETTERBOXD_NS = "https://letterboxd.com"
+const TMDB_NS = "https://themoviedb.org"
 
 /** Lee un campo `letterboxd:*` del item (con o sin soporte de namespaces). */
 function letterboxdField(item, name) {
@@ -22,6 +23,14 @@ function letterboxdField(item, name) {
     item.getElementsByTagName(`letterboxd:${name}`)[0] ||
     null
   )
+}
+
+/** ID de TMDB del item, o null si Letterboxd no lo enlaza con ninguna película. */
+function tmdbMovieId(item) {
+  const node =
+    item.getElementsByTagNameNS(TMDB_NS, "movieId")[0] ||
+    item.getElementsByTagName("tmdb:movieId")[0]
+  return Number(node?.textContent) || null
 }
 
 /** Error que no cambia al repetir la misma búsqueda. */
@@ -132,6 +141,7 @@ export function useLetterboxdFeed() {
           poster: extractPoster(description),
           rating: movieRating,
           year: yearNode ? yearNode.textContent : null,
+          tmdbId: tmdbMovieId(item),
           watchedDate: field("watchedDate"),
           liked: field("memberLike") === "Yes",
           rewatch: field("rewatch") === "Yes",

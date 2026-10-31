@@ -79,7 +79,7 @@ export default function App() {
       const requestId = ++requestIdRef.current
 
       const metadata = await fetchMetadata(
-        feedMovies.map((m) => ({ title: m.title, year: m.year })),
+        feedMovies.map((m) => ({ title: m.title, year: m.year, tmdbId: m.tmdbId })),
       )
       if (requestId !== requestIdRef.current) return
       if (!metadata) return
@@ -89,10 +89,12 @@ export default function App() {
           const found = metadata.rawResults.find(
             (r) =>
               r &&
-              r.title === m.title.trim() &&
-              (r.queryYear == null ||
-                !m.year ||
-                String(r.queryYear) === String(m.year).trim()),
+              (m.tmdbId
+                ? r.tmdbId === m.tmdbId
+                : r.title === m.title.trim() &&
+                  (r.queryYear == null ||
+                    !m.year ||
+                    String(r.queryYear) === String(m.year).trim())),
           )
           const releaseYear = found?.releaseDate
             ? parseInt(found.releaseDate.split("-")[0], 10)

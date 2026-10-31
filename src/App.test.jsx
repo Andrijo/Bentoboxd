@@ -176,6 +176,31 @@ describe("App", () => {
     expect(screen.queryByText(/Estadísticas basadas en/)).not.toBeInTheDocument()
   })
 
+  it("empareja cada entrada con su película por ID, no por título", async () => {
+    const rssWithId = RSS.replace(
+      'xmlns:letterboxd="https://letterboxd.com"',
+      'xmlns:letterboxd="https://letterboxd.com" xmlns:tmdb="https://themoviedb.org"',
+    ).replace("</item>", "<tmdb:movieId>438631</tmdb:movieId></item>")
+    fetch.mockImplementation(() =>
+      Promise.resolve({ ok: true, text: async () => rssWithId }),
+    )
+    fetchMetadataFromTMDB.mockResolvedValue({
+      ...METADATA,
+      rawResults: [
+        { title: "Dune", queryYear: 2021, tmdbId: 1, runtime: 11 },
+        { title: "Dune", queryYear: 2021, tmdbId: 438631, runtime: 155 },
+      ],
+    })
+    render(<App />)
+
+    search("user")
+
+    expect(await screen.findByText("2 h 35 min")).toBeInTheDocument()
+    expect(fetchMetadataFromTMDB.mock.calls[0][0]).toEqual([
+      { title: "Dune", year: "2021", tmdbId: 438631 },
+    ])
+  })
+
   it("recorre los paneles en el mismo orden en que se ven", async () => {
     fetchMetadataFromTMDB.mockResolvedValue(METADATA)
     render(<App />)
