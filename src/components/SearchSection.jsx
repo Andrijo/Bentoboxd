@@ -7,7 +7,7 @@ export default function SearchSection({ url, loading, onUrlChange, onFetch }) {
         onFetch()
       }}
       style={{
-        padding: "32px var(--gutter)",
+        padding: "20px var(--gutter)",
         display: "flex",
         gap: "12px",
         alignItems: "center",
