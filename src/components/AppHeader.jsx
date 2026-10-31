@@ -27,7 +27,7 @@ export default function AppHeader({ page, showTabs, theme, onNavigate, onReset, 
       <h1
         className="rd-header-title"
         style={{
-          fontSize: "clamp(2.5rem, 6vw, 5rem)",
+          fontSize: "clamp(2.5rem, 6vw, 4.5rem)",
         }}>
         <button
           onClick={onReset}
