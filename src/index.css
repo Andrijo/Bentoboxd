@@ -69,8 +69,8 @@ html[data-edge="bottom"] {
   --c-surface: rgb(var(--fg-rgb) / 0.03);
   --c-card: #111111;
   --c-terminal: #111111;
-  --c-arrow: #333333;
-  --c-arrow-hover: #beb8ad;
+  --c-arrow: #beb8ad;
+  --c-arrow-hover: #f6f4ee;
   --ramp-1: color-mix(in srgb, #f6f4ee 100%, #333333);
   --ramp-2: color-mix(in srgb, #f6f4ee 91%, #333333);
   --ramp-3: color-mix(in srgb, #f6f4ee 82%, #333333);
