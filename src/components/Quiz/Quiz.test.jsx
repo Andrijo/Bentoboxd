@@ -22,7 +22,7 @@ describe("Quiz", () => {
 
     fireEvent.click(screen.getByRole("button", { name: /^b/ }))
     fireEvent.click(screen.getByRole("button", { name: "Ver resultado" }))
-    expect(screen.getByText("QUIZ COMPLETADO")).toBeInTheDocument()
+    expect(screen.getByRole("heading", { name: "Resultados" })).toBeInTheDocument()
   })
 
   it("muestra el repaso con la respuesta correcta de las falladas", () => {
