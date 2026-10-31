@@ -10,6 +10,7 @@ describe("AppFooter", () => {
       "href",
       "https://www.justwatch.com",
     )
+    expect(screen.getByRole("heading", { name: "Créditos" })).toBeInTheDocument()
     expect(screen.getByRole("img", { name: "Logo de TMDB" })).toBeInTheDocument()
     expect(
       screen.getByText("Este producto usa la API de TMDB, pero no está avalado ni certificado por TMDB."),

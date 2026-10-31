@@ -16,7 +16,9 @@ function ExternalLink({ href, children }) {
 export default function AppFooter() {
   return (
     <footer className="rd-footer">
-      {/* TMDB exige su logo y este aviso, y citar a JustWatch como fuente del streaming. */}
+      <h2 className="rd-footer-title">Créditos</h2>
+
+      {/* TMDB exige su logo y este aviso en una sección de créditos, y citar a JustWatch como fuente del streaming. */}
       <p>
         Datos de <ExternalLink href="https://letterboxd.com">Letterboxd</ExternalLink>,{" "}
         <ExternalLink href="https://www.themoviedb.org">TMDB</ExternalLink> y{" "}
