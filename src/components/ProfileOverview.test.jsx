@@ -46,6 +46,13 @@ describe("ProfileOverview", () => {
     expect(screen.getByText("Más alto que el público (1 película)")).toBeInTheDocument()
   })
 
+  it("explica cómo se compara con el público", () => {
+    render(<ProfileOverview movies={MOVIES} username="ana" loading={false} />)
+
+    expect(screen.getByText("Cómo se calcula")).toBeInTheDocument()
+    expect(screen.getByText(/se divide entre 2/)).toBeInTheDocument()
+  })
+
   it("indica lo que falta por cargar de TMDB", () => {
     render(<ProfileOverview movies={MOVIES} username="ana" loading />)
 

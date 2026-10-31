@@ -2,6 +2,7 @@ import { useMemo } from "react"
 import { PanelSkeleton } from "../Skeleton.jsx"
 import PosterImage from "../PosterImage.jsx"
 import Panel from "../Panel/Panel.jsx"
+import HowCalculated from "../HowCalculated.jsx"
 import { computeDivergences } from "../../utils/divergences.js"
 
 const GROUPS = [
@@ -103,6 +104,13 @@ export default function OpinionsPanel({ movies, loading }) {
             ? "Las calificaciones van en línea con las del público (TMDB): ninguna se aleja media estrella o más."
             : "Este perfil aún no tiene calificaciones para comparar con las del público (TMDB)."}
         </div>
+      )}
+
+      {!loading && compared > 0 && (
+        <HowCalculated style={{ marginTop: "16px" }}>
+          Nota del perfil menos la del público en cada película. TMDB puntúa de 0 a 10: aquí se divide
+          entre 2. Se muestran hasta 3 películas por lado con al menos media estrella de diferencia.
+        </HowCalculated>
       )}
     </Panel>
   )

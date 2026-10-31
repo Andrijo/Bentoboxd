@@ -496,6 +496,10 @@ input:focus-visible {
 .rd-overview-title { font-family: var(--font-display); font-size: var(--fs-lg); font-weight: normal; letter-spacing: 1px; color: var(--c-text-bright); overflow-wrap: anywhere; }
 .rd-overview-headline { margin-top: 4px; font-size: var(--fs-sm); line-height: 1.4; color: var(--c-text); }
 .rd-overview-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
+.rd-how { font-size: var(--fs-xs); color: var(--c-text-muted); }
+.rd-how summary { padding: 4px 0; cursor: pointer; transition: color 0.2s; }
+.rd-how summary:hover { color: var(--c-text-bright); }
+.rd-how p { margin-top: 4px; line-height: 1.5; }
 .rd-search-form { padding: 20px var(--gutter); }
 .rd-search-field { position: relative; flex: 1; min-width: min(260px, 100%); }
 .rd-search-clear { position: absolute; top: 0; right: 0; width: 44px; height: 100%; background: none; border: none; color: var(--c-text-muted); font-size: var(--fs-xs); cursor: pointer; transition: color 0.2s; }

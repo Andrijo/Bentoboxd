@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import StatTile from "./StatsSummary/StatTile.jsx"
+import HowCalculated from "./HowCalculated.jsx"
 import { Skeleton } from "./Skeleton.jsx"
 import { computeProfileStats } from "../utils/profileStats.js"
 import { profileHeadline } from "../utils/profileHeadline.js"
@@ -78,8 +79,12 @@ export default function ProfileOverview({ movies, genres = {}, username, loading
       <StatTile
         label="Frente al público (TMDB)"
         value={`${sign}${Math.abs(stats.tmdbDiff).toFixed(1)}`}
-        detail={`${TMDB_VERDICT[stats.tmdbVerdict]}${partial ? ` (${formatMovieCount(stats.tmdbCompared)})` : ""}`}
-      />
+        detail={`${TMDB_VERDICT[stats.tmdbVerdict]}${partial ? ` (${formatMovieCount(stats.tmdbCompared)})` : ""}`}>
+        <HowCalculated>
+          Media de la nota del perfil menos la del público en cada película calificada.
+          TMDB puntúa de 0 a 10: aquí se divide entre 2. Menos de 0.1 de diferencia cuenta como «en línea».
+        </HowCalculated>
+      </StatTile>
     )
   }
 
