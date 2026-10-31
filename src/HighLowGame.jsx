@@ -16,7 +16,6 @@ const CAT_CONFIG = {
     sub: "Según el público (TMDB), de 0 a 5.",
   },
   popularity: {
-    unit: "Popularidad",
     desc: "Adivina qué película es más popular hoy.",
     sub: "Según la actividad reciente en TMDB; cambia día a día.",
   },
@@ -27,14 +26,19 @@ const CAT_CONFIG = {
   },
 }
 
+const VALUE_SIZE = "clamp(2rem, 8vw, 2.75rem)"
+const WORD_SIZE = "clamp(1.1rem, 5vw, 1.75rem)"
+
 // El índice de popularidad de TMDB no significa nada por sí solo: solo se dice cuál gana.
 function cardMetric(category, movie, rival, revealed) {
-  const { unit } = CAT_CONFIG[category]
-  if (category !== "popularity") return { value: movie.metrics[category], unit }
-  if (!revealed) return { value: null, unit }
+  if (category !== "popularity") {
+    return { value: movie.metrics[category], unit: CAT_CONFIG[category].unit, size: VALUE_SIZE }
+  }
+  if (!revealed) return { value: null, unit: null, size: VALUE_SIZE }
   return {
     value: movie.metrics.popularity > rival.metrics.popularity ? "Más" : "Menos",
     unit: "popular",
+    size: WORD_SIZE,
   }
 }
 
@@ -348,7 +352,7 @@ function GamePlayArea({
               <div style={labelStyle}>
                 <div
                   style={{
-                    fontSize: "clamp(2rem, 8vw, 2.75rem)",
+                    fontSize: metricA.size,
                     lineHeight: 1,
                   }}>
                   {metricA.value}
@@ -384,7 +388,7 @@ function GamePlayArea({
               <div style={labelStyle}>
                 <div
                   style={{
-                    fontSize: "clamp(2rem, 8vw, 2.75rem)",
+                    fontSize: metricB.size,
                     lineHeight: 1,
                   }}>
                   {feedback ? (

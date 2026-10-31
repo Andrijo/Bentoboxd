@@ -72,6 +72,7 @@ describe("HighLowGame", () => {
     fireEvent.click(button("Popularidad"))
 
     expect(screen.queryByText("10")).not.toBeInTheDocument()
+    expect(screen.getAllByText("Popularidad")).toHaveLength(1)
 
     fireEvent.click(higher())
 
