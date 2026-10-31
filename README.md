@@ -18,20 +18,23 @@ Nace como un experimento personal para explorar visualización de datos, integra
 
 ## Características
 
-- **Feed RSS de Letterboxd** — Ingresa un nombre de usuario o URL y obtén sus últimas 50 películas vistas (las listas del feed se ignoran). Las vistas muestran las 20 más recientes; las estadísticas y los juegos usan las 50
+- **Feed RSS de Letterboxd** — Ingresa un nombre de usuario o URL y obtén sus últimas 50 películas vistas (las listas del feed se ignoran). Las vistas muestran las 20 más recientes y «Ver todas» abre las 50 con filtros por me gusta, nota y año; las estadísticas y los juegos siempre usan las 50
 - **3 modos de visualización:**
   - **Bento** — Cuadrícula dinámica sin huecos con tarjetas 1x1, 2x1, 1x2 y 2x2 (en móvil, 3 columnas sin 1x2)
   - **Timeline** — Línea de tiempo cronológica con pósters y calificaciones
   - **Terminal** — Listado estilo terminal retro
-- **Paneles de análisis:**
-  - **Resumen** — Promedio, comparación con TMDB, me gusta, revisiones, década favorita, tiempo viendo, ritmo semanal y día favorito
+- **Datos clave del perfil** — Promedio, tiempo viendo, comparación con el público (TMDB) y películas por semana, sobre las películas
+- **Paneles de análisis** (con un índice fijo para saltar entre ellos):
+  - **Resumen** — Me gusta, vistas otra vez, día más activo, década más vista y distribución de calificaciones
+  - **Evolución mensual** — Películas y nota media por mes, según la fecha en que se vio cada una
   - **Opiniones impopulares** — Las películas con mayor diferencia frente al público (TMDB), a favor y en contra
   - **Mejor calificados** — Géneros y directores con el mejor promedio de calificaciones del perfil (mínimo 2 películas)
   - **Géneros** — 5 tipos de gráfico (Donut, Radar, Barras, Matriz, Gauges)
   - **Directores** — Vista de tarjetas, holograma u órbita
-  - **Actores** — Cuadrícula, espectro o constelación
+  - **Reparto** — Cuadrícula, espectro o constelación
   - **Países de producción** — Tabla o sectores con banderas
   - **Plataformas de streaming** — Disponibilidad en México (datos de JustWatch)
+- **Explorar los datos** — Al pulsar un género, director, actor, país o plataforma se despliegan sus películas, enlazadas a Letterboxd
 - **Juegos** (páginas propias, enlazables y compatibles con el botón atrás):
   - **Higher or Lower** (`#higher-lower`) — Adivina si la siguiente película tiene mayor/menor rating, popularidad o año
   - **Quiz** (`#quiz`) — 5 preguntas sobre año de estreno o calificación
@@ -40,8 +43,8 @@ Nace como un experimento personal para explorar visualización de datos, integra
 - **Paleta de cinco tonos** — Todos los colores salen de tokens CSS (tintas y crema); los gráficos usan rampas derivadas de ellos
 - **Diseño responsive** con layout adaptado a móvil
 - **Accesibilidad** — Etiquetas ARIA, anuncios en vivo para los juegos y enlaces externos señalados para lectores de pantalla
-- **Enlaces compartibles** — El perfil va en la URL (`?user=<usuario>`, combinable con `#quiz` o `#higher-lower`): se puede compartir, recargar y navegar con atrás/adelante entre perfiles
-- **Persistencia** — Últimos 3 perfiles guardados en localStorage
+- **Enlaces compartibles** — El perfil va en la URL (`?user=<usuario>`, combinable con `#quiz` o `#higher-lower`): se puede compartir con «Copiar enlace», recargar y navegar con atrás/adelante entre perfiles
+- **Persistencia** — Últimos 3 perfiles guardados en localStorage, disponibles también desde la búsqueda
 
 ## Stack
 
