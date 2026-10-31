@@ -190,7 +190,7 @@ function GameHeader({ category, streak, onCategoryChange }) {
               lineHeight: 1,
               color: "var(--c-text-bright)",
               marginBottom: "8px",
-              marginTop: "-36px",
+              marginTop: "-34px",
             }}>
             HIGHER OR LOWER
           </h2>
