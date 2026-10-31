@@ -1,7 +1,9 @@
 import { useState } from "react"
 import { PanelSkeleton } from "../Skeleton.jsx"
 import Panel from "../Panel/Panel.jsx"
+import MovieDrilldown from "../MovieDrilldown.jsx"
 import { formatMovieCount } from "../../utils/formatters.js"
+import { moviesWith } from "../../utils/movieFilters.js"
 
 export default function PlatformsPanel({ platformsData, movies, loading }) {
   const [selectedPlatform, setSelectedPlatform] = useState(null)
@@ -10,8 +12,6 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
   const topPlatforms = Object.entries(counts || {})
     .sort((a, b) => b[1] - a[1])
     .slice(0, 6)
-
-  const filteredMovies = movies.filter(m => m.platforms?.includes(selectedPlatform))
 
   return (
     <Panel
@@ -40,7 +40,7 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
         <>
           <div style={{
             display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))",
-            gap: "12px", marginBottom: selectedPlatform ? "24px" : "0",
+            gap: "12px",
           }}>
             {topPlatforms.map(([name, count]) => (
               <button key={name}
@@ -59,7 +59,7 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
                   loading="lazy" decoding="async"
                   style={{ width: "30px", height: "30px", borderRadius: "var(--radius-sm)", border: "1px solid rgb(var(--fg-rgb) / 0.1)" }} />
                 <div style={{ overflow: "hidden" }}>
-                  <div style={{ fontSize: "var(--fs-xs)", color: "var(--c-text)", fontWeight: "bold", whiteSpace: "nowrap", textOverflow: "ellipsis" }}>
+                  <div style={{ fontSize: "var(--fs-xs)", color: "var(--c-text)", fontWeight: "bold", whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
                     {name}
                   </div>
                   <div style={{ fontSize: "var(--fs-xs)", color: "var(--c-text-muted)" }}>{formatMovieCount(count)}</div>
@@ -69,28 +69,10 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
           </div>
 
           {selectedPlatform && (
-            <div role="region" aria-label={`Películas en ${selectedPlatform}`} style={{
-              background: "var(--c-inset)", border: "1px solid rgb(var(--fg-rgb) / 0.08)",
-              padding: "16px", borderRadius: "var(--radius-md)", animation: "fadeSlideIn 0.3s ease both",
-            }}>
-              <div style={{
-                fontSize: "var(--fs-xs)", color: "var(--c-text-muted)", letterSpacing: "2px",
-                marginBottom: "12px", borderBottom: "1px solid rgb(var(--fg-rgb) / 0.08)", paddingBottom: "8px",
-              }}>
-                Películas en {selectedPlatform}
-              </div>
-              <div style={{ display: "flex", flexDirection: "column", gap: "6px" }}>
-                {filteredMovies.map((m) => (
-                  <div key={m.link} style={{
-                    fontSize: "var(--fs-xs)", color: "var(--c-text-bright)",
-                    display: "flex", justifyContent: "space-between",
-                  }}>
-                    <span><span aria-hidden="true">&gt; </span>{m.title}</span>
-                    <span style={{ color: "var(--c-text-muted)" }}>{m.year}</span>
-                  </div>
-                ))}
-              </div>
-            </div>
+            <MovieDrilldown
+              label={`Películas en ${selectedPlatform}`}
+              movies={moviesWith(movies, "platforms", selectedPlatform)}
+            />
           )}
         </>
       )}

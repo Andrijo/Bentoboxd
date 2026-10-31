@@ -12,7 +12,7 @@ const VIEW_OPTIONS = [
   { key: "constellation", label: "Mapa" },
 ]
 
-export default function ActorsPanel({ actors, loading }) {
+export default function ActorsPanel({ actors, movies, loading }) {
   const [viewMode, setViewMode] = useState("grid")
 
   const topActors = Object.entries(actors || {})
@@ -34,7 +34,7 @@ export default function ActorsPanel({ actors, loading }) {
 
       {!loading && hasData && (
         <>
-          {viewMode === "grid" && <ActorsGrid actors={actors} />}
+          {viewMode === "grid" && <ActorsGrid actors={actors} movies={movies} />}
           {viewMode === "spectrum" && <ActorsSpectrum actors={actors} />}
           {viewMode === "constellation" && <ActorsConstellation actors={actors} />}
         </>

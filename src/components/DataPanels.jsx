@@ -51,14 +51,15 @@ export default function DataPanels({
             <GenrePanel
               genres={genres}
               movieCount={coverage?.matched || movies.length}
+              movies={movies}
               loadingGenres={loadingGenres}
             />
             <PlatformsPanel platformsData={platforms} movies={movies} loading={loadingGenres} />
             <OpinionsPanel movies={movies} loading={loadingGenres} />
-            <DirectorsPanel directors={directors} loading={loadingGenres} />
-            <ActorsPanel actors={actors} loading={loadingGenres} />
+            <DirectorsPanel directors={directors} movies={movies} loading={loadingGenres} />
+            <ActorsPanel actors={actors} movies={movies} loading={loadingGenres} />
             <TopRatedPanel movies={movies} loading={loadingGenres} />
-            <CountriesPanel countries={countries} loading={loadingGenres} />
+            <CountriesPanel countries={countries} movies={movies} loading={loadingGenres} />
           </>
         )}
       </div>

@@ -18,7 +18,7 @@ const CHART_OPTIONS = [
   { key: "gauges", label: "Medidores" },
 ]
 
-export default function GenrePanel({ genres, movieCount, loadingGenres }) {
+export default function GenrePanel({ genres, movieCount, movies, loadingGenres }) {
   const [chartType, setChartType] = useState("donut")
 
   const total = Object.values(genres || {}).reduce((a, b) => a + b, 0)
@@ -53,7 +53,7 @@ export default function GenrePanel({ genres, movieCount, loadingGenres }) {
       )}
 
       {!loadingGenres && hasData && (
-        <GenreList genres={genres} movieCount={movieCount} />
+        <GenreList genres={genres} movieCount={movieCount} movies={movies} />
       )}
 
       {!loadingGenres && !hasData && (

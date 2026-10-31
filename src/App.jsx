@@ -108,6 +108,8 @@ export default function App() {
             platforms: found?.platforms || [],
             genres: found?.genres || [],
             directors: found?.directors || [],
+            actors: found?.actors || [],
+            countries: found?.countries || [],
             metrics: {
               rating: found?.globalRating ? parseFloat(found.globalRating) : 0,
               popularity: found?.popularity || 0,
