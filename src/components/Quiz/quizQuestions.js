@@ -59,13 +59,13 @@ function distinctValues(values) {
   return [...new Set(values.filter(Boolean))]
 }
 
-function hasEnoughOthers(pool, correct) {
-  return pool.filter((value) => value !== correct).length >= OPTION_COUNT - 1
+function hasEnoughOthers(pool, excluded) {
+  return pool.filter((value) => !excluded.includes(value)).length >= OPTION_COUNT - 1
 }
 
-function otherOptions(pool, correct, random) {
+function otherOptions(pool, excluded, random) {
   return shuffle(
-    pool.filter((value) => value !== correct),
+    pool.filter((value) => !excluded.includes(value)),
     random,
   ).slice(0, OPTION_COUNT - 1)
 }
@@ -81,7 +81,7 @@ const QUESTION_TYPES = [
       qText: `¿Qué calificación le diste a "${movie.title}"?`,
       correct: movie.rating ? `${movie.rating}` : UNRATED,
     }),
-    distractors: (correct, _pool, random) => ratingOptions(correct, random),
+    distractors: ({ correct, random }) => ratingOptions(correct, random),
   },
   {
     type: "year",
@@ -90,31 +90,32 @@ const QUESTION_TYPES = [
       qText: `¿En qué año se estrenó "${movie.title}"?`,
       correct: String(movie.year).trim(),
     }),
-    distractors: (correct, _pool, random, currentYear) =>
+    distractors: ({ correct, random, currentYear }) =>
       yearOptions(correct, currentYear, random),
   },
   {
     type: "director",
     available: (movie, pool) =>
       Boolean(movie.directors?.[0]) &&
-      hasEnoughOthers(pool.directors, movie.directors[0]),
+      hasEnoughOthers(pool.directors, movie.directors),
     build: (movie) => ({
       qText: `¿Quién dirigió "${movie.title}"?`,
       correct: movie.directors[0],
     }),
-    distractors: (correct, pool, random) =>
-      otherOptions(pool.directors, correct, random),
+    // Un codirector también es correcto: no puede salir como opción falsa.
+    distractors: ({ movie, pool, random }) =>
+      otherOptions(pool.directors, movie.directors, random),
   },
   {
     type: "poster",
     available: (movie, pool) =>
-      Boolean(movie.poster) && hasEnoughOthers(pool.titles, movie.title),
+      Boolean(movie.poster) && hasEnoughOthers(pool.titles, [movie.title]),
     build: (movie) => ({
       qText: "¿De qué película es este póster?",
       correct: movie.title,
     }),
-    distractors: (correct, pool, random) =>
-      otherOptions(pool.titles, correct, random),
+    distractors: ({ correct, pool, random }) =>
+      otherOptions(pool.titles, [correct], random),
   },
 ]
 
@@ -133,7 +134,7 @@ export function generateQuestions(
       const candidates = QUESTION_TYPES.filter((t) => t.available(movie, pool))
       const kind = candidates[Math.floor(random() * candidates.length)]
       const { qText, correct } = kind.build(movie)
-      const distractors = kind.distractors(correct, pool, random, currentYear)
+      const distractors = kind.distractors({ movie, correct, pool, random, currentYear })
 
       return {
         movie,
