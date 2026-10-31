@@ -249,7 +249,7 @@ input:focus-visible { outline: none; }
 .rd-quiz-review + .rd-quiz-actions { margin-top: 24px; }
 .rd-profile-btn { background: var(--c-text-bright); border: 1px solid var(--c-text-bright); color: var(--c-on-text); padding: 8px 16px; border-radius: var(--radius-md); font-family: var(--font-mono); font-size: 0.75rem; cursor: pointer; transition: opacity 0.2s; }
 .rd-profile-btn:hover, .rd-profile-btn:focus-visible { opacity: 0.85; }
-.rd-search-input { flex: 1; min-width: min(260px, 100%); background: rgb(var(--fg-rgb) / 0.03); border: 1px solid rgb(var(--fg-rgb) / 0.1); border-radius: var(--radius-md); padding: 12px 16px; color: var(--c-text-bright); font-family: var(--font-mono); font-size: max(16px, var(--fs-sm)); transition: border 0.2s; }
+.rd-search-input { flex: 1; min-width: min(260px, 100%); background: rgb(var(--fg-rgb) / 0.03); border: 1px solid rgb(var(--fg-rgb) / 0.1); border-radius: var(--radius-md); padding: 10px 16px; color: var(--c-text-bright); font-family: var(--font-mono); font-size: max(16px, var(--fs-sm)); transition: border 0.2s; }
 .rd-search-btn { padding: 12px 28px; border-radius: var(--radius-md); font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 2px; transition: all 0.2s; width: 160px; text-align: center; }
 @media (max-width: 640px) {
   /* El toggle queda junto al título y las pestañas bajan a su propia fila. */
