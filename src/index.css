@@ -492,7 +492,9 @@ input:focus-visible {
 .rd-panel-title, .rd-section-anchor { scroll-margin-top: 80px; }
 .rd-overview { padding: 20px var(--gutter) 0; display: flex; flex-direction: column; gap: 12px; }
 .rd-overview-head { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
+.rd-overview-intro { flex: 1 1 260px; min-width: 0; }
 .rd-overview-title { font-family: var(--font-display); font-size: var(--fs-lg); font-weight: normal; letter-spacing: 1px; color: var(--c-text-bright); overflow-wrap: anywhere; }
+.rd-overview-headline { margin-top: 4px; font-size: var(--fs-sm); line-height: 1.4; color: var(--c-text); }
 .rd-overview-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
 .rd-search-form { padding: 20px var(--gutter); }
 .rd-search-field { position: relative; flex: 1; min-width: min(260px, 100%); }

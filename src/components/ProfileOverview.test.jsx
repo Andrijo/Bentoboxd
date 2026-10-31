@@ -29,6 +29,14 @@ describe("ProfileOverview", () => {
     expect(screen.getByText("Por semana").nextSibling).toHaveTextContent("0.9")
   })
 
+  it("resume el perfil en una frase con sus géneros", () => {
+    render(<ProfileOverview movies={MOVIES} genres={{ Drama: 2 }} username="ana" loading={false} />)
+
+    expect(
+      screen.getByText("Casi 1 película por semana, sobre todo de drama, y notas parecidas a las del público"),
+    ).toBeInTheDocument()
+  })
+
   it("solo aclara cuántas películas se compararon si no fueron todas", () => {
     const { rerender } = render(<ProfileOverview movies={MOVIES} username="ana" loading={false} />)
     expect(screen.getByText("En línea con el público")).toBeInTheDocument()

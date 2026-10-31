@@ -2,6 +2,7 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import StatTile from "./StatsSummary/StatTile.jsx"
 import { Skeleton } from "./Skeleton.jsx"
 import { computeProfileStats } from "../utils/profileStats.js"
+import { profileHeadline } from "../utils/profileHeadline.js"
 import { formatDuration, formatHours, formatMovieCount } from "../utils/formatters.js"
 import { profileLink } from "../utils/profileUrl.js"
 
@@ -49,8 +50,9 @@ function CopyLinkButton({ username }) {
   )
 }
 
-export default function ProfileOverview({ movies, username, loading }) {
+export default function ProfileOverview({ movies, genres = {}, username, loading }) {
   const stats = useMemo(() => computeProfileStats(movies), [movies])
+  const headline = profileHeadline(stats, genres)
   const pending = <Skeleton width="64px" height="1.4rem" />
 
   let hoursTile = null
@@ -84,7 +86,10 @@ export default function ProfileOverview({ movies, username, loading }) {
   return (
     <section className="rd-overview" aria-labelledby="rd-overview-title">
       <div className="rd-overview-head">
-        <h2 id="rd-overview-title" className="rd-overview-title">@{username}</h2>
+        <div className="rd-overview-intro">
+          <h2 id="rd-overview-title" className="rd-overview-title">@{username}</h2>
+          {headline && <p className="rd-overview-headline">{headline}</p>}
+        </div>
         <CopyLinkButton username={username} />
       </div>
 
