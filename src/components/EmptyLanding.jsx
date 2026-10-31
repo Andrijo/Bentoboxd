@@ -4,15 +4,7 @@ import { FEED_LIMIT } from "../hooks/useLetterboxdFeed.js"
 // Perfil público de Letterboxd para probar la app sin tener cuenta.
 export const EXAMPLE_PROFILE = "Andrijo"
 
-const FEATURES = [
-  "Géneros",
-  "Directores",
-  "Reparto",
-  "Países",
-  "Streaming",
-  "Quiz",
-  "Higher or Lower",
-]
+const FEATURES = ["Géneros", "Directores", "Reparto", "Países", "Streaming"]
 
 function FilmIcon() {
   return (
