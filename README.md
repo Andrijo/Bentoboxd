@@ -23,20 +23,20 @@ Nace como un experimento personal para explorar visualización de datos, integra
   - **Bento** — Cuadrícula dinámica sin huecos con tarjetas 1x1, 2x1, 1x2 y 2x2 (en móvil, 3 columnas sin 1x2)
   - **Timeline** — Línea de tiempo cronológica con pósters y calificaciones
   - **Terminal** — Listado estilo terminal retro
-- **Datos clave del perfil** — Promedio, tiempo viendo, comparación con el público (TMDB) y películas por semana, sobre las películas
+- **Datos clave del perfil** — Una frase generada con su ritmo, género principal y notas, seguida de promedio, tiempo viendo, comparación con el público (TMDB) y películas por semana
 - **Paneles de análisis** (con un índice fijo para saltar entre ellos):
   - **Resumen** — Me gusta, vistas otra vez, día más activo, década más vista y distribución de calificaciones
   - **Evolución mensual** — Películas y nota media por mes, según la fecha en que se vio cada una
-  - **Opiniones impopulares** — Las películas con mayor diferencia frente al público (TMDB), a favor y en contra
+  - **Opiniones impopulares** — Las películas con mayor diferencia frente al público (TMDB), a favor y en contra, con «Cómo se calcula»
   - **Mejor calificados** — Géneros y directores con el mejor promedio de calificaciones del perfil (mínimo 2 películas)
   - **Géneros** — 5 tipos de gráfico (Donut, Radar, Barras, Matriz, Gauges)
-  - **Directores** — Vista de tarjetas, holograma u órbita
+  - **Directores** — Quienes tienen al menos 2 películas, en vista de tarjetas, holograma u órbita
   - **Reparto** — Cuadrícula, espectro o constelación
   - **Países de producción** — Tabla o sectores con banderas
   - **Plataformas de streaming** — Disponibilidad en México (datos de JustWatch)
 - **Explorar los datos** — Al pulsar un género, director, actor, país o plataforma se despliegan sus películas, enlazadas a Letterboxd
 - **Juegos** (páginas propias, enlazables y compatibles con el botón atrás):
-  - **Higher or Lower** (`#higher-lower`) — Adivina si la siguiente película tiene mayor/menor rating, popularidad o año
+  - **Higher or Lower** (`#higher-lower`) — Adivina si la siguiente película tiene mayor/menor rating, popularidad o año (en popularidad solo se muestra cuál gana)
   - **Quiz** (`#quiz`) — 5 preguntas sobre año de estreno o calificación
 - **Skeleton loading** mientras cargan el feed y los metadatos de TMDB
 - **Tema claro y oscuro** — Botón de cambio en la cabecera; respeta `prefers-color-scheme` en la primera visita y recuerda tu elección en localStorage (sin parpadeo al cargar)
