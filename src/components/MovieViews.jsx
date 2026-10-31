@@ -256,7 +256,10 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                     {movie.rating ? (
                       <span role="img" aria-label={`${movie.rating} de 5 estrellas`}>{movie.rating}★</span>
                     ) : (
-                      <span aria-label="Sin calificar">NULL</span>
+                      <>
+                        <span aria-hidden="true">—</span>
+                        <span className="rd-sr-only">Sin calificar</span>
+                      </>
                     )}
                   </span>
                 </span>

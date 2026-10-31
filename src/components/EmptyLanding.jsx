@@ -39,6 +39,7 @@ export default function EmptyLanding({
   error,
   recentProfiles,
   onProfileSelect,
+  onProfileRemove,
 }) {
   if (loading || movies.length > 0) return null
 
@@ -74,7 +75,11 @@ export default function EmptyLanding({
         </>
       )}
 
-      <RecentProfiles profiles={recentProfiles} onSelect={onProfileSelect} />
+      <RecentProfiles
+        profiles={recentProfiles}
+        onSelect={onProfileSelect}
+        onRemove={onProfileRemove}
+      />
     </div>
   )
 }

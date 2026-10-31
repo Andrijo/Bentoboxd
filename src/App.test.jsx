@@ -58,6 +58,32 @@ afterEach(() => {
 })
 
 describe("App", () => {
+  it("indica qué falta si se busca con el campo vacío", () => {
+    render(<App />)
+
+    fireEvent.click(screen.getByRole("button", { name: "Generar" }))
+
+    expect(screen.getByRole("alert")).toHaveTextContent("Escribe un usuario")
+    expect(screen.getByRole("textbox")).toHaveFocus()
+    expect(fetch).not.toHaveBeenCalled()
+
+    fireEvent.change(screen.getByRole("textbox"), { target: { value: "u" } })
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument()
+  })
+
+  it("quita el aviso de campo vacío al elegir un perfil desde fuera del campo", async () => {
+    fetchMetadataFromTMDB.mockResolvedValue(METADATA)
+    render(<App />)
+
+    fireEvent.click(screen.getByRole("button", { name: "Generar" }))
+    expect(screen.getByRole("alert")).toHaveTextContent("Escribe un usuario")
+
+    fireEvent.click(screen.getByRole("button", { name: /Probar con/ }))
+    await screen.findByRole("heading", { name: "TOP GÉNEROS" })
+
+    expect(screen.queryByRole("alert")).not.toBeInTheDocument()
+  })
+
   it("conserva el perfil si la siguiente búsqueda falla y no ofrece reintentar", async () => {
     fetchMetadataFromTMDB.mockResolvedValue(METADATA)
     render(<App />)

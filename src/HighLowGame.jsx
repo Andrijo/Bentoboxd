@@ -1,6 +1,13 @@
-import { useState, useReducer, useEffect } from "react"
+import { useState, useReducer, useEffect, useRef } from "react"
+import SegmentedControl from "./components/Panel/SegmentedControl.jsx"
 import { seededRandom, randomSeed } from "./utils/shuffle.js"
 import { buildDeck, isCorrectGuess } from "./utils/highLowDeck.js"
+
+const CATEGORY_OPTIONS = [
+  { key: "rating", label: "Estrellas" },
+  { key: "popularity", label: "Popularidad" },
+  { key: "year", label: "Estreno" },
+]
 
 const CAT_CONFIG = {
   rating: {
@@ -29,6 +36,7 @@ const initialGameState = {
   currentIndex: 0,
   feedback: null,
   gameOver: false,
+  won: false,
   deckSeed: 0,
 }
 
@@ -41,7 +49,7 @@ function gameReducer(state, action) {
     case "NEXT_CARD":
       return { ...state, currentIndex: state.currentIndex + 1, feedback: null }
     case "GAME_OVER":
-      return { ...state, gameOver: true }
+      return { ...state, gameOver: true, won: action.won }
     case "RESTART":
       return { ...initialGameState, deckSeed: action.seed }
     default:
@@ -226,54 +234,52 @@ function GameHeader({ category, streak, onCategoryChange }) {
         </div>
       </div>
 
-      <div
-        role="group"
-        className="rd-segmented"
-        aria-label="Categoría"
-        style={{
-          display: "flex",
-          flexWrap: "wrap",
-          gap: "10px",
-          justifyContent: "center",
-        }}>
-        {[
-          { id: "rating", label: "Calificación" },
-          { id: "popularity", label: "Popularidad" },
-          { id: "year", label: "Año" },
-        ].map((cat) => (
-          <button
-            key={cat.id}
-            onClick={() => {
-              onCategoryChange(cat.id)
-            }}
-            type="button"
-            aria-pressed={category === cat.id}
-            style={{
-              background:
-                category === cat.id
-                  ? "var(--c-text-bright)"
-                  : "rgb(var(--fg-rgb) / 0.05)",
-              color:
-                category === cat.id
-                  ? "var(--c-on-text)"
-                  : "var(--c-text-muted)",
-              border:
-                category === cat.id
-                  ? "1px solid var(--c-text-bright)"
-                  : "1px solid rgb(var(--fg-rgb) / 0.1)",
-              padding: "8px clamp(12px, 4vw, 24px)",
-              borderRadius: "var(--radius-md)",
-              cursor: "pointer",
-              fontWeight: "bold",
-              fontSize: "var(--fs-xs)",
-              fontFamily: "var(--font-mono)",
-              transition:
-                "background 0.3s, color 0.3s, border 0.3s, box-shadow 0.3s",
-            }}>
-            {cat.label}
-          </button>
-        ))}
+      <div style={{ display: "flex", justifyContent: "center" }}>
+        <SegmentedControl
+          label="Categoría"
+          options={CATEGORY_OPTIONS}
+          value={category}
+          onChange={onCategoryChange}
+        />
       </div>
+
+      {/* Oculto y no ausente: así la página no salta con la primera racha. */}
+      <p
+        className="rd-hlg-note"
+        style={{ visibility: streak > 0 ? "visible" : "hidden" }}>
+        Cambiar de categoría reinicia la racha.
+      </p>
+    </div>
+  )
+}
+
+function GameOver({ streak, won, onRestart }) {
+  const restartRef = useRef(null)
+
+  // El botón "Ver resultado" desaparece: el foco no debe perderse con él.
+  useEffect(() => {
+    restartRef.current?.focus()
+  }, [])
+
+  return (
+    <div style={{ textAlign: "center" }}>
+      <h2
+        style={{
+          fontSize: "clamp(1.75rem, 8vw, 2.5rem)",
+          color: "var(--c-text-bright)",
+          fontFamily: "var(--font-display)",
+          marginBottom: "12px",
+        }}>
+        {won ? "¡BARAJA COMPLETA!" : "JUEGO TERMINADO"}
+      </h2>
+      <p className="rd-hlg-final">Racha final: {streak}</p>
+      <button
+        ref={restartRef}
+        onClick={onRestart}
+        type="button"
+        className="rd-btn-solid rd-hlg-btn">
+        Jugar de nuevo
+      </button>
     </div>
   )
 }
@@ -284,9 +290,19 @@ function GamePlayArea({
   category,
   feedback,
   gameOver,
+  won,
+  streak,
+  hasNextCard,
   onGuess,
+  onNext,
   onRestart,
 }) {
+  const nextRef = useRef(null)
+
+  useEffect(() => {
+    if (feedback && !gameOver) nextRef.current?.focus()
+  }, [feedback, gameOver])
+
   return (
     <div
       style={{
@@ -299,33 +315,7 @@ function GamePlayArea({
         padding: "20px 0",
       }}>
       {gameOver ? (
-        <div style={{ textAlign: "center" }}>
-          <h2
-            style={{
-              fontSize: "clamp(1.75rem, 8vw, 2.5rem)",
-              color: "var(--c-text-bright)",
-              fontFamily: "var(--font-display)",
-              marginBottom: "28px",
-            }}>
-            JUEGO TERMINADO
-          </h2>
-          <button
-            onClick={onRestart}
-            type="button"
-            style={{
-              background: "var(--c-text-bright)",
-              color: "var(--c-on-text)",
-              padding: "10px 28px",
-              border: "1px solid var(--c-text-bright)",
-              borderRadius: "var(--radius-md)",
-              cursor: "pointer",
-              fontWeight: "bold",
-              fontSize: "var(--fs-xs)",
-              fontFamily: "var(--font-mono)",
-            }}>
-            Reintentar
-          </button>
-        </div>
+        <GameOver streak={streak} won={won} onRestart={onRestart} />
       ) : (
         <>
           <div style={{ textAlign: "center" }}>
@@ -415,6 +405,22 @@ function GamePlayArea({
               {movieB.title}
             </div>
           </div>
+
+          <div className="rd-hlg-footer">
+            {feedback ? (
+              <button
+                ref={nextRef}
+                onClick={onNext}
+                type="button"
+                className="rd-btn-solid rd-hlg-btn">
+                {feedback === "correct" && hasNextCard
+                  ? "Siguiente"
+                  : "Ver resultado"}
+              </button>
+            ) : (
+              <p className="rd-hlg-shortcuts">Atajos: ↑ Higher · ↓ Lower</p>
+            )}
+          </div>
         </>
       )}
     </div>
@@ -433,19 +439,16 @@ export default function HighLowGame({ movies, loading, active = true }) {
 
   const movieA = gameDeck[state.currentIndex]
   const movieB = gameDeck[state.currentIndex + 1]
-  const deckLength = gameDeck.length
+  const hasNextCard = state.currentIndex + 2 < gameDeck.length
 
-  // Al reiniciar o cambiar de categoría, la limpieza cancela el avance pendiente.
-  useEffect(() => {
-    if (!state.feedback) return
+  const handleNext = () => {
     const correct = state.feedback === "correct"
-    const hasNextCard = state.currentIndex + 2 < deckLength
-    const id = setTimeout(
-      () => dispatch({ type: correct && hasNextCard ? "NEXT_CARD" : "GAME_OVER" }),
-      correct ? 1500 : 2000,
+    dispatch(
+      correct && hasNextCard
+        ? { type: "NEXT_CARD" }
+        : { type: "GAME_OVER", won: correct },
     )
-    return () => clearTimeout(id)
-  }, [state.feedback, state.currentIndex, deckLength])
+  }
 
   const handleGuess = (guess) => {
     if (state.feedback || state.gameOver) return
@@ -486,7 +489,7 @@ export default function HighLowGame({ movies, loading, active = true }) {
     <section className="rd-page rd-hlg" aria-label="Higher or Lower">
       <p className="rd-sr-only" role="status" aria-live="polite">
         {state.gameOver
-          ? `Fin del juego. Racha final: ${state.streak}.`
+          ? `${state.won ? "¡Has completado el juego!" : "Fin del juego"}. Racha final: ${state.streak}.`
           : state.feedback === "correct"
             ? `Correcto. ${movieB?.title}: ${formatMetric(category, movieB?.metrics[category])}. Racha: ${state.streak}.`
             : state.feedback === "wrong"
@@ -510,7 +513,11 @@ export default function HighLowGame({ movies, loading, active = true }) {
           category={category}
           feedback={state.feedback}
           gameOver={state.gameOver}
+          won={state.won}
+          streak={state.streak}
+          hasNextCard={hasNextCard}
           onGuess={handleGuess}
+          onNext={handleNext}
           onRestart={restart}
         />
       ) : (

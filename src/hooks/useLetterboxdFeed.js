@@ -11,6 +11,8 @@ import {
 /** Máximo de películas leídas del feed (el RSS de Letterboxd trae ~50). */
 export const FEED_LIMIT = 50
 
+const FEED_TIMEOUT_MS = 15000
+
 const LETTERBOXD_NS = "https://letterboxd.com"
 
 /** Lee un campo `letterboxd:*` del item (con o sin soporte de namespaces). */
@@ -36,12 +38,22 @@ export function useLetterboxdFeed() {
   const [canRetry, setCanRetry] = useState(false)
   const [username, setUsername] = useState(null)
   const requestIdRef = useRef(0)
+  const controllerRef = useRef(null)
 
   const fetchMovies = useCallback(async (url) => {
     if (!url?.trim()) return
 
     // Solo la última búsqueda puede escribir en el estado.
     const requestId = ++requestIdRef.current
+
+    controllerRef.current?.abort()
+    const controller = new AbortController()
+    controllerRef.current = controller
+    let timedOut = false
+    const timeoutId = setTimeout(() => {
+      timedOut = true
+      controller.abort()
+    }, FEED_TIMEOUT_MS)
 
     setLoading(true)
     setError(null)
@@ -58,7 +70,7 @@ export function useLetterboxdFeed() {
       const rssUrl = buildRssUrl(user)
       let res
       try {
-        res = await fetch(rssUrl)
+        res = await fetch(rssUrl, { signal: controller.signal })
       } catch {
         throw new Error("Sin conexión. Revisa tu internet e inténtalo de nuevo.")
       }
@@ -83,7 +95,7 @@ export function useLetterboxdFeed() {
         .slice(0, FEED_LIMIT)
 
       if (items.length === 0)
-        throw permanentError("No se encontraron películas. Verifica el usuario.")
+        throw permanentError(`No se encontraron películas en el diario público de @${user}.`)
 
       const parsed = items.map((item) => {
         const rawTitleNode = item.querySelector("title")?.textContent || ""
@@ -132,24 +144,34 @@ export function useLetterboxdFeed() {
       return parsed
     } catch (e) {
       if (requestId === requestIdRef.current) {
-        setError(e.message || "Error inesperado")
+        setError(
+          timedOut
+            ? "Letterboxd tardó demasiado en responder. Inténtalo de nuevo."
+            : e.message || "Error inesperado",
+        )
         setCanRetry(e.retryable !== false)
       }
       return []
     } finally {
+      clearTimeout(timeoutId)
       if (requestId === requestIdRef.current) {
         setLoading(false)
       }
     }
   }, [])
 
-  const resetFeed = useCallback(() => {
+  const cancelFeed = useCallback(() => {
     requestIdRef.current += 1
-    setMovies([])
-    setUsername(null)
-    setError(null)
+    controllerRef.current?.abort()
     setLoading(false)
   }, [])
 
-  return { movies, loading, error, canRetry, username, fetchMovies, resetFeed, setMovies }
+  const resetFeed = useCallback(() => {
+    cancelFeed()
+    setMovies([])
+    setUsername(null)
+    setError(null)
+  }, [cancelFeed])
+
+  return { movies, loading, error, canRetry, username, fetchMovies, cancelFeed, resetFeed, setMovies }
 }
