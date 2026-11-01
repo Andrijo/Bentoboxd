@@ -40,7 +40,9 @@ describe("HighLowGame", () => {
     fireEvent.click(higher())
     fireEvent.click(button("Ver resultado"))
 
-    expect(screen.getByRole("heading", { name: "¡BARAJA COMPLETA!" })).toBeInTheDocument()
+    expect(
+      screen.getByRole("heading", { name: "¡HAS ACERTADO TODO!" }),
+    ).toBeInTheDocument()
     expect(screen.getByText("Racha final: 2")).toBeInTheDocument()
     expect(button("Jugar de nuevo")).toHaveFocus()
     unmount()
@@ -49,7 +51,9 @@ describe("HighLowGame", () => {
     fireEvent.click(lower())
     fireEvent.click(button("Ver resultado"))
 
-    expect(screen.getByRole("heading", { name: "JUEGO TERMINADO" })).toBeInTheDocument()
+    expect(
+      screen.getByRole("heading", { name: "JUEGO TERMINADO" }),
+    ).toBeInTheDocument()
     expect(screen.getByText("Racha final: 0")).toBeInTheDocument()
   })
 
@@ -89,7 +93,9 @@ describe("HighLowGame", () => {
     render(<HighLowGame movies={movies} loading={false} />)
     fireEvent.click(lower())
 
-    expect(screen.getByRole("status")).toHaveTextContent("Incorrecto. Película 2: 2.")
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "Incorrecto. Película 2: 2.",
+    )
   })
 
   it("ignora los atajos mientras está oculto", () => {
