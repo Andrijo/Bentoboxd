@@ -61,7 +61,7 @@ export default function DataPanels({
             <OpinionsPanel movies={movies} loading={loadingGenres} />
             <DirectorsPanel directors={directors} movies={movies} photos={photos} loading={loadingGenres} />
             <ActorsPanel actors={actors} movies={movies} photos={photos} loading={loadingGenres} />
-            <TopRatedPanel movies={movies} loading={loadingGenres} />
+            <TopRatedPanel movies={movies} photos={photos} loading={loadingGenres} />
             <CountriesPanel countries={countries} movies={movies} loading={loadingGenres} />
           </>
         )}
