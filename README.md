@@ -18,10 +18,10 @@ Nace como un experimento personal para explorar visualización de datos, integra
 
 ## Características
 
-- **Feed RSS de Letterboxd** — Ingresa un nombre de usuario o URL y obtén sus últimas 50 películas vistas (las listas del feed se ignoran). Las vistas muestran las 20 más recientes y «Ver todas» abre las 50 con filtros por me gusta, nota y año; las estadísticas y los juegos siempre usan las 50
+- **Feed RSS de Letterboxd** — Ingresa un nombre de usuario o URL y obtén sus últimas 50 películas vistas (las listas del feed se ignoran). Las vistas muestran las 20 más recientes y «Ver todas» abre las 50 con filtros por me gusta, nota y año; las estadísticas y los juegos siempre usan las 50. Letterboxd no publica más en el feed, así que las cifras no cubren el historial completo
 - **3 modos de visualización:**
   - **Bento** — Cuadrícula dinámica sin huecos con tarjetas 1x1, 2x1, 1x2 y 2x2 (en móvil, 3 columnas sin 1x2)
-  - **Timeline** — Línea de tiempo cronológica con pósters y calificaciones
+  - **Línea de tiempo** — Lista cronológica con pósters, calificaciones y fechas
   - **Terminal** — Listado estilo terminal retro
 - **Datos clave del perfil** — Una frase generada con su ritmo, género principal y notas, seguida de promedio, tiempo viendo, comparación con el público (TMDB) y películas por semana
 - **Paneles de análisis** (con un índice fijo para saltar entre ellos):
@@ -29,15 +29,15 @@ Nace como un experimento personal para explorar visualización de datos, integra
   - **Evolución mensual** — Películas y nota media por mes, según la fecha en que se vio cada una
   - **Opiniones impopulares** — Las películas con mayor diferencia frente al público (TMDB), a favor y en contra, con «Cómo se calcula»
   - **Mejor calificados** — Géneros y directores con el mejor promedio de calificaciones del perfil (mínimo 2 películas)
-  - **Géneros** — 5 tipos de gráfico (Donut, Radar, Barras, Matriz, Gauges)
-  - **Directores** — Quienes tienen al menos 2 películas, en vista de tarjetas con foto, holograma u órbita
-  - **Reparto** — Cuadrícula con fotos, espectro o constelación
-  - **Países de producción** — Tabla o sectores con banderas
+  - **Géneros** — 5 tipos de gráfico (Dona, Radar, Barras, Matriz, Medidores)
+  - **Directores** — Quienes tienen al menos 2 películas, en vista de lista con foto, holograma u órbita
+  - **Reparto** — Cuadrícula con fotos, espectro o mapa
+  - **Países de producción** — Lista o sectores con banderas
   - **Plataformas de streaming** — Disponibilidad en México (datos de JustWatch)
 - **Explorar los datos** — Al pulsar un género, director, actor, país o plataforma se despliegan sus películas, enlazadas a Letterboxd
 - **Juegos** (páginas propias, enlazables y compatibles con el botón atrás):
   - **Higher or Lower** (`#higher-lower`) — Adivina si la siguiente película tiene mayor/menor rating, popularidad o año (en popularidad solo se muestra cuál gana)
-  - **Quiz** (`#quiz`) — 5 preguntas sobre año de estreno o calificación
+  - **Quiz** (`#quiz`) — 5 preguntas sobre calificación, año de estreno, dirección o póster
 - **Skeleton loading** mientras cargan el feed y los metadatos de TMDB
 - **Tema claro y oscuro** — Botón de cambio en la cabecera; respeta `prefers-color-scheme` en la primera visita y recuerda tu elección en localStorage (sin parpadeo al cargar)
 - **Paleta de cinco tonos** — Todos los colores salen de tokens CSS (tintas y crema); los gráficos usan rampas derivadas de ellos
@@ -54,7 +54,7 @@ Nace como un experimento personal para explorar visualización de datos, integra
 | Vite                 | 7                       |
 | ESLint (flat config) | 9                       |
 | CSS                  | Vanilla + design tokens |
-| Tipografías          | Milker, Carmine, DM Sans (autoalojadas) |
+| Tipografías          | Milker, DM Sans (autoalojadas) |
 | Tests                | Vitest 3 + Testing Library |
 | APIs                 | Letterboxd RSS, TMDB v3 |
 
@@ -133,7 +133,10 @@ En local solo necesitas `TMDB_API_KEY` en `.env`: `npm run dev` usa los proxies 
 api/
 ├── rss.js                   # Proxy serverless del RSS (Vercel)
 ├── tmdb.js                  # Proxy serverless de TMDB (Vercel)
-└── _lib/tmdbUpstream.js     # Rutas permitidas de TMDB (prod y dev)
+└── _lib/
+    ├── apiHeaders.js        # Cabeceras de seguridad y respuesta 429
+    ├── rateLimit.js         # Límite de peticiones por IP
+    └── tmdbUpstream.js      # Rutas permitidas de TMDB (prod y dev)
 
 src/
 ├── App.jsx                  # Componente principal
@@ -146,19 +149,30 @@ src/
 │   ├── SearchSection.jsx    # Búsqueda de usuario
 │   ├── RecentProfiles.jsx   # Perfiles recientes
 │   ├── EmptyLanding.jsx     # Pantalla inicial sin perfil
-│   ├── Panel/               # Panel, SegmentedControl y PanelError compartidos
-│   ├── MovieViews.jsx       # Bento / Timeline / Terminal
+│   ├── ProfileOverview.jsx  # Titular, datos clave y «Copiar enlace»
+│   ├── SectionNav.jsx       # Índice fijo de secciones
+│   ├── Panel/               # Panel y SegmentedControl compartidos
+│   ├── MovieViews.jsx       # Bento / Línea de tiempo / Terminal
+│   ├── MovieFilters.jsx     # Filtros de «Ver todas»
+│   ├── MovieDrilldown.jsx   # Películas de un género, persona, país o plataforma
 │   ├── DataPanels.jsx       # Contenedor de paneles de análisis
+│   ├── HowCalculated.jsx    # Explicación desplegable «Cómo se calcula»
 │   ├── Skeleton.jsx         # Placeholders de carga
 │   ├── PosterImage.jsx      # Póster con carga diferida
+│   ├── PersonAvatar.jsx     # Foto o iniciales de una persona
 │   ├── StarRating.jsx       # Calificación en estrellas
+│   ├── KeepAlive.jsx        # Conserva el estado de los juegos entre pestañas
+│   ├── ErrorBoundary.jsx    # Pantalla de error inesperado
+│   ├── ErrorNotice.jsx      # Aviso de error con reintento
 │   ├── BentoGrid/           # Cuadrícula bento
+│   ├── StatsSummary/        # Resumen e histograma de calificaciones
+│   ├── MonthlyPanel/        # Evolución mensual
 │   ├── GenrePanel/          # Gráficos de géneros
 │   ├── DirectorsPanel/      # Paneles de directores
 │   ├── ActorsPanel/         # Paneles de actores
 │   ├── CountriesPanel/      # Paneles de países
 │   ├── PlatformsPanel/      # Plataformas de streaming
-│   ├── TopRatedPanel/       # Mejor calificados por ti
+│   ├── TopRatedPanel/       # Mejor calificados del perfil
 │   ├── OpinionsPanel/       # Opiniones impopulares (vs TMDB)
 │   └── Quiz/                # Página de quiz (#quiz)
 ├── hooks/                   # Custom hooks
@@ -178,4 +192,6 @@ src/
 
 ## Licencia
 
-MIT
+El código se publica bajo la licencia MIT.
+
+La tipografía Milker (`public/fonts/Milker.woff2`) no está incluida en esa licencia. Es © 2023 Brandsemut, conserva sus propios términos y su autor la ofrece gratis solo para uso personal: el uso comercial o promocional requiere [una licencia aparte](https://brandsemut.com/product/milker/).
