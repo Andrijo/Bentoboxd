@@ -1,9 +1,10 @@
 import { useState } from "react"
 import MovieDrilldown from "../MovieDrilldown.jsx"
+import PersonAvatar from "../PersonAvatar.jsx"
 import { formatMovieCount } from "../../utils/formatters.js"
 import { moviesWith } from "../../utils/movieFilters.js"
 
-export default function DirectorCards({ ranking, movies = [] }) {
+export default function DirectorCards({ ranking, movies = [], photos = {} }) {
   const [openDirector, setOpenDirector] = useState(null)
 
   return (
@@ -22,25 +23,23 @@ export default function DirectorCards({ ranking, movies = [] }) {
               background: "var(--c-inset)", padding: "12px 20px",
               borderRadius: "var(--radius-md)",
             }}>
-            <span aria-hidden="true" style={{
-              fontFamily: "var(--font-display)", fontSize: "var(--fs-xl)",
-              color: "rgb(var(--fg-rgb) / 0.15)", lineHeight: 1,
-            }}>
-              0{i + 1}
-            </span>
-            <span style={{
-              flex: 1, color: "var(--c-text)", fontSize: "var(--fs-sm)",
-              letterSpacing: "1px",
-            }}>
-              {name}
-            </span>
-            <span style={{
-              fontSize: "var(--fs-xs)", color: "var(--c-text-muted)",
-              fontFamily: "var(--font-mono)", letterSpacing: "1px",
-              background: "rgb(var(--fg-rgb) / 0.05)",
-              padding: "4px 8px", borderRadius: "var(--radius-sm)",
-            }}>
-              {formatMovieCount(count)}
+            <PersonAvatar name={name} photo={photos[name]} rank={i + 1} />
+            <span className="rd-director-text">
+              <span style={{
+                flex: 1, minWidth: 0, color: "var(--c-text)", fontSize: "var(--fs-sm)",
+                letterSpacing: "1px", overflowWrap: "anywhere",
+              }}>
+                {name}
+              </span>
+              <span style={{
+                fontSize: "var(--fs-xs)", color: "var(--c-text-muted)",
+                fontFamily: "var(--font-mono)", letterSpacing: "1px",
+                background: "rgb(var(--fg-rgb) / 0.05)",
+                padding: "4px 8px", borderRadius: "var(--radius-sm)",
+                whiteSpace: "nowrap",
+              }}>
+                {formatMovieCount(count)}
+              </span>
             </span>
           </button>
           {openDirector === name && (

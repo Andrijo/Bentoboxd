@@ -19,6 +19,15 @@ export function formatMovieCount(count) {
   return `${count} película${count === 1 ? "" : "s"}`
 }
 
+/** "Bong Joon-ho" → "BJ"; "Zendaya" → "Z". */
+export function getInitials(name) {
+  const words = (name || "").trim().split(/\s+/).filter(Boolean)
+  if (words.length === 0) return ""
+  const first = [...words[0]][0]
+  const last = words.length > 1 ? [...words[words.length - 1]][0] : ""
+  return `${first}${last}`.toLocaleUpperCase("es-MX")
+}
+
 /** 27 de 50 → "54%". Base 0 → "0%". */
 export function formatPercent(count, total) {
   return `${total ? Math.round((count / total) * 100) : 0}%`

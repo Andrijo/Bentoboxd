@@ -1,12 +1,13 @@
 import { useMemo } from "react"
 import { PanelSkeleton } from "../Skeleton.jsx"
 import Panel from "../Panel/Panel.jsx"
+import PersonAvatar from "../PersonAvatar.jsx"
 import { computeTopRated } from "../../utils/topRated.js"
 import { formatMovieCount } from "../../utils/formatters.js"
 
 const formatAverage = (value) => value.toFixed(1)
 
-function RankedList({ title, items }) {
+function RankedList({ title, items, photos }) {
   return (
     <section aria-label={title}>
       <h3 style={{
@@ -22,12 +23,16 @@ function RankedList({ title, items }) {
             border: "1px solid rgb(var(--fg-rgb) / 0.05)", borderRadius: "var(--radius-md)",
             background: "var(--c-inset)",
           }}>
-            <span aria-hidden="true" style={{
-              fontFamily: "var(--font-display)", fontSize: "var(--fs-md)",
-              color: "rgb(var(--fg-rgb) / 0.3)", width: "20px",
-            }}>
-              {i + 1}
-            </span>
+            {photos ? (
+              <PersonAvatar name={name} photo={photos[name]} rank={i + 1} compact />
+            ) : (
+              <span aria-hidden="true" style={{
+                fontFamily: "var(--font-display)", fontSize: "var(--fs-md)",
+                color: "rgb(var(--fg-rgb) / 0.3)", width: "20px",
+              }}>
+                {i + 1}
+              </span>
+            )}
             <span style={{ flex: 1, minWidth: 0 }}>
               <span style={{
                 display: "block", fontSize: "var(--fs-sm)", color: "var(--c-text)",
@@ -38,6 +43,7 @@ function RankedList({ title, items }) {
               <span style={{
                 display: "block", marginTop: "2px", fontSize: "var(--fs-xs)",
                 color: "var(--c-text-muted)",
+                whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
               }}>
                 {formatMovieCount(count)} calificadas
               </span>
@@ -55,7 +61,7 @@ function RankedList({ title, items }) {
   )
 }
 
-export default function TopRatedPanel({ movies, loading }) {
+export default function TopRatedPanel({ movies, photos = {}, loading }) {
   const genres = useMemo(
     () => computeTopRated(movies, "genres", { exclude: ["Otro"], limit: 3 }),
     [movies],
@@ -79,7 +85,7 @@ export default function TopRatedPanel({ movies, loading }) {
           display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "24px",
         }}>
           {genres.length > 0 && <RankedList title="Géneros" items={genres} />}
-          {directors.length > 0 && <RankedList title="Directores" items={directors} />}
+          {directors.length > 0 && <RankedList title="Directores" items={directors} photos={photos} />}
         </div>
       )}
 

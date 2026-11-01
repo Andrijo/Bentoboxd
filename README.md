@@ -30,8 +30,8 @@ Nace como un experimento personal para explorar visualización de datos, integra
   - **Opiniones impopulares** — Las películas con mayor diferencia frente al público (TMDB), a favor y en contra, con «Cómo se calcula»
   - **Mejor calificados** — Géneros y directores con el mejor promedio de calificaciones del perfil (mínimo 2 películas)
   - **Géneros** — 5 tipos de gráfico (Donut, Radar, Barras, Matriz, Gauges)
-  - **Directores** — Quienes tienen al menos 2 películas, en vista de tarjetas, holograma u órbita
-  - **Reparto** — Cuadrícula, espectro o constelación
+  - **Directores** — Quienes tienen al menos 2 películas, en vista de tarjetas con foto, holograma u órbita
+  - **Reparto** — Cuadrícula con fotos, espectro o constelación
   - **Países de producción** — Tabla o sectores con banderas
   - **Plataformas de streaming** — Disponibilidad en México (datos de JustWatch)
 - **Explorar los datos** — Al pulsar un género, director, actor, país o plataforma se despliegan sus películas, enlazadas a Letterboxd

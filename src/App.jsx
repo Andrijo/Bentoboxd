@@ -57,6 +57,7 @@ export default function App() {
     actors,
     countries,
     platforms,
+    photos,
     coverage,
     loading: metaLoading,
     error: genreError,
@@ -289,6 +290,7 @@ export default function App() {
           actors={actors}
           countries={countries}
           platforms={platforms}
+          photos={photos}
           coverage={coverage}
           loadingGenres={metaLoading}
           genreError={genreError}

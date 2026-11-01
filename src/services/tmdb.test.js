@@ -86,6 +86,56 @@ describe("fetchMetadataFromTMDB", () => {
     })
   })
 
+  it("reúne las fotos de directores y reparto, y omite a quien no tiene", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() =>
+        jsonResponse(
+          detailsResponse({
+            credits: {
+              crew: [
+                { job: "Director", name: "Ana", profile_path: "/ana.jpg" },
+                { job: "Writer", name: "Otra", profile_path: "/otra.jpg" },
+              ],
+              cast: [
+                { name: "Luis", profile_path: "/luis.jpg" },
+                { name: "Sin Foto", profile_path: null },
+              ],
+            },
+          }),
+        ),
+      ),
+    )
+
+    const result = await fetchMetadataFromTMDB([{ title: "X", tmdbId: 1 }])
+
+    expect(result.photos).toEqual({
+      Ana: "https://image.tmdb.org/t/p/w185/ana.jpg",
+      Luis: "https://image.tmdb.org/t/p/w185/luis.jpg",
+    })
+  })
+
+  it("conserva las fotos cuando la película sale de la caché", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() =>
+        jsonResponse(
+          detailsResponse({
+            credits: {
+              crew: [],
+              cast: [{ name: "Luis", profile_path: "/luis.jpg" }],
+            },
+          }),
+        ),
+      ),
+    )
+
+    await fetchMetadataFromTMDB([{ title: "X", tmdbId: 1 }])
+    const cached = await fetchMetadataFromTMDB([{ title: "X", tmdbId: 1 }])
+
+    expect(cached.photos.Luis).toBe("https://image.tmdb.org/t/p/w185/luis.jpg")
+  })
+
   it("usa 'Otro' solo cuando ningún género es conocido", async () => {
     vi.stubGlobal(
       "fetch",

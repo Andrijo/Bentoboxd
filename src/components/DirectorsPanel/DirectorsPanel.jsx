@@ -13,7 +13,7 @@ const VIEW_OPTIONS = [
   { key: "orbit", label: "Órbita" },
 ]
 
-export default function DirectorsPanel({ directors, movies, loading }) {
+export default function DirectorsPanel({ directors, movies, photos, loading }) {
   const [viewMode, setViewMode] = useState("cards")
 
   const ranking = topDirectors(directors)
@@ -34,7 +34,7 @@ export default function DirectorsPanel({ directors, movies, loading }) {
 
       {!loading && hasData && (
         <>
-          {viewMode === "cards" && <DirectorCards ranking={ranking} movies={movies} />}
+          {viewMode === "cards" && <DirectorCards ranking={ranking} movies={movies} photos={photos} />}
           {viewMode === "hologram" && <DirectorHologram ranking={ranking} />}
           {viewMode === "orbit" && <DirectorOrbit ranking={ranking} />}
         </>

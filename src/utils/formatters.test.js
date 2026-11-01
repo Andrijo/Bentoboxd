@@ -1,5 +1,18 @@
 import { describe, it, expect } from "vitest"
-import { countryName, formatDuration, formatHours, formatMonth, formatMonthYear, formatMovieCount, formatPercent, formatWatchedDate, weekdayName } from "./formatters.js"
+import { countryName, formatDuration, formatHours, formatMonth, formatMonthYear, formatMovieCount, formatPercent, formatWatchedDate, getInitials, weekdayName } from "./formatters.js"
+
+describe("getInitials", () => {
+  it("toma la primera y la última palabra", () => {
+    expect(getInitials("Bong Joon-ho")).toBe("BJ")
+    expect(getInitials("  ana   de armas ")).toBe("AA")
+  })
+
+  it("admite un solo nombre o ninguno", () => {
+    expect(getInitials("Zendaya")).toBe("Z")
+    expect(getInitials("")).toBe("")
+    expect(getInitials(undefined)).toBe("")
+  })
+})
 
 describe("formatPercent", () => {
   it("redondea sobre la base dada y no divide entre cero", () => {
