@@ -16,7 +16,6 @@ const CAT_CONFIG = {
     sub: "Según el público (TMDB), de 0 a 5.",
   },
   popularity: {
-    unit: "Popularidad",
     desc: "Adivina qué película es más popular hoy.",
     sub: "Según la actividad reciente en TMDB; cambia día a día.",
   },
@@ -27,9 +26,34 @@ const CAT_CONFIG = {
   },
 }
 
-// El índice de popularidad de TMDB llega con muchos decimales.
-const formatMetric = (category, value) =>
-  category === "popularity" ? Math.round(value * 10) / 10 : value
+const VALUE_SIZE = "clamp(2rem, 8vw, 2.75rem)"
+const WORD_SIZE = "clamp(1.1rem, 5vw, 1.75rem)"
+
+// El índice de popularidad de TMDB no significa nada por sí solo: solo se dice cuál gana.
+function cardMetric(category, movie, rival, revealed) {
+  if (category !== "popularity") {
+    return {
+      value: movie.metrics[category],
+      unit: CAT_CONFIG[category].unit,
+      size: VALUE_SIZE,
+    }
+  }
+  if (!revealed) return { value: null, unit: null, size: VALUE_SIZE }
+  return {
+    value:
+      movie.metrics.popularity > rival.metrics.popularity ? "Más" : "Menos",
+    unit: "popular",
+    size: WORD_SIZE,
+  }
+}
+
+function revealMessage(category, movieA, movieB) {
+  if (category !== "popularity")
+    return `${movieB.title}: ${movieB.metrics[category]}`
+  const verdict =
+    movieB.metrics.popularity > movieA.metrics.popularity ? "más" : "menos"
+  return `${movieB.title} es ${verdict} popular que ${movieA.title}`
+}
 
 const initialGameState = {
   streak: 0,
@@ -270,7 +294,7 @@ function GameOver({ streak, won, onRestart }) {
           fontFamily: "var(--font-display)",
           marginBottom: "12px",
         }}>
-        {won ? "¡BARAJA COMPLETA!" : "JUEGO TERMINADO"}
+        {won ? "¡HAS ACERTADO TODO!" : "JUEGO TERMINADO"}
       </h2>
       <p className="rd-hlg-final">Racha final: {streak}</p>
       <button
@@ -303,6 +327,9 @@ function GamePlayArea({
     if (feedback && !gameOver) nextRef.current?.focus()
   }, [feedback, gameOver])
 
+  const metricA = cardMetric(category, movieA, movieB, Boolean(feedback))
+  const metricB = cardMetric(category, movieB, movieA, Boolean(feedback))
+
   return (
     <div
       style={{
@@ -332,13 +359,13 @@ function GamePlayArea({
               <div style={labelStyle}>
                 <div
                   style={{
-                    fontSize: "clamp(2rem, 8vw, 2.75rem)",
+                    fontSize: metricA.size,
                     lineHeight: 1,
                   }}>
-                  {formatMetric(category, movieA.metrics[category])}
+                  {metricA.value}
                 </div>
                 <div style={{ fontSize: "var(--fs-sm)", opacity: 0.9 }}>
-                  {CAT_CONFIG[category].unit}
+                  {metricA.unit}
                 </div>
               </div>
             </div>
@@ -368,11 +395,11 @@ function GamePlayArea({
               <div style={labelStyle}>
                 <div
                   style={{
-                    fontSize: "clamp(2rem, 8vw, 2.75rem)",
+                    fontSize: metricB.size,
                     lineHeight: 1,
                   }}>
                   {feedback ? (
-                    formatMetric(category, movieB.metrics[category])
+                    metricB.value
                   ) : (
                     <>
                       <span aria-hidden="true">?</span>
@@ -381,7 +408,7 @@ function GamePlayArea({
                   )}
                 </div>
                 <div style={{ fontSize: "var(--fs-sm)", opacity: 0.9 }}>
-                  {CAT_CONFIG[category].unit}
+                  {metricB.unit}
                 </div>
               </div>
 
@@ -440,6 +467,8 @@ export default function HighLowGame({ movies, loading, active = true }) {
   const movieA = gameDeck[state.currentIndex]
   const movieB = gameDeck[state.currentIndex + 1]
   const hasNextCard = state.currentIndex + 2 < gameDeck.length
+  const reveal =
+    state.feedback && movieB ? revealMessage(category, movieA, movieB) : ""
 
   const handleNext = () => {
     const correct = state.feedback === "correct"
@@ -468,7 +497,8 @@ export default function HighLowGame({ movies, loading, active = true }) {
 
   // Atajos: ↑ higher, ↓ lower. Sin pregunta abierta, las flechas hacen scroll.
   useEffect(() => {
-    if (!active || !movieA || !movieB || state.feedback || state.gameOver) return
+    if (!active || !movieA || !movieB || state.feedback || state.gameOver)
+      return
     const onKey = (e) => {
       if (e.key !== "ArrowUp" && e.key !== "ArrowDown") return
       // No secuestrar las flechas dentro de campos de texto.
@@ -491,9 +521,9 @@ export default function HighLowGame({ movies, loading, active = true }) {
         {state.gameOver
           ? `${state.won ? "¡Has completado el juego!" : "Fin del juego"}. Racha final: ${state.streak}.`
           : state.feedback === "correct"
-            ? `Correcto. ${movieB?.title}: ${formatMetric(category, movieB?.metrics[category])}. Racha: ${state.streak}.`
+            ? `Correcto. ${reveal}. Racha: ${state.streak}.`
             : state.feedback === "wrong"
-              ? `Incorrecto. ${movieB?.title}: ${formatMetric(category, movieB?.metrics[category])}.`
+              ? `Incorrecto. ${reveal}.`
               : ""}
       </p>
 

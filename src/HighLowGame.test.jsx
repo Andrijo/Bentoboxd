@@ -40,7 +40,9 @@ describe("HighLowGame", () => {
     fireEvent.click(higher())
     fireEvent.click(button("Ver resultado"))
 
-    expect(screen.getByRole("heading", { name: "¡BARAJA COMPLETA!" })).toBeInTheDocument()
+    expect(
+      screen.getByRole("heading", { name: "¡HAS ACERTADO TODO!" }),
+    ).toBeInTheDocument()
     expect(screen.getByText("Racha final: 2")).toBeInTheDocument()
     expect(button("Jugar de nuevo")).toHaveFocus()
     unmount()
@@ -49,7 +51,9 @@ describe("HighLowGame", () => {
     fireEvent.click(lower())
     fireEvent.click(button("Ver resultado"))
 
-    expect(screen.getByRole("heading", { name: "JUEGO TERMINADO" })).toBeInTheDocument()
+    expect(
+      screen.getByRole("heading", { name: "JUEGO TERMINADO" }),
+    ).toBeInTheDocument()
     expect(screen.getByText("Racha final: 0")).toBeInTheDocument()
   })
 
@@ -65,6 +69,33 @@ describe("HighLowGame", () => {
     fireEvent.click(button("Popularidad"))
     expect(screen.getByText("Racha: 0")).toBeInTheDocument()
     expect(higher()).toBeEnabled()
+  })
+
+  it("en popularidad muestra cuál gana, no el índice", () => {
+    render(<HighLowGame movies={movies} loading={false} />)
+    fireEvent.click(button("Popularidad"))
+
+    expect(screen.queryByText("10")).not.toBeInTheDocument()
+    expect(screen.getAllByText("Popularidad")).toHaveLength(1)
+
+    fireEvent.click(higher())
+
+    expect(screen.getByText("Más")).toBeInTheDocument()
+    expect(screen.getByText("Menos")).toBeInTheDocument()
+    expect(screen.queryByText("10")).not.toBeInTheDocument()
+    expect(screen.queryByText("20")).not.toBeInTheDocument()
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "Correcto. Película 2 es más popular que Película 1. Racha: 1.",
+    )
+  })
+
+  it("en las demás categorías revela el valor", () => {
+    render(<HighLowGame movies={movies} loading={false} />)
+    fireEvent.click(lower())
+
+    expect(screen.getByRole("status")).toHaveTextContent(
+      "Incorrecto. Película 2: 2.",
+    )
   })
 
   it("ignora los atajos mientras está oculto", () => {

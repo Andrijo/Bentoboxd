@@ -3,11 +3,7 @@ import { formatMovieCount } from "../../utils/formatters.js"
 const rankColors = ["var(--ramp-1)", "var(--ramp-3)", "var(--ramp-5)", "var(--ramp-7)", "var(--ramp-9)"]
 const radii = [40, 70, 100, 130, 160]
 
-export default function DirectorOrbit({ directors }) {
-  const topDirectors = Object.entries(directors || {})
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 5)
-
+export default function DirectorOrbit({ ranking }) {
   const cx = 150, cy = 150
 
   return (
@@ -19,7 +15,7 @@ export default function DirectorOrbit({ directors }) {
           @
         </text>
 
-        {topDirectors.map(([name, count], i) => {
+        {ranking.map(([name, count], i) => {
           const color = rankColors[i] || rankColors[0]
           const r = radii[i]
           const angleDeg = i * 72 - 90

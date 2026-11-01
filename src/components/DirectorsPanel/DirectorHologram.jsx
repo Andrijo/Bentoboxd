@@ -1,18 +1,14 @@
 const rankColors = ["var(--ramp-1)", "var(--ramp-3)", "var(--ramp-5)", "var(--ramp-7)", "var(--ramp-9)"]
 
-export default function DirectorHologram({ directors }) {
-  const topDirectors = Object.entries(directors || {})
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 5)
-
-  const max = Math.max(...topDirectors.map((d) => d[1]), 1)
+export default function DirectorHologram({ ranking }) {
+  const max = Math.max(...ranking.map((d) => d[1]), 1)
 
   return (
     <div style={{
       display: "flex", justifyContent: "space-evenly", alignItems: "flex-end",
       height: "200px", padding: "20px 0",
     }}>
-      {topDirectors.map(([name, count], i) => {
+      {ranking.map(([name, count], i) => {
         const color = rankColors[i] || rankColors[0]
         const heightPct = (count / max) * 100
 

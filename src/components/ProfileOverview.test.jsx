@@ -29,6 +29,14 @@ describe("ProfileOverview", () => {
     expect(screen.getByText("Por semana").nextSibling).toHaveTextContent("0.9")
   })
 
+  it("resume el perfil en una frase con sus géneros", () => {
+    render(<ProfileOverview movies={MOVIES} genres={{ Drama: 2 }} username="ana" loading={false} />)
+
+    expect(
+      screen.getByText("Casi 1 película por semana, sobre todo de drama, y notas parecidas a las del público"),
+    ).toBeInTheDocument()
+  })
+
   it("solo aclara cuántas películas se compararon si no fueron todas", () => {
     const { rerender } = render(<ProfileOverview movies={MOVIES} username="ana" loading={false} />)
     expect(screen.getByText("En línea con el público")).toBeInTheDocument()
@@ -36,6 +44,13 @@ describe("ProfileOverview", () => {
     const partial = [MOVIES[0], { ...MOVIES[1], metrics: { runtime: 120 } }]
     rerender(<ProfileOverview movies={partial} username="ana" loading={false} />)
     expect(screen.getByText("Más alto que el público (1 película)")).toBeInTheDocument()
+  })
+
+  it("explica cómo se compara con el público", () => {
+    render(<ProfileOverview movies={MOVIES} username="ana" loading={false} />)
+
+    expect(screen.getByText("Cómo se calcula")).toBeInTheDocument()
+    expect(screen.getByText(/se divide entre 2/)).toBeInTheDocument()
   })
 
   it("indica lo que falta por cargar de TMDB", () => {

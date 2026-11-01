@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useRef, useState } from "react"
 import StatTile from "./StatsSummary/StatTile.jsx"
+import HowCalculated from "./HowCalculated.jsx"
 import { Skeleton } from "./Skeleton.jsx"
 import { computeProfileStats } from "../utils/profileStats.js"
+import { profileHeadline } from "../utils/profileHeadline.js"
 import { formatDuration, formatHours, formatMovieCount } from "../utils/formatters.js"
 import { profileLink } from "../utils/profileUrl.js"
 
@@ -49,8 +51,9 @@ function CopyLinkButton({ username }) {
   )
 }
 
-export default function ProfileOverview({ movies, username, loading }) {
+export default function ProfileOverview({ movies, genres = {}, username, loading }) {
   const stats = useMemo(() => computeProfileStats(movies), [movies])
+  const headline = profileHeadline(stats, genres)
   const pending = <Skeleton width="64px" height="1.4rem" />
 
   let hoursTile = null
@@ -76,15 +79,22 @@ export default function ProfileOverview({ movies, username, loading }) {
       <StatTile
         label="Frente al público (TMDB)"
         value={`${sign}${Math.abs(stats.tmdbDiff).toFixed(1)}`}
-        detail={`${TMDB_VERDICT[stats.tmdbVerdict]}${partial ? ` (${formatMovieCount(stats.tmdbCompared)})` : ""}`}
-      />
+        detail={`${TMDB_VERDICT[stats.tmdbVerdict]}${partial ? ` (${formatMovieCount(stats.tmdbCompared)})` : ""}`}>
+        <HowCalculated>
+          Media de la nota del perfil menos la del público en cada película calificada.
+          TMDB puntúa de 0 a 10: aquí se divide entre 2. Menos de 0.1 de diferencia cuenta como «en línea».
+        </HowCalculated>
+      </StatTile>
     )
   }
 
   return (
     <section className="rd-overview" aria-labelledby="rd-overview-title">
       <div className="rd-overview-head">
-        <h2 id="rd-overview-title" className="rd-overview-title">@{username}</h2>
+        <div className="rd-overview-intro">
+          <h2 id="rd-overview-title" className="rd-overview-title">@{username}</h2>
+          {headline && <p className="rd-overview-headline">{headline}</p>}
+        </div>
         <CopyLinkButton username={username} />
       </div>
 

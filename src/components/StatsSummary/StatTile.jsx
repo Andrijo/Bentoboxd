@@ -1,4 +1,4 @@
-export default function StatTile({ label, value, detail }) {
+export default function StatTile({ label, value, detail, children }) {
   return (
     <div style={{
       background: "var(--c-inset)", border: "1px solid rgb(var(--fg-rgb) / 0.05)",
@@ -16,6 +16,7 @@ export default function StatTile({ label, value, detail }) {
           {detail}
         </div>
       )}
+      {children}
     </div>
   )
 }

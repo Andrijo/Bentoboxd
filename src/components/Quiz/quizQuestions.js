@@ -17,7 +17,6 @@ const POSSIBLE_RATINGS = [
   "4",
   "4.5",
   "5",
-  UNRATED,
 ]
 
 /**
@@ -48,13 +47,6 @@ function sortOptions(options) {
   })
 }
 
-function ratingOptions(correct, random) {
-  return shuffle(
-    POSSIBLE_RATINGS.filter((rating) => rating !== correct),
-    random,
-  ).slice(0, OPTION_COUNT - 1)
-}
-
 function distinctValues(values) {
   return [...new Set(values.filter(Boolean))]
 }
@@ -81,7 +73,8 @@ const QUESTION_TYPES = [
       qText: `¿Qué calificación recibió "${movie.title}" en este perfil?`,
       correct: movie.rating ? `${movie.rating}` : UNRATED,
     }),
-    distractors: ({ correct, random }) => ratingOptions(correct, random),
+    distractors: ({ correct, pool, random }) =>
+      otherOptions(pool.ratings, [correct], random),
   },
   {
     type: "year",
@@ -126,6 +119,10 @@ export function generateQuestions(
   const pool = {
     directors: distinctValues(movies.flatMap((movie) => movie.directors || [])),
     titles: distinctValues(movies.map((movie) => movie.title)),
+    // Con todo calificado, "Sin calificar" sería una opción descartable.
+    ratings: movies.every((movie) => movie.rating)
+      ? POSSIBLE_RATINGS
+      : [...POSSIBLE_RATINGS, UNRATED],
   }
 
   return shuffle(movies, random)

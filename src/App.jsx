@@ -269,7 +269,7 @@ export default function App() {
 
         {hasMovies && (
           <>
-            <ProfileOverview movies={movies} username={username} loading={metaLoading} />
+            <ProfileOverview movies={movies} genres={genres} username={username} loading={metaLoading} />
             <SectionNav showTmdbSections={!genreError} />
             <MovieViews
               key={username}

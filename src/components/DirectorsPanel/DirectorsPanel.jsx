@@ -5,6 +5,7 @@ import DirectorOrbit from "./DirectorOrbit.jsx"
 import { PanelSkeleton } from "../Skeleton.jsx"
 import Panel from "../Panel/Panel.jsx"
 import SegmentedControl from "../Panel/SegmentedControl.jsx"
+import { topDirectors } from "../../utils/topDirectors.js"
 
 const VIEW_OPTIONS = [
   { key: "cards", label: "Lista" },
@@ -15,17 +16,16 @@ const VIEW_OPTIONS = [
 export default function DirectorsPanel({ directors, movies, loading }) {
   const [viewMode, setViewMode] = useState("cards")
 
-  const topDirectors = Object.entries(directors || {})
-    .sort((a, b) => b[1] - a[1])
-    .slice(0, 5)
-
-  const hasData = topDirectors.length > 0
+  const ranking = topDirectors(directors)
+  const hasData = ranking.length > 0
+  const hasDirectors = Object.keys(directors || {}).length > 0
 
   return (
     <Panel
       id="rd-panel-directores"
       area="directors"
       title="TOP DIRECTORES"
+      subtitle={hasData && !loading && "Con al menos 2 películas"}
       actions={hasData && !loading && (
         <SegmentedControl label="Vista de directores" options={VIEW_OPTIONS} value={viewMode} onChange={setViewMode} />
       )}
@@ -34,9 +34,9 @@ export default function DirectorsPanel({ directors, movies, loading }) {
 
       {!loading && hasData && (
         <>
-          {viewMode === "cards" && <DirectorCards directors={directors} movies={movies} />}
-          {viewMode === "hologram" && <DirectorHologram directors={directors} />}
-          {viewMode === "orbit" && <DirectorOrbit directors={directors} />}
+          {viewMode === "cards" && <DirectorCards ranking={ranking} movies={movies} />}
+          {viewMode === "hologram" && <DirectorHologram ranking={ranking} />}
+          {viewMode === "orbit" && <DirectorOrbit ranking={ranking} />}
         </>
       )}
 
@@ -46,7 +46,9 @@ export default function DirectorsPanel({ directors, movies, loading }) {
           color: "var(--c-text-muted)", marginTop: "20px",
           fontFamily: "var(--font-mono)",
         }}>
-          Sin datos de directores disponibles
+          {hasDirectors
+            ? "Ningún director tiene al menos 2 películas en este perfil."
+            : "Sin datos de directores disponibles"}
         </div>
       )}
     </Panel>
