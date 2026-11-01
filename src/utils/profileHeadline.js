@@ -1,4 +1,5 @@
-import { formatMovieCount } from "./formatters.js"
+import { OTHER_GENRE } from "../constants/genres.js"
+import { getMessages } from "../i18n/index.js"
 
 const WEEKS_PER_MONTH = 52 / 12
 // Desde esta fracción se redondea hacia arriba con "Casi"; por debajo de una
@@ -7,15 +8,7 @@ const NEAR_NEXT = 0.75
 const MIN_GENRE_MOVIES = 2
 const MAX_TOP_GENRES = 2
 
-const GENRE_PHRASES = { Documental: "documentales", Familiar: "familiares" }
-
-const TMDB_PHRASES = {
-  kinder: "notas más altas que las del público",
-  harsher: "notas más bajas que las del público",
-  same: "notas parecidas a las del público",
-}
-
-function paceText(perWeek) {
+function paceText(perWeek, { headline }) {
   // Con un decimal, como la tarjeta "Por semana": ambas deben coincidir.
   const rounded = Number(perWeek.toFixed(1))
   const whole = Math.floor(rounded)
@@ -23,24 +16,24 @@ function paceText(perWeek) {
 
   if (rounded < NEAR_NEXT) {
     const perMonth = Math.max(1, Math.round(perWeek * WEEKS_PER_MONTH))
-    return `Cerca de ${formatMovieCount(perMonth)} al mes`
+    return headline.aboutPerMonth(perMonth)
   }
-  if (fraction === 0) return `${formatMovieCount(whole)} por semana`
+  if (fraction === 0) return headline.perWeek(whole)
   return fraction >= NEAR_NEXT
-    ? `Casi ${formatMovieCount(whole + 1)} por semana`
-    : `Más de ${formatMovieCount(whole)} por semana`
+    ? headline.almostPerWeek(whole + 1)
+    : headline.overPerWeek(whole)
 }
 
-function genreText(genres) {
-  const known = Object.entries(genres).filter(([genre]) => genre !== "Otro")
+function genreText(genres, t) {
+  const known = Object.entries(genres).filter(([genre]) => genre !== OTHER_GENRE)
   const topCount = Math.max(0, ...known.map(([, count]) => count))
   if (topCount < MIN_GENRE_MOVIES) return null
 
   const top = known.filter(([, count]) => count === topCount)
   if (top.length > MAX_TOP_GENRES) return null
 
-  const phrases = top.map(([genre]) => GENRE_PHRASES[genre] || `de ${genre.toLowerCase()}`)
-  return `sobre todo ${phrases.join(" y ")}`
+  const phrases = top.map(([genre]) => t.headline.genrePhrase(genre, t.genres[genre]))
+  return t.headline.mostly(phrases.join(` ${t.headline.and} `))
 }
 
 /**
@@ -51,12 +44,13 @@ function genreText(genres) {
 export function profileHeadline({ perWeek, tmdbVerdict }, genres) {
   if (perWeek === null) return null
 
-  const genre = genreText(genres)
-  const tmdb = TMDB_PHRASES[tmdbVerdict]
+  const t = getMessages()
+  const genre = genreText(genres, t)
+  const tmdb = t.headline.tmdb[tmdbVerdict]
 
   return [
-    paceText(perWeek),
+    paceText(perWeek, t),
     genre && `, ${genre}`,
-    tmdb && `${genre ? "," : ""} y ${tmdb}`,
+    tmdb && `${genre ? "," : ""} ${t.headline.and} ${tmdb}`,
   ].filter(Boolean).join("")
 }

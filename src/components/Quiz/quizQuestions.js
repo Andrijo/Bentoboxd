@@ -5,7 +5,8 @@ const OPTION_COUNT = 4
 const YEAR_SPREAD = 5
 // Primera película conservada (Roundhay Garden Scene).
 const FIRST_FILM_YEAR = 1888
-const UNRATED = "Sin calificar"
+/** Opción "sin nota": un valor, porque su texto depende del idioma. */
+export const UNRATED = "unrated"
 const POSSIBLE_RATINGS = [
   "0.5",
   "1",
@@ -70,7 +71,7 @@ const QUESTION_TYPES = [
     type: "rating",
     available: () => true,
     build: (movie) => ({
-      qText: `¿Qué calificación recibió "${movie.title}" en este perfil?`,
+      text: (t) => t.quiz.questions.rating(movie.title),
       correct: movie.rating ? `${movie.rating}` : UNRATED,
     }),
     distractors: ({ correct, pool, random }) =>
@@ -80,7 +81,7 @@ const QUESTION_TYPES = [
     type: "year",
     available: (movie) => Boolean(movie.year),
     build: (movie) => ({
-      qText: `¿En qué año se estrenó "${movie.title}"?`,
+      text: (t) => t.quiz.questions.year(movie.title),
       correct: String(movie.year).trim(),
     }),
     distractors: ({ correct, random, currentYear }) =>
@@ -92,7 +93,7 @@ const QUESTION_TYPES = [
       Boolean(movie.directors?.[0]) &&
       hasEnoughOthers(pool.directors, movie.directors),
     build: (movie) => ({
-      qText: `¿Quién dirigió "${movie.title}"?`,
+      text: (t) => t.quiz.questions.director(movie.title),
       correct: movie.directors[0],
     }),
     // Un codirector también es correcto: no puede salir como opción falsa.
@@ -104,7 +105,7 @@ const QUESTION_TYPES = [
     available: (movie, pool) =>
       Boolean(movie.poster) && hasEnoughOthers(pool.titles, [movie.title]),
     build: (movie) => ({
-      qText: "¿De qué película es este póster?",
+      text: (t) => t.quiz.questions.poster(),
       correct: movie.title,
     }),
     distractors: ({ correct, pool, random }) =>
@@ -130,12 +131,12 @@ export function generateQuestions(
     .map((movie) => {
       const candidates = QUESTION_TYPES.filter((t) => t.available(movie, pool))
       const kind = candidates[Math.floor(random() * candidates.length)]
-      const { qText, correct } = kind.build(movie)
+      const { text, correct } = kind.build(movie)
       const distractors = kind.distractors({ movie, correct, pool, random, currentYear })
 
       return {
         movie,
-        qText,
+        text,
         options: NUMERIC_TYPES.has(kind.type)
           ? sortOptions([correct, ...distractors])
           : shuffle([correct, ...distractors], random),

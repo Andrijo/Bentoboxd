@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { formatMonth, formatMonthYear, formatMovieCount } from "../../utils/formatters.js"
+import { useMessages } from "../../i18n/index.js"
 
 const MAX_RATING = 5
 const MAX_AXIS_LABELS = 7
@@ -27,8 +28,8 @@ function lineSegments(months) {
   return segments.filter((segment) => segment.length > 1)
 }
 
-function monthSummary({ key, count, average }) {
-  const rating = average === null ? "sin nota" : `nota media ${average.toFixed(1)}`
+function monthSummary({ monthly }, { key, count, average }) {
+  const rating = average === null ? monthly.noRating : monthly.averageRating(average.toFixed(1))
   return `${formatMonthYear(key)}: ${formatMovieCount(count)}, ${rating}`
 }
 
@@ -37,6 +38,7 @@ function monthSummary({ key, count, average }) {
  * escalas distintas. Cada columna es un botón que comparte una sola lectura.
  */
 export default function MonthlyChart({ months }) {
+  const t = useMessages()
   const [activeKey, setActiveKey] = useState(null)
   const lastIndex = months.length - 1
   const maxCount = Math.max(...months.map((m) => m.count))
@@ -57,7 +59,7 @@ export default function MonthlyChart({ months }) {
 
       <div className="rd-monthly-plot">
         <div aria-hidden="true">
-          <div className="rd-monthly-label">Películas</div>
+          <div className="rd-monthly-label">{t.common.movies}</div>
           <div className="rd-monthly-bars">
             {months.map((month) => {
               const lit = month === active || month === peak
@@ -73,7 +75,7 @@ export default function MonthlyChart({ months }) {
             })}
           </div>
 
-          <div className="rd-monthly-label">Nota media</div>
+          <div className="rd-monthly-label">{t.monthly.averageLabel}</div>
           <div className="rd-monthly-line">
             <span className="rd-monthly-tick" style={{ top: 0 }}>{MAX_RATING}★</span>
             <span className="rd-monthly-tick" style={{ top: "100%" }}>0</span>
@@ -111,12 +113,12 @@ export default function MonthlyChart({ months }) {
           </div>
         </div>
 
-        <div role="group" aria-label="Películas y nota media por mes" className="rd-monthly-hits">
+        <div role="group" aria-label={t.monthly.perMonth} className="rd-monthly-hits">
           {months.map((month) => (
             <button
               key={month.key}
               type="button"
-              aria-label={monthSummary(month)}
+              aria-label={monthSummary(t, month)}
               data-active={month === active ? "" : undefined}
               onPointerEnter={() => setActiveKey(month.key)}
               onFocus={() => setActiveKey(month.key)}

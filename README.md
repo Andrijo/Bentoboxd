@@ -40,6 +40,7 @@ Nace como un experimento personal para explorar visualización de datos, integra
   - **Quiz** (`#quiz`) — 5 preguntas sobre calificación, año de estreno, dirección o póster
 - **Skeleton loading** mientras cargan el feed y los metadatos de TMDB
 - **Tema claro y oscuro** — Botón de cambio en la cabecera; respeta `prefers-color-scheme` en la primera visita y recuerda tu elección en localStorage (sin parpadeo al cargar)
+- **Español e inglés** — Selector ES/EN en la cabecera; usa el idioma del navegador en la primera visita, recuerda tu elección en localStorage y muestra los títulos en español cuando TMDB los tiene
 - **Paleta de cinco tonos** — Todos los colores salen de tokens CSS (tintas y crema); los gráficos usan rampas derivadas de ellos
 - **Diseño responsive** con layout adaptado a móvil
 - **Accesibilidad** — Etiquetas ARIA, anuncios en vivo para los juegos y enlaces externos señalados para lectores de pantalla
@@ -186,6 +187,7 @@ src/
 │   ├── letterboxd.js        # Parseo de RSS
 │   └── tmdb.js              # Cliente TMDB
 ├── constants/               # Constantes y mapeos
+├── i18n/                    # Idioma activo y diccionarios (es, en)
 ├── test/setup.js            # Setup de Vitest (jest-dom)
 └── utils/                   # Utilidades
 ```

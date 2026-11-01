@@ -6,22 +6,12 @@ import { computeProfileStats } from "../utils/profileStats.js"
 import { profileHeadline } from "../utils/profileHeadline.js"
 import { formatDuration, formatFeedScope, formatHours, formatMovieCount } from "../utils/formatters.js"
 import { profileLink } from "../utils/profileUrl.js"
+import { useMessages } from "../i18n/index.js"
 
 const COPY_RESET_MS = 2500
 
-const COPY_LABELS = {
-  idle: "Copiar enlace",
-  copied: "Enlace copiado",
-  failed: "No se pudo copiar",
-}
-
-const TMDB_VERDICT = {
-  kinder: "Más alto que el público",
-  harsher: "Más bajo que el público",
-  same: "En línea con el público",
-}
-
 function CopyLinkButton({ username }) {
+  const t = useMessages()
   const [status, setStatus] = useState("idle")
   const resetRef = useRef(null)
 
@@ -42,47 +32,47 @@ function CopyLinkButton({ username }) {
   return (
     <>
       <button type="button" className="rd-btn-outline" onClick={copy}>
-        {COPY_LABELS[status]}
+        {t.overview.copy[status]}
       </button>
       <span role="status" className="rd-sr-only">
-        {status !== "idle" && COPY_LABELS[status]}
+        {status !== "idle" && t.overview.copy[status]}
       </span>
     </>
   )
 }
 
 export default function ProfileOverview({ movies, genres = {}, username, loading }) {
+  const t = useMessages()
   const stats = useMemo(() => computeProfileStats(movies), [movies])
   const headline = profileHeadline(stats, genres)
   const pending = <Skeleton width="64px" height="1.4rem" />
 
   let hoursTile = null
   if (loading) {
-    hoursTile = <StatTile label="Tiempo viendo" value={pending} detail="Sumando duraciones…" />
+    hoursTile = <StatTile label={t.overview.timeWatching} value={pending} detail={t.overview.addingRuntimes} />
   } else if (stats.runtimeCount > 0) {
     hoursTile = (
       <StatTile
-        label="Tiempo viendo"
+        label={t.overview.timeWatching}
         value={formatHours(stats.runtimeMinutes)}
-        detail={`${formatDuration(stats.runtimeMinutes / stats.runtimeCount)} por película`}
+        detail={t.overview.perMovie(formatDuration(stats.runtimeMinutes / stats.runtimeCount))}
       />
     )
   }
 
   let tmdbTile = null
   if (loading) {
-    tmdbTile = <StatTile label="Frente al público (TMDB)" value={pending} detail="Comparando…" />
+    tmdbTile = <StatTile label={t.overview.versusAudience} value={pending} detail={t.overview.comparing} />
   } else if (stats.tmdbDiff !== null) {
     const sign = stats.tmdbDiff > 0 ? "+" : stats.tmdbDiff < 0 ? "−" : ""
     const partial = stats.tmdbCompared < stats.ratedCount
     tmdbTile = (
       <StatTile
-        label="Frente al público (TMDB)"
+        label={t.overview.versusAudience}
         value={`${sign}${Math.abs(stats.tmdbDiff).toFixed(1)}`}
-        detail={`${TMDB_VERDICT[stats.tmdbVerdict]}${partial ? ` (${formatMovieCount(stats.tmdbCompared)})` : ""}`}>
+        detail={`${t.overview.verdict[stats.tmdbVerdict]}${partial ? ` (${formatMovieCount(stats.tmdbCompared)})` : ""}`}>
         <HowCalculated>
-          Media de la nota del perfil menos la del público en cada película calificada.
-          TMDB puntúa de 0 a 10: aquí se divide entre 2. Menos de 0.1 de diferencia cuenta como «en línea».
+          {t.overview.versusHow}
         </HowCalculated>
       </StatTile>
     )
@@ -101,21 +91,21 @@ export default function ProfileOverview({ movies, genres = {}, username, loading
 
       <div className="rd-overview-tiles">
         <StatTile
-          label="Promedio"
+          label={t.overview.average}
           value={stats.average === null ? "—" : stats.average.toFixed(1)}
           detail={
             stats.unratedCount > 0
-              ? `${stats.unratedCount} sin calificar`
-              : `${formatMovieCount(stats.ratedCount)} calificadas`
+              ? t.overview.unratedCount(stats.unratedCount)
+              : t.overview.ratedCount(stats.ratedCount)
           }
         />
         {hoursTile}
         {tmdbTile}
         {stats.perWeek !== null && (
           <StatTile
-            label="Por semana"
+            label={t.overview.perWeek}
             value={stats.perWeek.toFixed(1)}
-            detail={`${formatMovieCount(stats.datedCount)} en ${stats.spanDays} día${stats.spanDays === 1 ? "" : "s"}`}
+            detail={t.overview.moviesInDays(stats.datedCount, stats.spanDays)}
           />
         )}
       </div>

@@ -7,16 +7,12 @@ import GenreList from "./GenreList.jsx"
 import { PanelSkeleton } from "../Skeleton.jsx"
 import Panel from "../Panel/Panel.jsx"
 import SegmentedControl from "../Panel/SegmentedControl.jsx"
-import { formatMovieCount } from "../../utils/formatters.js"
+import { useMessages } from "../../i18n/index.js"
 
-const CHART_OPTIONS = [
-  { key: "donut", label: "Dona" },
-  { key: "bar", label: "Barras" },
-  { key: "matrix", label: "Matriz" },
-  { key: "gauges", label: "Medidores" },
-]
+const CHART_KEYS = ["donut", "bar", "matrix", "gauges"]
 
 export default function GenrePanel({ genres, movieCount, movies, loadingGenres }) {
+  const t = useMessages()
   const [chartType, setChartType] = useState("donut")
 
   const total = Object.values(genres || {}).reduce((a, b) => a + b, 0)
@@ -28,17 +24,22 @@ export default function GenrePanel({ genres, movieCount, movies, loadingGenres }
     <Panel
       id="rd-panel-generos"
       area="genres"
-      title="TOP GÉNEROS"
-      subtitle={hasData && `${formatMovieCount(movieCount)} · ${genreCount} género${genreCount === 1 ? "" : "s"}`}
+      title={t.genrePanel.title}
+      subtitle={hasData && t.genrePanel.subtitle(movieCount, genreCount)}
       actions={hasData && (
-        <SegmentedControl label="Tipo de gráfico" options={CHART_OPTIONS} value={chartType} onChange={setChartType} />
+        <SegmentedControl
+          label={t.genrePanel.chartType}
+          options={CHART_KEYS.map((key) => ({ key, label: t.genrePanel.charts[key] }))}
+          value={chartType}
+          onChange={setChartType}
+        />
       )}
       bodyStyle={{
         padding: "32px 24px", minHeight: "200px",
         display: "flex", flexDirection: "column", alignItems: "center", justifyContent: "center",
         gap: "32px",
       }}>
-      {loadingGenres && <PanelSkeleton variant="chart" label="Clasificando géneros…" />}
+      {loadingGenres && <PanelSkeleton variant="chart" label={t.genrePanel.loading} />}
 
       {!loadingGenres && hasData && (
         <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
@@ -58,7 +59,7 @@ export default function GenrePanel({ genres, movieCount, movies, loadingGenres }
           fontSize: "var(--fs-xs)", color: "var(--c-text-muted)",
           letterSpacing: "2px", fontFamily: "var(--font-mono)",
         }}>
-          Sin datos de géneros disponibles
+          {t.genrePanel.empty}
         </div>
       )}
     </Panel>

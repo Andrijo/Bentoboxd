@@ -1,9 +1,8 @@
 import RecentProfiles from "./RecentProfiles.jsx"
+import { useMessages } from "../i18n/index.js"
 
 // Perfil público de Letterboxd para probar la app sin tener cuenta.
 export const EXAMPLE_PROFILE = "Andrijo"
-
-const FEATURES = ["Géneros", "Directores", "Reparto", "Países", "Streaming"]
 
 function FilmIcon() {
   return (
@@ -32,6 +31,7 @@ export default function EmptyLanding({
   onProfileSelect,
   onProfileRemove,
 }) {
+  const t = useMessages()
   if (loading || movies.length > 0) return null
 
   // Con error solo quedan los recientes: el aviso ya ocupa el lugar del mensaje.
@@ -40,13 +40,12 @@ export default function EmptyLanding({
       {!error && (
         <>
           <FilmIcon />
-          <h2 className="rd-landing-title">Tu Letterboxd, en un dashboard</h2>
+          <h2 className="rd-landing-title">{t.landing.title}</h2>
           <p className="rd-landing-lead">
-            Escribe un usuario y convierte sus últimas películas vistas en
-            estadísticas, gráficos y minijuegos.
+            {t.landing.lead}
           </p>
-          <ul className="rd-landing-features" aria-label="Qué incluye">
-            {FEATURES.map((feature) => (
+          <ul className="rd-landing-features" aria-label={t.landing.includes}>
+            {t.landing.features.map((feature) => (
               <li key={feature}>{feature}</li>
             ))}
           </ul>
@@ -55,7 +54,7 @@ export default function EmptyLanding({
             type="button"
             className="rd-landing-example"
             onClick={() => onProfileSelect(EXAMPLE_PROFILE)}>
-            Probar con @{EXAMPLE_PROFILE}
+            {t.landing.tryExample(EXAMPLE_PROFILE)}
           </button>
         </>
       )}

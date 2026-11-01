@@ -4,8 +4,10 @@ import StatTile from "./StatTile.jsx"
 import { computeProfileStats } from "../../utils/profileStats.js"
 import { formatMovieCount, formatWatchedDate, weekdayName } from "../../utils/formatters.js"
 import Panel from "../Panel/Panel.jsx"
+import { useMessages } from "../../i18n/index.js"
 
 export default function StatsSummary({ movies }) {
+  const t = useMessages()
   const stats = useMemo(() => computeProfileStats(movies), [movies])
   if (stats.total === 0) return null
 
@@ -17,33 +19,33 @@ export default function StatsSummary({ movies }) {
     <Panel
       id="rd-panel-resumen"
       area="stats"
-      title="RESUMEN"
+      title={t.summary.title}
       subtitle={`${formatMovieCount(stats.total)}${period ? ` · ${period}` : ""}`}
       bodyStyle={{ display: "flex", flexDirection: "column", gap: "24px" }}>
       <div style={{
         display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(160px, 1fr))", gap: "12px",
       }}>
         <StatTile
-          label="Me gusta"
+          label={t.common.liked}
           value={stats.likedCount}
-          detail={`${Math.round((stats.likedCount / stats.total) * 100)}% de las vistas`}
+          detail={t.summary.ofWatched(Math.round((stats.likedCount / stats.total) * 100))}
         />
         <StatTile
-          label="Vistas otra vez"
+          label={t.summary.rewatches}
           value={stats.rewatchCount}
-          detail={`${Math.round((stats.rewatchCount / stats.total) * 100)}% de las vistas`}
+          detail={t.summary.ofWatched(Math.round((stats.rewatchCount / stats.total) * 100))}
         />
         {stats.topWeekday !== null && (
           <StatTile
-            label="Día más activo"
+            label={t.summary.mostActiveDay}
             value={weekdayName(stats.topWeekday)}
             detail={formatMovieCount(stats.topWeekdayCount)}
           />
         )}
         {stats.topDecade !== null && (
           <StatTile
-            label="Década más vista"
-            value={`${stats.topDecade}s`}
+            label={t.summary.topDecade}
+            value={t.summary.decade(stats.topDecade)}
             detail={formatMovieCount(stats.topDecadeCount)}
           />
         )}

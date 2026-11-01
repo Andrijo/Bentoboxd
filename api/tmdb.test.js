@@ -46,6 +46,16 @@ describe("buildTmdbUpstreamUrl", () => {
     expect(url.searchParams.get("query")).toBe("Inception")
   })
 
+  it("acepta las traducciones en los detalles", () => {
+    const url = buildTmdbUpstreamUrl(
+      "movie/603",
+      new URLSearchParams({ append_to_response: "credits,watch/providers,translations" }),
+      "secret",
+    )
+
+    expect(url.searchParams.get("append_to_response")).toBe("credits,watch/providers,translations")
+  })
+
   it("acepta detalles con credits y watch/providers", () => {
     const url = buildTmdbUpstreamUrl(
       "/movie/27205",

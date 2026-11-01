@@ -1,16 +1,18 @@
-const MOVIES_SECTION = { id: "rd-section-peliculas", label: "Películas" }
-const SUMMARY_SECTION = { id: "rd-panel-resumen", label: "Resumen" }
-const MONTHLY_SECTION = { id: "rd-panel-evolucion", label: "Evolución" }
+import { useMessages } from "../i18n/index.js"
+
+const MOVIES_SECTION = { id: "rd-section-peliculas", key: "movies" }
+const SUMMARY_SECTION = { id: "rd-panel-resumen", key: "summary" }
+const MONTHLY_SECTION = { id: "rd-panel-evolucion", key: "monthly" }
 
 // En el orden de la cuadrícula. Sin TMDB estos paneles no se muestran.
 const TMDB_SECTIONS = [
-  { id: "rd-panel-generos", label: "Géneros" },
-  { id: "rd-panel-streaming", label: "Streaming" },
-  { id: "rd-panel-opiniones", label: "Opiniones" },
-  { id: "rd-panel-directores", label: "Directores" },
-  { id: "rd-panel-reparto", label: "Reparto" },
-  { id: "rd-panel-mejor-calificados", label: "Mejor calificados" },
-  { id: "rd-panel-paises", label: "Países" },
+  { id: "rd-panel-generos", key: "genres" },
+  { id: "rd-panel-streaming", key: "streaming" },
+  { id: "rd-panel-opiniones", key: "opinions" },
+  { id: "rd-panel-directores", key: "directors" },
+  { id: "rd-panel-reparto", key: "cast" },
+  { id: "rd-panel-mejor-calificados", key: "topRated" },
+  { id: "rd-panel-paises", key: "countries" },
 ]
 
 // Botones y no enlaces: el hash de la URL es la página activa (ver useHashRoute).
@@ -24,6 +26,7 @@ function goToSection(id) {
 }
 
 export default function SectionNav({ showTmdbSections }) {
+  const t = useMessages()
   const sections = [
     MOVIES_SECTION,
     SUMMARY_SECTION,
@@ -32,10 +35,10 @@ export default function SectionNav({ showTmdbSections }) {
   ]
 
   return (
-    <nav aria-label="Secciones del perfil" className="rd-section-nav">
-      {sections.map(({ id, label }) => (
+    <nav aria-label={t.sections.label} className="rd-section-nav">
+      {sections.map(({ id, key }) => (
         <button key={id} type="button" onClick={() => goToSection(id)}>
-          {label}
+          {t.sections[key]}
         </button>
       ))}
     </nav>

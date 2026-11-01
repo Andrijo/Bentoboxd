@@ -5,7 +5,7 @@ const stats = (overrides) => ({ perWeek: 1.9, tmdbVerdict: "same", ...overrides 
 
 describe("profileHeadline", () => {
   it("une ritmo, género y comparación con el público", () => {
-    expect(profileHeadline(stats(), { Drama: 20, Comedia: 8, Otro: 1 })).toBe(
+    expect(profileHeadline(stats(), { drama: 20, comedy: 8, other: 1 })).toBe(
       "Casi 2 películas por semana, sobre todo de drama, y notas parecidas a las del público",
     )
   })
@@ -33,36 +33,36 @@ describe("profileHeadline", () => {
 
   it("mientras no hay datos de TMDB se queda con lo que ya sabe", () => {
     expect(profileHeadline(stats({ tmdbVerdict: null }), {})).toBe("Casi 2 películas por semana")
-    expect(profileHeadline(stats({ tmdbVerdict: null }), { Terror: 3 })).toBe(
+    expect(profileHeadline(stats({ tmdbVerdict: null }), { horror: 3 })).toBe(
       "Casi 2 películas por semana, sobre todo de terror",
     )
   })
 
   it("nombra dos géneros empatados y ninguno si son más", () => {
-    expect(profileHeadline(stats({ tmdbVerdict: null }), { Drama: 4, Comedia: 4, Terror: 1 })).toBe(
+    expect(profileHeadline(stats({ tmdbVerdict: null }), { drama: 4, comedy: 4, horror: 1 })).toBe(
       "Casi 2 películas por semana, sobre todo de drama y de comedia",
     )
-    expect(profileHeadline(stats({ tmdbVerdict: null }), { Drama: 4, Comedia: 4, Terror: 4 })).toBe(
+    expect(profileHeadline(stats({ tmdbVerdict: null }), { drama: 4, comedy: 4, horror: 4 })).toBe(
       "Casi 2 películas por semana",
     )
   })
 
   it("redacta los géneros que no admiten «de»", () => {
-    expect(profileHeadline(stats({ tmdbVerdict: null }), { Documental: 5 })).toBe(
+    expect(profileHeadline(stats({ tmdbVerdict: null }), { documentary: 5 })).toBe(
       "Casi 2 películas por semana, sobre todo documentales",
     )
-    expect(profileHeadline(stats({ tmdbVerdict: null }), { Familiar: 5 })).toBe(
+    expect(profileHeadline(stats({ tmdbVerdict: null }), { family: 5 })).toBe(
       "Casi 2 películas por semana, sobre todo familiares",
     )
   })
 
   it("no destaca «Otro» ni un género con una sola película", () => {
-    expect(profileHeadline(stats({ tmdbVerdict: null }), { Otro: 30, Drama: 1 })).toBe(
+    expect(profileHeadline(stats({ tmdbVerdict: null }), { other: 30, drama: 1 })).toBe(
       "Casi 2 películas por semana",
     )
   })
 
   it("sin fechas no hay titular", () => {
-    expect(profileHeadline(stats({ perWeek: null }), { Drama: 20 })).toBeNull()
+    expect(profileHeadline(stats({ perWeek: null }), { drama: 20 })).toBeNull()
   })
 })

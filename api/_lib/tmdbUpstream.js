@@ -8,7 +8,7 @@
 const TMDB_ORIGIN = "https://api.themoviedb.org"
 const LANGUAGE_RE = /^[a-z]{2}(-[A-Z]{2})?$/
 const YEAR_RE = /^\d{4}$/
-const APPEND_VALUES = new Set(["credits", "watch/providers"])
+const APPEND_VALUES = new Set(["credits", "watch/providers", "translations"])
 const MAX_QUERY_LENGTH = 200
 
 const isLanguage = (value) => LANGUAGE_RE.test(value)

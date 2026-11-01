@@ -1,25 +1,28 @@
+export const OTHER_GENRE = "other"
+
+// Claves de datos; las etiquetas viven en el diccionario de cada idioma.
 export const TMDB_GENRES = {
-  27: "Terror",
-  28: "Acción",
-  878: "Ciencia Ficción",
-  18: "Drama",
-  35: "Comedia",
-  53: "Thriller",
-  10749: "Romance",
-  16: "Animación",
-  99: "Documental",
-  12: "Aventura",
-  80: "Crimen",
-  14: "Fantasía",
-  9648: "Misterio",
-  10751: "Familiar",
+  27: "horror",
+  28: "action",
+  878: "scienceFiction",
+  18: "drama",
+  35: "comedy",
+  53: "thriller",
+  10749: "romance",
+  16: "animation",
+  99: "documentary",
+  12: "adventure",
+  80: "crime",
+  14: "fantasy",
+  9648: "mystery",
+  10751: "family",
 }
 
 const RAMP_STEPS = 10
 
 // Reparte los géneros por la rampa neutra definida en index.css
-// (--ramp-1 más contrastado), dejando "Otro" en el tono más tenue.
-const KEYS = [...new Set(Object.values(TMDB_GENRES)), "Otro"]
+// (--ramp-1 más contrastado), dejando OTHER_GENRE en el tono más tenue.
+const KEYS = [...new Set(Object.values(TMDB_GENRES)), OTHER_GENRE]
 
 export const GENRE_CONFIG = Object.fromEntries(
   KEYS.map((genre, i) => {

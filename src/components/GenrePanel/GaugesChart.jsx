@@ -1,6 +1,8 @@
 import { GENRE_KEYS, GENRE_CONFIG } from "../../constants/genres.js"
+import { useMessages } from "../../i18n/index.js"
 
 export default function GaugesChart({ genres }) {
+  const t = useMessages()
   const sortedGenres = GENRE_KEYS.filter((k) => (genres[k] || 0) > 0).sort(
     (a, b) => genres[b] - genres[a],
   )
@@ -45,13 +47,13 @@ export default function GaugesChart({ genres }) {
                 fontSize: "var(--fs-2xs)", fontFamily: "var(--font-mono)",
                 color: "var(--c-text)", letterSpacing: "1px",
               }}>
-                {k}
+                {t.genres[k]}
               </div>
               <div style={{
                 fontSize: "var(--fs-xs)", color: "var(--c-text-muted)",
                 fontFamily: "var(--font-mono)", marginTop: "2px",
               }}>
-                {Math.round(percent * 100)}% del máximo
+                {t.genrePanel.ofMaximum(Math.round(percent * 100))}
               </div>
             </div>
           </div>

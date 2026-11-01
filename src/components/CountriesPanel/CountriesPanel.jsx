@@ -4,13 +4,12 @@ import CountrySectors from "./CountrySectors.jsx"
 import { PanelSkeleton } from "../Skeleton.jsx"
 import Panel from "../Panel/Panel.jsx"
 import SegmentedControl from "../Panel/SegmentedControl.jsx"
+import { useMessages } from "../../i18n/index.js"
 
-const VIEW_OPTIONS = [
-  { key: "list", label: "Lista" },
-  { key: "nodes", label: "Sectores" },
-]
+const VIEW_KEYS = ["list", "nodes"]
 
 export default function CountriesPanel({ countries, movies, loading }) {
+  const t = useMessages()
   const [viewMode, setViewMode] = useState("list")
 
   const topCountryCodes = Object.entries(countries || {})
@@ -23,12 +22,17 @@ export default function CountriesPanel({ countries, movies, loading }) {
     <Panel
       id="rd-panel-paises"
       area="countries"
-      title="TOP PAÍSES"
+      title={t.countriesPanel.title}
       actions={hasData && !loading && (
-        <SegmentedControl label="Vista de países" options={VIEW_OPTIONS} value={viewMode} onChange={setViewMode} />
+        <SegmentedControl
+          label={t.countriesPanel.viewLabel}
+          options={VIEW_KEYS.map((key) => ({ key, label: t.countriesPanel.views[key] }))}
+          value={viewMode}
+          onChange={setViewMode}
+        />
       )}
       bodyStyle={{ minHeight: "150px" }}>
-      {loading && <PanelSkeleton variant="rows" label="Rastreando países…" />}
+      {loading && <PanelSkeleton variant="rows" label={t.countriesPanel.loading} />}
 
       {!loading && hasData && (
         <>
@@ -42,7 +46,7 @@ export default function CountriesPanel({ countries, movies, loading }) {
           color: "var(--c-text-muted)", marginTop: "20px",
           fontFamily: "var(--font-mono)",
         }}>
-          Sin datos de origen disponibles
+          {t.countriesPanel.empty}
         </div>
       )}
     </Panel>

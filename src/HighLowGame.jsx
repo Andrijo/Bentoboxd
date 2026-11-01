@@ -2,57 +2,37 @@ import { useState, useReducer, useEffect, useRef } from "react"
 import SegmentedControl from "./components/Panel/SegmentedControl.jsx"
 import { seededRandom, randomSeed } from "./utils/shuffle.js"
 import { buildDeck, isCorrectGuess } from "./utils/highLowDeck.js"
+import { useMessages } from "./i18n/index.js"
 
-const CATEGORY_OPTIONS = [
-  { key: "rating", label: "Nota" },
-  { key: "popularity", label: "Popularidad" },
-  { key: "year", label: "Estreno" },
-]
-
-const CAT_CONFIG = {
-  rating: {
-    unit: "Nota del público",
-    desc: "Adivina si la siguiente película tiene una nota mayor o menor.",
-    sub: "Según el público (TMDB), de 0 a 5.",
-  },
-  popularity: {
-    desc: "Adivina qué película es más popular hoy.",
-    sub: "Según la actividad reciente en TMDB; cambia día a día.",
-  },
-  year: {
-    unit: "Estreno",
-    desc: "Adivina qué película se estrenó más recientemente (Higher = más nueva).",
-    sub: "Según la fecha de estreno oficial en cines.",
-  },
-}
+const CATEGORY_KEYS = ["rating", "popularity", "year"]
 
 const VALUE_SIZE = "clamp(2rem, 8vw, 2.75rem)"
 const WORD_SIZE = "clamp(1.1rem, 5vw, 1.75rem)"
 
 // El índice de popularidad de TMDB no significa nada por sí solo: solo se dice cuál gana.
-function cardMetric(category, movie, rival, revealed) {
+function cardMetric({ highLow }, category, movie, rival, revealed) {
   if (category !== "popularity") {
     return {
       value: movie.metrics[category],
-      unit: CAT_CONFIG[category].unit,
+      unit: highLow.categories[category].unit,
       size: VALUE_SIZE,
     }
   }
   if (!revealed) return { value: null, unit: null, size: VALUE_SIZE }
   return {
     value:
-      movie.metrics.popularity > rival.metrics.popularity ? "Más" : "Menos",
-    unit: "popular",
+      movie.metrics.popularity > rival.metrics.popularity ? highLow.more : highLow.less,
+    unit: highLow.popular,
     size: WORD_SIZE,
   }
 }
 
-function revealMessage(category, movieA, movieB) {
+function revealMessage({ highLow }, category, movieA, movieB) {
   if (category !== "popularity")
     return `${movieB.title}: ${movieB.metrics[category]}`
   const verdict =
-    movieB.metrics.popularity > movieA.metrics.popularity ? "más" : "menos"
-  return `${movieB.title} es ${verdict} popular que ${movieA.title}`
+    movieB.metrics.popularity > movieA.metrics.popularity ? highLow.more : highLow.less
+  return highLow.popularityReveal(movieB.title, verdict.toLowerCase(), movieA.title)
 }
 
 const initialGameState = {
@@ -144,13 +124,15 @@ const titleStyle = {
 const ARROW_PATH = "M30 0 L55 50.51 A35 35 0 0 0 5 50.51 Z"
 
 function GuessControls({ disabled, onGuess }) {
+  const t = useMessages()
+
   return (
     <div className="rd-hlg-controls">
       <button
         onClick={() => onGuess("higher")}
         type="button"
         disabled={disabled}
-        aria-label="Higher (mayor)"
+        aria-label={t.highLow.higherLabel}
         title="Higher (↑)"
         className="rd-hlg-arrow rd-hlg-arrow-up">
         <svg viewBox="0 0 60 50.51" aria-hidden="true">
@@ -185,7 +167,7 @@ function GuessControls({ disabled, onGuess }) {
         onClick={() => onGuess("lower")}
         type="button"
         disabled={disabled}
-        aria-label="Lower (menor)"
+        aria-label={t.highLow.lowerLabel}
         title="Lower (↓)"
         className="rd-hlg-arrow rd-hlg-arrow-down">
         <svg viewBox="0 0 60 50.51" aria-hidden="true">
@@ -197,6 +179,9 @@ function GuessControls({ disabled, onGuess }) {
 }
 
 function GameHeader({ category, streak, username, onCategoryChange }) {
+  const t = useMessages()
+  const { desc, sub } = t.highLow.categories[category]
+
   return (
     <div
       style={{
@@ -224,10 +209,10 @@ function GameHeader({ category, streak, username, onCategoryChange }) {
               marginBottom: "8px",
               marginTop: "-34px",
             }}>
-            HIGHER OR LOWER
+            {t.highLow.title}
           </h2>
           <p className="rd-game-profile" style={{ marginBottom: "8px" }}>
-            Películas de @{username}
+            {t.common.gameProfile(username)}
           </p>
           <div
             style={{
@@ -235,14 +220,14 @@ function GameHeader({ category, streak, username, onCategoryChange }) {
               color: "var(--c-text-muted)",
               letterSpacing: "0.5px",
             }}>
-            {CAT_CONFIG[category].desc}
+            {desc}
             <br />
             <span
               style={{
                 color: "var(--c-text)",
                 transition: "color 0.3s",
               }}>
-              {CAT_CONFIG[category].sub}
+              {sub}
             </span>
           </div>
         </div>
@@ -257,14 +242,14 @@ function GameHeader({ category, streak, username, onCategoryChange }) {
             flexShrink: 0,
             textAlign: "right",
           }}>
-          Racha: {streak}
+          {t.highLow.streak(streak)}
         </div>
       </div>
 
       <div style={{ display: "flex", justifyContent: "center" }}>
         <SegmentedControl
-          label="Categoría"
-          options={CATEGORY_OPTIONS}
+          label={t.highLow.category}
+          options={CATEGORY_KEYS.map((key) => ({ key, label: t.highLow.categories[key].label }))}
           value={category}
           onChange={onCategoryChange}
         />
@@ -274,13 +259,14 @@ function GameHeader({ category, streak, username, onCategoryChange }) {
       <p
         className="rd-hlg-note"
         style={{ visibility: streak > 0 ? "visible" : "hidden" }}>
-        Cambiar de categoría reinicia la racha.
+        {t.highLow.streakResetNote}
       </p>
     </div>
   )
 }
 
 function GameOver({ streak, won, onRestart, onBack }) {
+  const t = useMessages()
   const restartRef = useRef(null)
 
   // El botón "Ver resultado" desaparece: el foco no debe perderse con él.
@@ -297,22 +283,22 @@ function GameOver({ streak, won, onRestart, onBack }) {
           fontFamily: "var(--font-display)",
           marginBottom: "12px",
         }}>
-        {won ? "¡HAS ACERTADO TODO!" : "JUEGO TERMINADO"}
+        {won ? t.highLow.allCorrect : t.highLow.gameOver}
       </h2>
-      <p className="rd-hlg-final">Racha final: {streak}</p>
+      <p className="rd-hlg-final">{t.highLow.finalStreak(streak)}</p>
       <div className="rd-hlg-actions">
         <button
           ref={restartRef}
           onClick={onRestart}
           type="button"
           className="rd-btn-solid rd-hlg-btn">
-          Jugar de nuevo
+          {t.common.playAgain}
         </button>
         <button
           onClick={onBack}
           type="button"
           className="rd-btn-solid rd-hlg-btn">
-          Volver al perfil
+          {t.common.backToProfile}
         </button>
       </div>
     </div>
@@ -333,14 +319,15 @@ function GamePlayArea({
   onRestart,
   onBack,
 }) {
+  const t = useMessages()
   const nextRef = useRef(null)
 
   useEffect(() => {
     if (feedback && !gameOver) nextRef.current?.focus()
   }, [feedback, gameOver])
 
-  const metricA = cardMetric(category, movieA, movieB, Boolean(feedback))
-  const metricB = cardMetric(category, movieB, movieA, Boolean(feedback))
+  const metricA = cardMetric(t, category, movieA, movieB, Boolean(feedback))
+  const metricB = cardMetric(t, category, movieB, movieA, Boolean(feedback))
 
   return (
     <div
@@ -415,7 +402,7 @@ function GamePlayArea({
                   ) : (
                     <>
                       <span aria-hidden="true">?</span>
-                      <span className="rd-sr-only">Valor oculto</span>
+                      <span className="rd-sr-only">{t.highLow.hiddenValue}</span>
                     </>
                   )}
                 </div>
@@ -453,11 +440,11 @@ function GamePlayArea({
                 type="button"
                 className="rd-btn-solid rd-hlg-btn">
                 {feedback === "correct" && hasNextCard
-                  ? "Siguiente"
-                  : "Ver resultado"}
+                  ? t.common.next
+                  : t.common.seeResult}
               </button>
             ) : (
-              <p className="rd-hlg-shortcuts">Atajos: ↑ Higher · ↓ Lower</p>
+              <p className="rd-hlg-shortcuts">{t.highLow.shortcuts}</p>
             )}
           </div>
         </>
@@ -467,6 +454,7 @@ function GamePlayArea({
 }
 
 export default function HighLowGame({ movies, username, loading, active = true, onBack }) {
+  const t = useMessages()
   const [category, setCategory] = useState("rating")
   // La semilla se sortea por partida: mismo orden en cada render, otro al reiniciar.
   const [state, dispatch] = useReducer(gameReducer, undefined, () => ({
@@ -480,7 +468,7 @@ export default function HighLowGame({ movies, username, loading, active = true, 
   const movieB = gameDeck[state.currentIndex + 1]
   const hasNextCard = state.currentIndex + 2 < gameDeck.length
   const reveal =
-    state.feedback && movieB ? revealMessage(category, movieA, movieB) : ""
+    state.feedback && movieB ? revealMessage(t, category, movieA, movieB) : ""
 
   const handleNext = () => {
     const correct = state.feedback === "correct"
@@ -524,18 +512,18 @@ export default function HighLowGame({ movies, username, loading, active = true, 
 
   // Las métricas vienen de TMDB; sin ellas no hay con qué comparar.
   const notice = loading
-    ? "Cargando datos de las películas…"
-    : "No hay suficientes películas con datos para esta categoría."
+    ? t.common.loadingMovieData
+    : t.highLow.notEnough
 
   return (
-    <section className="rd-page rd-hlg" aria-label="Higher or Lower">
+    <section className="rd-page rd-hlg" aria-label={t.highLow.label}>
       <p className="rd-sr-only" role="status" aria-live="polite">
         {state.gameOver
-          ? `${state.won ? "¡Has completado el juego!" : "Fin del juego"}. Racha final: ${state.streak}.`
+          ? t.highLow.statusFinished(state.won, state.streak)
           : state.feedback === "correct"
-            ? `Correcto. ${reveal}. Racha: ${state.streak}.`
+            ? t.highLow.statusCorrect(reveal, state.streak)
             : state.feedback === "wrong"
-              ? `Incorrecto. ${reveal}.`
+              ? t.highLow.statusWrong(reveal)
               : ""}
       </p>
 

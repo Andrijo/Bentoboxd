@@ -1,8 +1,6 @@
-const TABS = [
-  { page: "profile", label: "Perfil" },
-  { page: "quiz", label: "Quiz" },
-  { page: "higher-lower", label: "Higher or Lower" },
-]
+import { setLanguage, useLanguage, useMessages } from "../i18n/index.js"
+
+const TABS = ["profile", "quiz", "higher-lower"]
 
 const tabBase = {
   height: "36px",
@@ -20,6 +18,9 @@ const tabBase = {
 }
 
 export default function AppHeader({ page, showTabs, theme, onNavigate, onReset, onToggleTheme }) {
+  const t = useMessages()
+  const language = useLanguage()
+  const otherLanguage = language === "es" ? "en" : "es"
   const isLight = theme === "light"
 
   return (
@@ -32,7 +33,7 @@ export default function AppHeader({ page, showTabs, theme, onNavigate, onReset, 
         <button
           onClick={onReset}
           type="button"
-          aria-label="Bentoboxd, volver al inicio"
+          aria-label={t.header.home}
           style={{
             background: "none",
             border: "none",
@@ -47,8 +48,8 @@ export default function AppHeader({ page, showTabs, theme, onNavigate, onReset, 
 
       <div className="rd-header-actions">
         {showTabs && (
-          <nav aria-label="Secciones" className="rd-header-nav" style={{ display: "flex", gap: "12px", flex: 1 }}>
-            {TABS.map(({ page: tab, label }) => {
+          <nav aria-label={t.header.sections} className="rd-header-nav" style={{ display: "flex", gap: "12px", flex: 1 }}>
+            {TABS.map((tab) => {
               const active = page === tab
               return (
                 <button
@@ -63,18 +64,29 @@ export default function AppHeader({ page, showTabs, theme, onNavigate, onReset, 
                     border: `1px solid ${active ? "var(--c-text-bright)" : "rgb(var(--fg-rgb) / 0.2)"}`,
                     color: active ? "var(--c-on-text)" : "var(--c-text-muted)",
                   }}>
-                  {label}
+                  {t.header.tabs[tab]}
                 </button>
               )
             })}
           </nav>
         )}
 
+        <div className="rd-header-toggles">
+        <button
+          type="button"
+          lang={otherLanguage}
+          onClick={() => setLanguage(otherLanguage)}
+          aria-label={t.language.switchLabel}
+          title={t.language.switchLabel}
+          className="rd-theme-toggle rd-language-toggle">
+          {t.language.short}
+        </button>
+
         <button
           type="button"
           onClick={onToggleTheme}
-          aria-label={isLight ? "Cambiar a tema oscuro" : "Cambiar a tema claro"}
-          title={isLight ? "Tema oscuro" : "Tema claro"}
+          aria-label={isLight ? t.header.toDarkLabel : t.header.toLightLabel}
+          title={isLight ? t.header.toDarkTitle : t.header.toLightTitle}
           className="rd-theme-toggle">
           <svg aria-hidden="true" viewBox="0 0 24 24" width="18" height="18" fill="none"
             stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
@@ -88,6 +100,7 @@ export default function AppHeader({ page, showTabs, theme, onNavigate, onReset, 
             )}
           </svg>
         </button>
+        </div>
       </div>
     </header>
   )

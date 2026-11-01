@@ -1,4 +1,8 @@
+import { useMessages } from "../i18n/index.js"
+
 export default function MovieDrilldown({ label, movies }) {
+  const t = useMessages()
+
   return (
     <div role="region" aria-label={label} className="rd-drilldown">
       <div className="rd-drilldown-title">{label}</div>
@@ -11,7 +15,7 @@ export default function MovieDrilldown({ label, movies }) {
                 {movie.year}
                 {movie.rating ? ` · ${movie.rating}★` : ""}
               </span>
-              <span className="rd-sr-only">(se abre en Letterboxd en una pestaña nueva)</span>
+              <span className="rd-sr-only">{t.common.opensInLetterboxd}</span>
             </a>
           </li>
         ))}

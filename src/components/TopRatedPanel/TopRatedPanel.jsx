@@ -3,11 +3,14 @@ import { PanelSkeleton } from "../Skeleton.jsx"
 import Panel from "../Panel/Panel.jsx"
 import PersonAvatar from "../PersonAvatar.jsx"
 import { computeTopRated } from "../../utils/topRated.js"
-import { formatMovieCount } from "../../utils/formatters.js"
+import { OTHER_GENRE } from "../../constants/genres.js"
+import { useMessages } from "../../i18n/index.js"
 
 const formatAverage = (value) => value.toFixed(1)
 
 function RankedList({ title, items, photos }) {
+  const t = useMessages()
+
   return (
     <section aria-label={title}>
       <h3 style={{
@@ -45,7 +48,7 @@ function RankedList({ title, items, photos }) {
                 color: "var(--c-text-muted)",
                 whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
               }}>
-                {formatMovieCount(count)} calificadas
+                {t.topRatedPanel.ratedMovies(count)}
               </span>
             </span>
             <span style={{
@@ -62,8 +65,9 @@ function RankedList({ title, items, photos }) {
 }
 
 export default function TopRatedPanel({ movies, photos = {}, loading }) {
+  const t = useMessages()
   const genres = useMemo(
-    () => computeTopRated(movies, "genres", { exclude: ["Otro"], limit: 3 }),
+    () => computeTopRated(movies, "genres", { exclude: [OTHER_GENRE], limit: 3 }),
     [movies],
   )
   const directors = useMemo(
@@ -76,16 +80,19 @@ export default function TopRatedPanel({ movies, photos = {}, loading }) {
     <Panel
       id="rd-panel-mejor-calificados"
       area="toprated"
-      title="MEJOR CALIFICADOS"
-      subtitle={!loading && hasData && "Promedio de calificaciones del perfil, con al menos 2 películas"}>
-      {loading && <PanelSkeleton variant="rows" label="Calculando los mejor calificados…" />}
+      title={t.topRatedPanel.title}
+      subtitle={!loading && hasData && t.topRatedPanel.subtitle}>
+      {loading && <PanelSkeleton variant="rows" label={t.topRatedPanel.loading} />}
 
       {!loading && hasData && (
         <div style={{
           display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(240px, 1fr))", gap: "24px",
         }}>
-          {genres.length > 0 && <RankedList title="Géneros" items={genres} />}
-          {directors.length > 0 && <RankedList title="Directores" items={directors} photos={photos} />}
+          {genres.length > 0 && <RankedList
+              title={t.common.genres}
+              items={genres.map((item) => ({ ...item, name: t.genres[item.name] }))}
+            />}
+          {directors.length > 0 && <RankedList title={t.common.directors} items={directors} photos={photos} />}
         </div>
       )}
 
@@ -94,7 +101,7 @@ export default function TopRatedPanel({ movies, photos = {}, loading }) {
           textAlign: "center", fontSize: "var(--fs-xs)", color: "var(--c-text-muted)",
           marginTop: "20px", fontFamily: "var(--font-mono)",
         }}>
-          Aún no hay un género o director con al menos 2 películas calificadas por ti
+          {t.topRatedPanel.empty}
         </div>
       )}
     </Panel>

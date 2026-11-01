@@ -19,7 +19,7 @@ const RSS = `<?xml version="1.0" encoding="UTF-8"?>
 </channel></rss>`
 
 const METADATA = {
-  genres: { Drama: 1 },
+  genres: { drama: 1 },
   directors: {},
   actors: {},
   countries: {},
@@ -56,6 +56,23 @@ beforeEach(() => {
 
 afterEach(() => {
   vi.unstubAllGlobals()
+})
+
+describe("selector de idioma", () => {
+  it("cambia los textos y el título sin recargar", () => {
+    render(<App />)
+    expect(screen.getByRole("heading", { name: "Tu Letterboxd, en un dashboard" })).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole("button", { name: "Switch to English" }))
+
+    expect(screen.getByRole("heading", { name: "Your Letterboxd, as a dashboard" })).toBeInTheDocument()
+    expect(document.title).toBe("Bentoboxd — Your Letterboxd as a dashboard")
+    expect(document.documentElement.lang).toBe("en")
+
+    fireEvent.click(screen.getByRole("button", { name: "Cambiar a español" }))
+
+    expect(document.documentElement.lang).toBe("es")
+  })
 })
 
 describe("App", () => {
@@ -99,6 +116,28 @@ describe("App", () => {
     expect(screen.queryByRole("button", { name: "Reintentar" })).not.toBeInTheDocument()
     expect(screen.getByText("Dune")).toBeInTheDocument()
     expect(screen.getByRole("heading", { name: "TOP GÉNEROS" })).toBeInTheDocument()
+  })
+
+  it("muestra el título en español y el del feed en inglés sin volver a TMDB", async () => {
+    fetchMetadataFromTMDB.mockResolvedValue({
+      ...METADATA,
+      rawResults: [{ title: "Dune", queryYear: "2021", titleEs: "Duna", genres: ["drama"] }],
+    })
+    render(<App />)
+
+    search("user")
+
+    expect(await screen.findByRole("link", { name: /Duna/ })).toBeInTheDocument()
+    expect(fetchMetadataFromTMDB).toHaveBeenCalledWith(
+      [expect.objectContaining({ title: "Dune" })],
+      expect.anything(),
+    )
+
+    fireEvent.click(screen.getByRole("button", { name: "Switch to English" }))
+
+    expect(screen.getByRole("link", { name: /Dune/ })).toBeInTheDocument()
+    expect(screen.queryByRole("link", { name: /Duna/ })).not.toBeInTheDocument()
+    expect(fetchMetadataFromTMDB).toHaveBeenCalledTimes(1)
   })
 
   it("muestra un solo aviso si TMDB falla y permite reintentar", async () => {

@@ -2,8 +2,10 @@ import { useState } from "react"
 import StarRating from "../StarRating.jsx"
 import PosterImage from "../PosterImage.jsx"
 import { TILE_SPANS, VISIBLE_MOVIES } from "./bentoPatterns.js"
+import { useMessages } from "../../i18n/index.js"
 
 export default function MovieCard({ movie, size, index }) {
+  const t = useMessages()
   const [hovered, setHovered] = useState(false)
 
   return (
@@ -113,7 +115,7 @@ export default function MovieCard({ movie, size, index }) {
         </div>
 
         <span className="rd-sr-only">
-          (se abre en Letterboxd en una pestaña nueva)
+          {t.common.opensInLetterboxd}
         </span>
 
         {hovered && size >= 2 && (
@@ -126,7 +128,7 @@ export default function MovieCard({ movie, size, index }) {
               fontFamily: "var(--font-mono)",
               letterSpacing: "1px",
             }}>
-            Ver en Letterboxd →
+            {t.movieViews.viewOnLetterboxd}
           </div>
         )}
       </div>

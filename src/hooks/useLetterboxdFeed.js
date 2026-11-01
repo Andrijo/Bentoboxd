@@ -7,6 +7,7 @@ import {
   extractRating,
   safeFilmLink,
 } from "../services/letterboxd.js"
+import { useMessages } from "../i18n/index.js"
 
 /** Máximo de películas leídas del feed (el RSS de Letterboxd trae ~50). */
 export const FEED_LIMIT = 50
@@ -33,17 +34,22 @@ function tmdbMovieId(item) {
   return Number(node?.textContent) || null
 }
 
-/** Error que no cambia al repetir la misma búsqueda. */
-function permanentError(message) {
-  const error = new Error(message)
-  error.retryable = false
+/** `describe` recibe el diccionario: el aviso sigue al idioma aunque cambie después. */
+function feedError(describe, retryable = true) {
+  const error = new Error()
+  error.describe = describe
+  error.retryable = retryable
   return error
 }
 
+/** Error que no cambia al repetir la misma búsqueda. */
+const permanentError = (describe) => feedError(describe, false)
+
 export function useLetterboxdFeed() {
+  const t = useMessages()
   const [movies, setMovies] = useState([])
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
+  const [describeError, setDescribeError] = useState(null)
   const [canRetry, setCanRetry] = useState(false)
   const [username, setUsername] = useState(null)
   const requestIdRef = useRef(0)
@@ -65,35 +71,29 @@ export function useLetterboxdFeed() {
     }, FEED_TIMEOUT_MS)
 
     setLoading(true)
-    setError(null)
+    setDescribeError(null)
 
     try {
       const user = parseUsername(url)
 
       // Evita una petición que el proxy rechazaría de todos modos.
       if (!isValidUsername(user))
-        throw permanentError(
-          "Usuario inválido. Usa solo letras, números, guiones o guiones bajos.",
-        )
+        throw permanentError((m) => m.feedErrors.invalidUser)
 
       const rssUrl = buildRssUrl(user)
       let res
       try {
         res = await fetch(rssUrl, { signal: controller.signal })
       } catch {
-        throw new Error("Sin conexión. Revisa tu internet e inténtalo de nuevo.")
+        throw feedError((m) => m.feedErrors.offline)
       }
       if (requestId !== requestIdRef.current) return []
       if (res.status === 404)
-        throw permanentError(
-          `No encontramos a @${user} en Letterboxd. Revisa el nombre o que el perfil sea público.`,
-        )
+        throw permanentError((m) => m.feedErrors.notFound(user))
       if (res.status === 429)
-        throw new Error("Demasiadas búsquedas seguidas. Espera un minuto e inténtalo de nuevo.")
+        throw feedError((m) => m.feedErrors.rateLimited)
       if (!res.ok)
-        throw new Error(
-          "Letterboxd no responde en este momento. Inténtalo de nuevo en unos minutos.",
-        )
+        throw feedError((m) => m.feedErrors.upstream)
       const xmlText = await res.text()
       if (requestId !== requestIdRef.current) return []
       const parser = new DOMParser()
@@ -104,7 +104,7 @@ export function useLetterboxdFeed() {
         .slice(0, FEED_LIMIT)
 
       if (items.length === 0)
-        throw permanentError(`No se encontraron películas en el diario público de @${user}.`)
+        throw permanentError((m) => m.feedErrors.empty(user))
 
       const parsed = items.map((item) => {
         const rawTitleNode = item.querySelector("title")?.textContent || ""
@@ -154,11 +154,10 @@ export function useLetterboxdFeed() {
       return parsed
     } catch (e) {
       if (requestId === requestIdRef.current) {
-        setError(
-          timedOut
-            ? "Letterboxd tardó demasiado en responder. Inténtalo de nuevo."
-            : e.message || "Error inesperado",
-        )
+        const describe = timedOut
+          ? (m) => m.feedErrors.timeout
+          : e.describe || ((m) => e.message || m.feedErrors.unexpected)
+        setDescribeError(() => describe)
         setCanRetry(e.retryable !== false)
       }
       return []
@@ -180,8 +179,10 @@ export function useLetterboxdFeed() {
     cancelFeed()
     setMovies([])
     setUsername(null)
-    setError(null)
+    setDescribeError(null)
   }, [cancelFeed])
+
+  const error = describeError ? describeError(t) : null
 
   return { movies, loading, error, canRetry, username, fetchMovies, cancelFeed, resetFeed, setMovies }
 }

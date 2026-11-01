@@ -3,13 +3,13 @@ import { render, screen, fireEvent } from "@testing-library/react"
 import GenreList from "./GenreList.jsx"
 
 const MOVIES = [
-  { title: "Dune", year: "2021", rating: 4.5, link: "https://letterboxd.com/u/film/dune/", tmdbId: 1, genres: ["Drama"] },
-  { title: "Up", year: "2009", rating: null, link: "https://letterboxd.com/u/film/up/", tmdbId: 2, genres: ["Comedia"] },
+  { title: "Dune", year: "2021", rating: 4.5, link: "https://letterboxd.com/u/film/dune/", tmdbId: 1, genres: ["drama"] },
+  { title: "Up", year: "2009", rating: null, link: "https://letterboxd.com/u/film/up/", tmdbId: 2, genres: ["comedy"] },
 ]
 
 describe("GenreList", () => {
   it("despliega las películas del género, enlazadas, y las pliega al repetir", () => {
-    render(<GenreList genres={{ Drama: 1, Comedia: 1 }} movieCount={2} movies={MOVIES} />)
+    render(<GenreList genres={{ drama: 1, comedy: 1 }} movieCount={2} movies={MOVIES} />)
     const row = screen.getByRole("button", { name: /Drama/ })
 
     expect(row).toHaveAttribute("aria-expanded", "false")
@@ -28,7 +28,7 @@ describe("GenreList", () => {
   })
 
   it("mantiene abierto un solo género", () => {
-    render(<GenreList genres={{ Drama: 1, Comedia: 1 }} movieCount={2} movies={MOVIES} />)
+    render(<GenreList genres={{ drama: 1, comedy: 1 }} movieCount={2} movies={MOVIES} />)
 
     fireEvent.click(screen.getByRole("button", { name: /Drama/ }))
     fireEvent.click(screen.getByRole("button", { name: /Comedia/ }))

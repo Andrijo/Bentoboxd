@@ -387,6 +387,8 @@ input:focus-visible {
 .rd-btn-solid:hover, .rd-theme-toggle:hover, .rd-landing-example:hover, .rd-landing-example:focus-visible { opacity: 0.85; }
 .rd-btn-solid:disabled { opacity: 0.5; cursor: not-allowed; }
 .rd-spinner { display: inline-block; vertical-align: middle; width: 14px; height: 14px; border: 2px solid color-mix(in srgb, currentColor 25%, transparent); border-top-color: currentColor; border-radius: 50%; animation: spin 0.7s linear infinite; }
+.rd-header-toggles { display: flex; gap: 8px; flex-shrink: 0; }
+.rd-language-toggle { font-family: var(--font-mono); font-size: var(--fs-2xs); letter-spacing: 1px; }
 .rd-theme-toggle { flex-shrink: 0; width: 36px; height: 36px; display: flex; align-items: center; justify-content: center; border-radius: var(--radius-md); }
 .rd-page { padding: 32px var(--gutter) 48px; animation: fadeSlideIn 0.3s ease both; }
 .rd-page-notice { padding: 48px 0; text-align: center; font-size: var(--fs-xs); letter-spacing: 2px; color: rgb(var(--fg-rgb) / 0.65); }
@@ -525,9 +527,16 @@ input:focus-visible {
 @media (max-width: 640px) { .rd-search-input { font-size: 16px; } }
 .rd-search-btn { padding: 12px 28px; border-radius: var(--radius-md); font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 2px; transition: all 0.2s; width: 160px; text-align: center; }
 @media (max-width: 640px) {
-  /* El toggle queda junto al título y las pestañas bajan a su propia fila. */
+  /* Los toggles quedan junto al título y las pestañas bajan a su propia fila. */
   .rd-header-actions {
     display: contents;
+  }
+  .rd-header-bar {
+    column-gap: 12px;
+  }
+  /* El título cede lo justo para no empujar los toggles a otra fila. */
+  .rd-header-title {
+    font-size: min(2.5rem, calc((100vw - 142px) / 6.4)) !important;
   }
   .rd-header-nav {
     order: 1;
@@ -581,15 +590,6 @@ input:focus-visible {
     flex: 1 1 30%;
     text-align: center;
     justify-content: center;
-  }
-}
-/* El logo y el toggle no caben en una fila con el tamaño mínimo del título. */
-@media (max-width: 359px) {
-  .rd-header-bar {
-    gap: 12px;
-  }
-  .rd-header-title {
-    font-size: 2.2rem !important;
   }
 }
 .rd-terminal-row:hover,

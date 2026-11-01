@@ -3,8 +3,10 @@ import MovieDrilldown from "../MovieDrilldown.jsx"
 import PersonAvatar from "../PersonAvatar.jsx"
 import { formatMovieCount } from "../../utils/formatters.js"
 import { moviesWith } from "../../utils/movieFilters.js"
+import { useMessages } from "../../i18n/index.js"
 
 export default function DirectorCards({ ranking, movies = [], photos = {} }) {
+  const t = useMessages()
   const [openDirector, setOpenDirector] = useState(null)
 
   return (
@@ -43,7 +45,7 @@ export default function DirectorCards({ ranking, movies = [], photos = {} }) {
             </span>
           </button>
           {openDirector === name && (
-            <MovieDrilldown label={`Películas de ${name}`} movies={moviesWith(movies, "directors", name)} />
+            <MovieDrilldown label={t.common.moviesBy(name)} movies={moviesWith(movies, "directors", name)} />
           )}
         </div>
       ))}

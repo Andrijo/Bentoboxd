@@ -1,3 +1,5 @@
+import { useMessages } from "../i18n/index.js"
+
 const linkStyle = {
   color: "rgb(var(--accent-rgb) / 0.85)",
   textDecoration: "underline",
@@ -5,30 +7,34 @@ const linkStyle = {
 }
 
 function ExternalLink({ href, children }) {
+  const t = useMessages()
+
   return (
     <a href={href} target="_blank" rel="noopener noreferrer" style={linkStyle}>
       {children}
-      <span className="rd-sr-only"> (se abre en una pestaña nueva)</span>
+      <span className="rd-sr-only"> {t.common.opensInNewTab}</span>
     </a>
   )
 }
 
 export default function AppFooter() {
+  const t = useMessages()
+
   return (
     <footer className="rd-footer">
-      <h2 className="rd-footer-title">Créditos</h2>
+      <h2 className="rd-footer-title">{t.footer.title}</h2>
 
       {/* TMDB exige su logo y este aviso en una sección de créditos, y citar a JustWatch como fuente del streaming. */}
       <p>
-        Datos de <ExternalLink href="https://letterboxd.com">Letterboxd</ExternalLink>,{" "}
-        <ExternalLink href="https://www.themoviedb.org">TMDB</ExternalLink> y{" "}
+        {t.footer.dataFrom} <ExternalLink href="https://letterboxd.com">Letterboxd</ExternalLink>,{" "}
+        <ExternalLink href="https://www.themoviedb.org">TMDB</ExternalLink> {t.footer.and}{" "}
         <ExternalLink href="https://www.justwatch.com">JustWatch</ExternalLink>.
-        Proyecto no oficial, sin relación con Letterboxd.
+        {" "}{t.footer.unofficial}
       </p>
 
-      <p>Este producto usa la API de TMDB, pero no está avalado ni certificado por TMDB.</p>
+      <p>{t.footer.tmdbNotice}</p>
 
-      <img src="/tmdb-logo.svg" alt="Logo de TMDB" className="rd-footer-tmdb" />
+      <img src="/tmdb-logo.svg" alt={t.footer.tmdbLogo} className="rd-footer-tmdb" />
     </footer>
   )
 }

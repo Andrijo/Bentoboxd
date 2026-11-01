@@ -1,5 +1,6 @@
 import { useState } from "react"
 import { formatMovieCount } from "../../utils/formatters.js"
+import { useMessages } from "../../i18n/index.js"
 
 const CHART_HEIGHT = 120
 
@@ -8,6 +9,7 @@ const CHART_HEIGHT = 120
  * alta va a color completo y el resto atenuadas (énfasis, no categorías).
  */
 export default function RatingHistogram({ distribution }) {
+  const t = useMessages()
   const [active, setActive] = useState(null)
   const max = Math.max(...distribution.map((d) => d.count))
   const mode = distribution.find((d) => d.count === max)
@@ -18,7 +20,7 @@ export default function RatingHistogram({ distribution }) {
         fontSize: "var(--fs-xs)", color: "var(--c-text-muted)",
         letterSpacing: "1px", marginBottom: "12px",
       }}>
-        Calificaciones · la más frecuente es {mode.rating}★
+        {t.summary.histogramCaption(mode.rating)}
       </figcaption>
 
       <div aria-hidden="true" style={{ position: "relative" }}>
@@ -85,13 +87,13 @@ export default function RatingHistogram({ distribution }) {
       </div>
 
       <table className="rd-sr-only">
-        <caption>Películas por calificación</caption>
+        <caption>{t.summary.histogramTable}</caption>
         <thead>
-          <tr><th scope="col">Calificación</th><th scope="col">Películas</th></tr>
+          <tr><th scope="col">{t.summary.ratingColumn}</th><th scope="col">{t.common.movies}</th></tr>
         </thead>
         <tbody>
           {distribution.map((d) => (
-            <tr key={d.rating}><td>{d.rating} estrellas</td><td>{d.count}</td></tr>
+            <tr key={d.rating}><td>{t.summary.starsRow(d.rating)}</td><td>{d.count}</td></tr>
           ))}
         </tbody>
       </table>
