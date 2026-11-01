@@ -173,6 +173,69 @@ describe("fetchMetadataFromTMDB", () => {
     expect(result.genres.drama).toBe(0)
   })
 
+  describe("título en español", () => {
+    const translation = (country, title, language = "es") => ({
+      iso_639_1: language,
+      iso_3166_1: country,
+      data: { title },
+    })
+
+    async function titleEsFor(details) {
+      vi.stubGlobal(
+        "fetch",
+        vi.fn((url) =>
+          url.includes("/search/movie")
+            ? jsonResponse({ results: [{ id: 1, genre_ids: [18] }] })
+            : jsonResponse(detailsResponse(details)),
+        ),
+      )
+      const result = await fetchMetadataFromTMDB(["Película"])
+      return result.rawResults[0].titleEs
+    }
+
+    it("prefiere el de México", async () => {
+      await expect(
+        titleEsFor({
+          translations: {
+            translations: [
+              translation("ES", "Origen de España"),
+              translation("MX", "El origen"),
+              translation("FR", "Inception", "fr"),
+            ],
+          },
+        }),
+      ).resolves.toBe("El origen")
+    })
+
+    it("usa el de otro país si México no tiene título", async () => {
+      await expect(
+        titleEsFor({
+          translations: {
+            translations: [translation("MX", ""), translation("ES", "Origen")],
+          },
+        }),
+      ).resolves.toBe("Origen")
+    })
+
+    it("usa el original si la película es en español", async () => {
+      await expect(
+        titleEsFor({
+          original_language: "es",
+          original_title: "Roma",
+          translations: { translations: [translation("MX", "Otro título")] },
+        }),
+      ).resolves.toBe("Roma")
+    })
+
+    it("no inventa título si no hay traducción", async () => {
+      await expect(
+        titleEsFor({ translations: { translations: [translation("FR", "Titre", "fr")] } }),
+      ).resolves.toBeNull()
+      clearMetadataCache()
+      await expect(titleEsFor({})).resolves.toBeNull()
+    })
+  })
+
   it("ignora títulos sin resultados en TMDB", async () => {
     vi.stubGlobal(
       "fetch",

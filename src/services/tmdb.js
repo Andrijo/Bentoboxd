@@ -183,6 +183,21 @@ function pickGenres(movieInfo, detailsData) {
 }
 
 /**
+ * Título en español: el original si la película es en español y, si no, el de
+ * México o el de otro país. Sin traducción devuelve null: `title` de TMDB
+ * caería al idioma original, que puede ser ilegible (japonés, coreano…).
+ */
+function spanishTitle(details) {
+  if (details.original_language === "es") return details.original_title || null
+
+  const spanish = (details.translations?.translations || []).filter(
+    (translation) => translation.iso_639_1 === "es" && translation.data?.title,
+  )
+  const best = spanish.find((translation) => translation.iso_3166_1 === "MX") || spanish[0]
+  return best?.data.title || null
+}
+
+/**
  * Elige el resultado cuyo estreno se acerca más al año del RSS.
  * Si no hay año o ninguno está a ±1 año, mantiene el primer resultado.
  */
@@ -252,7 +267,7 @@ async function fetchOne({ title, year, tmdbId }, signal) {
 
   const movieId = tmdbId || movieInfo.id
   const detailsRes = await fetchWithRetry(
-    `${DETAILS_URL}/${movieId}?append_to_response=credits,watch/providers&language=${getLocale()}`,
+    `${DETAILS_URL}/${movieId}?append_to_response=credits,watch/providers,translations&language=${getLocale()}`,
     signal,
   )
 
@@ -296,6 +311,7 @@ async function fetchOne({ title, year, tmdbId }, signal) {
     title,
     queryYear: year,
     tmdbId: movieId,
+    titleEs: spanishTitle(detailsData),
     genres,
     genre: genres[0],
     directors,

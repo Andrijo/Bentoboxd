@@ -1,4 +1,4 @@
-import { useState, useCallback, useEffect, useRef } from "react"
+import { useState, useCallback, useEffect, useMemo, useRef } from "react"
 import HighLowGame from "./HighLowGame.jsx"
 import Quiz from "./components/Quiz/Quiz.jsx"
 import AppHeader from "./components/AppHeader.jsx"
@@ -19,10 +19,11 @@ import { useOverscrollColor } from "./hooks/useOverscrollColor.js"
 import { useTheme } from "./hooks/useTheme.js"
 import { parseUsername } from "./services/letterboxd.js"
 import { readProfileParam, writeProfileParam } from "./utils/profileUrl.js"
-import { useMessages } from "./i18n/index.js"
+import { useLanguage, useMessages } from "./i18n/index.js"
 
 export default function App() {
   const t = useMessages()
+  const language = useLanguage()
   // Con un enlace compartido (?user=) el buscador arranca con ese usuario.
   const [url, setUrl] = useState(() => readProfileParam() || "")
   const [movieViewMode, setMovieViewMode] = useState("bento")
@@ -108,6 +109,7 @@ export default function App() {
 
           return {
             ...m,
+            titleEs: found?.titleEs || null,
             platforms: found?.platforms || [],
             genres: found?.genres || [],
             directors: found?.directors || [],
@@ -213,6 +215,15 @@ export default function App() {
       : t.document.title
   }, [t, username, movies.length])
 
+  // `title` conserva el del feed, que es con el que se emparejan los metadatos.
+  const displayMovies = useMemo(
+    () =>
+      language === "es"
+        ? movies.map((m) => (m.titleEs ? { ...m, title: m.titleEs } : m))
+        : movies,
+    [movies, language],
+  )
+
   const showGenrePanel = movies.length > 0 || metaLoading
   // Sin feed cargado (p. ej. al recargar en #quiz) solo existe el perfil.
   const hasMovies = movies.length > 0
@@ -272,11 +283,11 @@ export default function App() {
 
         {hasMovies && (
           <>
-            <ProfileOverview movies={movies} genres={genres} username={username} loading={metaLoading} />
+            <ProfileOverview movies={displayMovies} genres={genres} username={username} loading={metaLoading} />
             <SectionNav showTmdbSections={!genreError} />
             <MovieViews
               key={username}
-              movies={movies}
+              movies={displayMovies}
               movieViewMode={movieViewMode}
               username={username}
               onViewModeChange={setMovieViewMode}
@@ -286,7 +297,7 @@ export default function App() {
 
         <DataPanels
           showGenrePanel={showGenrePanel}
-          movies={movies}
+          movies={displayMovies}
           genres={genres}
           directors={directors}
           actors={actors}
@@ -313,7 +324,7 @@ export default function App() {
       {hasMovies && (
         <KeepAlive key={`higher-lower:${username}`} active={page === "higher-lower"}>
           <HighLowGame
-            movies={movies}
+            movies={displayMovies}
             username={username}
             loading={metaLoading}
             active={page === "higher-lower"}
@@ -325,7 +336,7 @@ export default function App() {
       {hasMovies && (
         <KeepAlive key={`quiz:${username}`} active={page === "quiz"}>
           <Quiz
-            movies={movies}
+            movies={displayMovies}
             username={username}
             loading={metaLoading}
             onBack={() => navigate("profile")}

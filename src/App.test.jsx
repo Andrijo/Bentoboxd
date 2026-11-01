@@ -118,6 +118,28 @@ describe("App", () => {
     expect(screen.getByRole("heading", { name: "TOP GÉNEROS" })).toBeInTheDocument()
   })
 
+  it("muestra el título en español y el del feed en inglés sin volver a TMDB", async () => {
+    fetchMetadataFromTMDB.mockResolvedValue({
+      ...METADATA,
+      rawResults: [{ title: "Dune", queryYear: "2021", titleEs: "Duna", genres: ["drama"] }],
+    })
+    render(<App />)
+
+    search("user")
+
+    expect(await screen.findByRole("link", { name: /Duna/ })).toBeInTheDocument()
+    expect(fetchMetadataFromTMDB).toHaveBeenCalledWith(
+      [expect.objectContaining({ title: "Dune" })],
+      expect.anything(),
+    )
+
+    fireEvent.click(screen.getByRole("button", { name: "Switch to English" }))
+
+    expect(screen.getByRole("link", { name: /Dune/ })).toBeInTheDocument()
+    expect(screen.queryByRole("link", { name: /Duna/ })).not.toBeInTheDocument()
+    expect(fetchMetadataFromTMDB).toHaveBeenCalledTimes(1)
+  })
+
   it("muestra un solo aviso si TMDB falla y permite reintentar", async () => {
     const consoleError = vi.spyOn(console, "error").mockImplementation(() => {})
     fetchMetadataFromTMDB
