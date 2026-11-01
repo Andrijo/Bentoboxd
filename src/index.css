@@ -614,13 +614,6 @@ input:focus-visible {
   line-height: 1.6;
   color: var(--c-text);
 }
-.rd-landing-note {
-  max-width: 480px;
-  margin-top: 4px;
-  font-size: var(--fs-xs);
-  line-height: 1.6;
-  color: var(--c-text-muted);
-}
 .rd-landing-features {
   list-style: none;
   display: flex;

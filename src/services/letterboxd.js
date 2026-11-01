@@ -68,8 +68,3 @@ export function extractRating(description) {
   const half = raw.includes("½") ? 0.5 : 0
   return full + half
 }
-
-export function extractTitle(description) {
-  const match = description?.match(/<p><strong>([^<]+)<\/strong><br>/)
-  return match ? match[1] : null
-}
