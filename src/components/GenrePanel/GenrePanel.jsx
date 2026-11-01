@@ -1,6 +1,5 @@
 import { useState } from "react"
 import DonutChart from "./DonutChart.jsx"
-import RadarChart from "./RadarChart.jsx"
 import BarChart from "./BarChart.jsx"
 import MatrixChart from "./MatrixChart.jsx"
 import GaugesChart from "./GaugesChart.jsx"
@@ -12,7 +11,6 @@ import { formatMovieCount } from "../../utils/formatters.js"
 
 const CHART_OPTIONS = [
   { key: "donut", label: "Dona" },
-  { key: "radar", label: "Radar" },
   { key: "bar", label: "Barras" },
   { key: "matrix", label: "Matriz" },
   { key: "gauges", label: "Medidores" },
@@ -45,7 +43,6 @@ export default function GenrePanel({ genres, movieCount, movies, loadingGenres }
       {!loadingGenres && hasData && (
         <div style={{ width: "100%", display: "flex", justifyContent: "center" }}>
           {chartType === "donut" && <DonutChart genres={genres} movieCount={movieCount} />}
-          {chartType === "radar" && <RadarChart genres={genres} />}
           {chartType === "bar" && <BarChart genres={genres} />}
           {chartType === "matrix" && <MatrixChart genres={genres} movieCount={movieCount} />}
           {chartType === "gauges" && <GaugesChart genres={genres} />}
