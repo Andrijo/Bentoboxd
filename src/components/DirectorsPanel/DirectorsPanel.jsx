@@ -1,7 +1,6 @@
 import { useState } from "react"
 import DirectorCards from "./DirectorCards.jsx"
 import DirectorHologram from "./DirectorHologram.jsx"
-import DirectorOrbit from "./DirectorOrbit.jsx"
 import { PanelSkeleton } from "../Skeleton.jsx"
 import Panel from "../Panel/Panel.jsx"
 import SegmentedControl from "../Panel/SegmentedControl.jsx"
@@ -10,7 +9,6 @@ import { topDirectors } from "../../utils/topDirectors.js"
 const VIEW_OPTIONS = [
   { key: "cards", label: "Lista" },
   { key: "hologram", label: "Holograma" },
-  { key: "orbit", label: "Órbita" },
 ]
 
 export default function DirectorsPanel({ directors, movies, photos, loading }) {
@@ -36,7 +34,6 @@ export default function DirectorsPanel({ directors, movies, photos, loading }) {
         <>
           {viewMode === "cards" && <DirectorCards ranking={ranking} movies={movies} photos={photos} />}
           {viewMode === "hologram" && <DirectorHologram ranking={ranking} />}
-          {viewMode === "orbit" && <DirectorOrbit ranking={ranking} />}
         </>
       )}
 
