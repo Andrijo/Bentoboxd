@@ -1,5 +1,4 @@
 import RecentProfiles from "./RecentProfiles.jsx"
-import { FEED_LIMIT } from "../hooks/useLetterboxdFeed.js"
 
 // Perfil público de Letterboxd para probar la app sin tener cuenta.
 export const EXAMPLE_PROFILE = "Andrijo"

@@ -5,7 +5,6 @@ import {
   buildRssUrl,
   extractPoster,
   extractRating,
-  extractTitle,
   safeFilmLink,
   safePosterUrl,
 } from "./letterboxd.js"
@@ -122,17 +121,6 @@ describe("extractRating", () => {
   it("devuelve null cuando no hay calificación", () => {
     expect(extractRating("sin rating")).toBeNull()
     expect(extractRating(undefined)).toBeNull()
-  })
-})
-
-describe("extractTitle", () => {
-  it("extrae el título del bloque <strong>", () => {
-    const desc = "<p><strong>Inception</strong><br>2010</p>"
-    expect(extractTitle(desc)).toBe("Inception")
-  })
-
-  it("devuelve null si no coincide el patrón", () => {
-    expect(extractTitle("<p>otra cosa</p>")).toBeNull()
   })
 })
 
