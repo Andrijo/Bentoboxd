@@ -24,6 +24,7 @@ const METADATA = {
   actors: {},
   countries: {},
   platforms: { counts: {}, logos: {} },
+  photos: {},
   rawResults: [],
 }
 

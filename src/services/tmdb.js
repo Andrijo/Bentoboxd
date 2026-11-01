@@ -9,6 +9,7 @@ const TMDB_PROXY_URL = (
 ).replace(/\/$/, "")
 const SEARCH_URL = `${TMDB_PROXY_URL}/search/movie`
 const DETAILS_URL = `${TMDB_PROXY_URL}/movie`
+const PERSON_PHOTO_URL = "https://image.tmdb.org/t/p/w185"
 const REQUEST_TIMEOUT_MS = 6000
 const MAX_RETRIES = 2
 const BASE_BACKOFF_MS = 400
@@ -267,17 +268,15 @@ async function fetchOne({ title, year, tmdbId }, signal) {
       return p.provider_name
     }) || []
 
+  const directorCredits = (detailsData.credits?.crew || []).filter(
+    (person) => person.job === "Director",
+  )
   const directors = [
-    ...new Set(
-      (detailsData.credits?.crew || [])
-        .filter((person) => person.job === "Director")
-        .map((person) => person.name)
-        .filter(Boolean),
-    ),
+    ...new Set(directorCredits.map((person) => person.name).filter(Boolean)),
   ]
 
-  const actors =
-    detailsData.credits?.cast?.slice(0, 9).map((a) => a.name) || []
+  const castCredits = detailsData.credits?.cast?.slice(0, 9) || []
+  const actors = castCredits.map((a) => a.name)
 
   const countries = [
     ...new Set(
@@ -301,6 +300,7 @@ async function fetchOne({ title, year, tmdbId }, signal) {
     directors,
     director: directors[0] || null,
     actors,
+    photos: personPhotos([...directorCredits, ...castCredits]),
     countries,
     country: countries[0] || "UNKNOWN",
     platforms,
@@ -312,6 +312,14 @@ async function fetchOne({ title, year, tmdbId }, signal) {
 
   cacheSet(key, item)
   return item
+}
+
+function personPhotos(people) {
+  return Object.fromEntries(
+    people
+      .filter((person) => person.name && person.profile_path)
+      .map((person) => [person.name, `${PERSON_PHOTO_URL}${person.profile_path}`]),
+  )
 }
 
 /** Ejecuta `mapper` sobre `items` con un máximo de `limit` en paralelo. */
@@ -382,9 +390,12 @@ export async function fetchMetadataFromTMDB(movies, { signal } = {}) {
   const actorCounts = {}
   const countryCounts = {}
   const platformCounts = {}
+  const photos = {}
 
   results.forEach((item) => {
     if (!item) return
+
+    Object.assign(photos, item.photos)
 
     item.genres.forEach((genre) => {
       if (genre in genreCounts) genreCounts[genre] += 1
@@ -420,6 +431,7 @@ export async function fetchMetadataFromTMDB(movies, { signal } = {}) {
       counts: platformCounts,
       logos: Object.fromEntries(platformLogoCache),
     },
+    photos,
     rawResults: results,
     coverage: {
       total: results.length,

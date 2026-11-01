@@ -1,9 +1,10 @@
 import { Fragment, useState } from "react"
 import MovieDrilldown from "../MovieDrilldown.jsx"
+import PersonAvatar from "../PersonAvatar.jsx"
 import { formatMovieCount } from "../../utils/formatters.js"
 import { moviesWith } from "../../utils/movieFilters.js"
 
-export default function ActorsGrid({ actors, movies = [] }) {
+export default function ActorsGrid({ actors, movies = [], photos = {} }) {
   const [openActor, setOpenActor] = useState(null)
   const topActors = Object.entries(actors || {})
     .sort((a, b) => b[1] - a[1])
@@ -28,10 +29,8 @@ export default function ActorsGrid({ actors, movies = [] }) {
                 borderRadius: "var(--radius-md)", animation: "fadeSlideIn 0.3s ease both",
                 animationDelay: `${i * 50}ms`,
               }}>
-              <span className="rd-rank-circle">
-                {i + 1}
-              </span>
-              <span style={{ flex: 1, overflow: "hidden" }}>
+              <PersonAvatar name={name} photo={photos[name]} rank={i + 1} />
+              <span style={{ flex: 1, overflow: "hidden", marginLeft: "12px" }}>
                 <span style={{
                   display: "block", fontSize: "var(--fs-xs)", fontWeight: "bold",
                   color: "var(--c-text)", whiteSpace: "nowrap", overflow: "hidden",

@@ -390,7 +390,12 @@ input:focus-visible {
 .rd-page { padding: 32px var(--gutter) 48px; animation: fadeSlideIn 0.3s ease both; }
 .rd-page-notice { padding: 48px 0; text-align: center; font-size: var(--fs-xs); letter-spacing: 2px; color: rgb(var(--fg-rgb) / 0.65); }
 .rd-hlg { display: flex; flex-direction: column; min-height: 75vh; overflow-x: hidden; }
-.rd-rank-circle { width: 32px; height: 32px; flex-shrink: 0; display: flex; align-items: center; justify-content: center; border-radius: 50%; margin-right: 12px; font-family: var(--font-display); font-size: 1rem; line-height: 1; padding-bottom: 3px; color: rgb(var(--fg-rgb) / 0.5); background: rgb(var(--fg-rgb) / 0.05); border: 1px solid rgb(var(--fg-rgb) / 0.1); }
+.rd-person-avatar { position: relative; width: 44px; height: 44px; flex-shrink: 0; border-radius: 50%; background: rgb(var(--fg-rgb) / 0.05); border: 1px solid rgb(var(--fg-rgb) / 0.1); }
+.rd-person-avatar img { position: absolute; inset: 0; width: 100%; height: 100%; border-radius: 50%; object-fit: cover; object-position: 50% 20%; }
+.rd-person-initials { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; font-family: var(--font-mono); font-size: var(--fs-xs); color: var(--c-text-muted); }
+.rd-person-rank { position: absolute; right: -4px; bottom: -4px; min-width: 20px; height: 20px; display: flex; align-items: center; justify-content: center; border-radius: 50%; background: var(--c-card); border: 1px solid rgb(var(--fg-rgb) / 0.2); font-family: var(--font-mono); font-size: var(--fs-2xs); color: var(--c-text); }
+.rd-director-text { flex: 1; min-width: 0; display: flex; align-items: center; gap: 16px; }
+@media (max-width: 640px) { .rd-director-text { flex-direction: column; align-items: flex-start; gap: 4px; } }
 .rd-no-poster { position: absolute; inset: 0; background: linear-gradient(to top, #111111 0%, rgba(17,17,17,0.85) 25%, rgba(17,17,17,0.3) 55%, transparent 100%); display: flex; align-items: center; justify-content: center; color: rgb(var(--fg-rgb) / 0.15); font-size: 2rem; }
 .rd-index-badge { position: absolute; top: 8px; right: 8px; z-index: 10; width: 25px; height: 25px; border-radius: 50%; background: rgba(17,17,17,0.7); border: 1px solid rgb(var(--fg-rgb) / 0.2); display: flex; align-items: center; justify-content: center; color: var(--c-text-muted); font-family: var(--font-mono); font-size: 0.75rem; -webkit-backdrop-filter: blur(4px); backdrop-filter: blur(4px); }
 .rd-country-name { flex: 1; color: var(--c-text); font-size: 0.85rem; letter-spacing: 1px; font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }

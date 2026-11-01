@@ -7,6 +7,7 @@ export function useTMDBMetadata() {
   const [actors, setActors] = useState({})
   const [countries, setCountries] = useState({})
   const [platforms, setPlatforms] = useState({})
+  const [photos, setPhotos] = useState({})
   const [coverage, setCoverage] = useState(null)
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
@@ -42,6 +43,7 @@ export function useTMDBMetadata() {
       setActors(metadata.actors)
       setCountries(metadata.countries)
       setPlatforms(metadata.platforms)
+      setPhotos(metadata.photos)
       setCoverage(metadata.coverage)
       return metadata
     } catch (e) {
@@ -66,13 +68,14 @@ export function useTMDBMetadata() {
     setActors({})
     setCountries({})
     setPlatforms({})
+    setPhotos({})
     setCoverage(null)
     setError(null)
     setLoading(false)
   }, [])
 
   return {
-    genres, directors, actors, countries, platforms, coverage,
+    genres, directors, actors, countries, platforms, photos, coverage,
     loading, error, fetchMetadata, resetMetadata,
     setGenres, setDirectors, setActors, setCountries, setPlatforms,
   }

@@ -25,6 +25,7 @@ export default function DataPanels({
   actors,
   countries,
   platforms,
+  photos,
   coverage,
   loadingGenres,
   genreError,
@@ -58,8 +59,8 @@ export default function DataPanels({
             />
             <PlatformsPanel platformsData={platforms} movies={movies} loading={loadingGenres} />
             <OpinionsPanel movies={movies} loading={loadingGenres} />
-            <DirectorsPanel directors={directors} movies={movies} loading={loadingGenres} />
-            <ActorsPanel actors={actors} movies={movies} loading={loadingGenres} />
+            <DirectorsPanel directors={directors} movies={movies} photos={photos} loading={loadingGenres} />
+            <ActorsPanel actors={actors} movies={movies} photos={photos} loading={loadingGenres} />
             <TopRatedPanel movies={movies} loading={loadingGenres} />
             <CountriesPanel countries={countries} movies={movies} loading={loadingGenres} />
           </>
