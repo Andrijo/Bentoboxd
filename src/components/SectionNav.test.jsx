@@ -22,6 +22,26 @@ describe("SectionNav", () => {
     window.history.replaceState(null, "", "/")
   })
 
+  it("anima el desplazamiento salvo con movimiento reducido", () => {
+    render(
+      <>
+        <SectionNav showTmdbSections />
+        <h2 id="rd-panel-generos">TOP GÉNEROS</h2>
+      </>,
+    )
+    const heading = screen.getByRole("heading", { name: "TOP GÉNEROS" })
+    heading.scrollIntoView = vi.fn()
+    const button = screen.getByRole("button", { name: "Géneros" })
+
+    fireEvent.click(button)
+    expect(heading.scrollIntoView).toHaveBeenLastCalledWith({ behavior: "smooth" })
+
+    vi.stubGlobal("matchMedia", () => ({ matches: true }))
+    fireEvent.click(button)
+    expect(heading.scrollIntoView).toHaveBeenLastCalledWith({ behavior: "auto" })
+    vi.unstubAllGlobals()
+  })
+
   it("solo ofrece lo que existe sin datos de TMDB", () => {
     render(<SectionNav showTmdbSections={false} />)
 
