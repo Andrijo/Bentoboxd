@@ -192,7 +192,8 @@ input::placeholder {
 }
 input:focus {
   outline: none;
-  border-color: rgb(var(--fg-rgb) / 0.5) !important;
+  border-color: rgb(var(--fg-rgb)) !important;
+  box-shadow: 0 0 0 1px rgb(var(--fg-rgb));
 }
 :focus-visible {
   outline: 2px solid rgb(var(--accent-rgb) / 0.7);
@@ -516,7 +517,7 @@ input:focus-visible {
 .rd-search-recents > div { margin-top: 0 !important; }
 .rd-btn-outline { background: none; border: 1px solid rgb(var(--fg-rgb) / 0.3); border-radius: var(--radius-md); color: var(--c-text); padding: 11px 16px; font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 2px; white-space: nowrap; cursor: pointer; transition: border-color 0.2s; }
 .rd-btn-outline:hover { border-color: rgb(var(--fg-rgb) / 0.6); }
-.rd-search-input { width: 100%; background: rgb(var(--fg-rgb) / 0.03); border: 1px solid rgb(var(--fg-rgb) / 0.1); border-radius: var(--radius-md); padding: 10px 44px 10px 16px; color: var(--c-text-bright); font-family: var(--font-mono); font-size: var(--fs-sm); transition: border 0.2s; }
+.rd-search-input { width: 100%; background: rgb(var(--fg-rgb) / 0.03); border: 1px solid rgb(var(--fg-rgb) / 0.5); border-radius: var(--radius-md); padding: 10px 44px 10px 16px; color: var(--c-text-bright); font-family: var(--font-mono); font-size: var(--fs-sm); transition: border 0.2s; }
 @media (max-width: 640px) { .rd-search-input { font-size: 16px; } }
 .rd-search-btn { padding: 12px 28px; border-radius: var(--radius-md); font-family: var(--font-mono); font-size: 0.75rem; letter-spacing: 2px; transition: all 0.2s; width: 160px; text-align: center; }
 @media (max-width: 640px) {
