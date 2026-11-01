@@ -92,7 +92,7 @@ html[data-edge="bottom"] {
   --accent-rgb: 17 17 17;
   --c-text: #333333;
   --c-text-bright: #111111;
-  --c-text-muted: rgb(51 51 51 / 0.72);
+  --c-text-muted: rgb(51 51 51 / 0.76);
   --c-on-text: #f6f4ee;
   --c-inset: rgb(190 184 173 / 0.28);
   --c-inset-strong: #e6e1d7;
