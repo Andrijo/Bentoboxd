@@ -4,7 +4,7 @@ import HowCalculated from "./HowCalculated.jsx"
 import { Skeleton } from "./Skeleton.jsx"
 import { computeProfileStats } from "../utils/profileStats.js"
 import { profileHeadline } from "../utils/profileHeadline.js"
-import { formatDuration, formatHours, formatMovieCount } from "../utils/formatters.js"
+import { formatDuration, formatFeedScope, formatHours, formatMovieCount } from "../utils/formatters.js"
 import { profileLink } from "../utils/profileUrl.js"
 
 const COPY_RESET_MS = 2500
@@ -93,7 +93,8 @@ export default function ProfileOverview({ movies, genres = {}, username, loading
       <div className="rd-overview-head">
         <div className="rd-overview-intro">
           <h2 id="rd-overview-title" className="rd-overview-title">@{username}</h2>
-          {headline && <p className="rd-overview-headline">{headline}</p>}
+          <p className="rd-overview-scope">{formatFeedScope(stats)}</p>
+          {headline &&<p className="rd-overview-headline">{headline}</p>}
         </div>
         <CopyLinkButton username={username} />
       </div>

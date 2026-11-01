@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import { countryName, formatDuration, formatHours, formatMonth, formatMonthYear, formatMovieCount, formatPercent, formatWatchedDate, getInitials, weekdayName } from "./formatters.js"
+import { countryName, formatDuration, formatFeedScope, formatHours, formatMonth, formatMonthYear, formatMovieCount, formatPercent, formatWatchedDate, getInitials, weekdayName } from "./formatters.js"
 
 describe("getInitials", () => {
   it("toma la primera y la última palabra", () => {
@@ -40,6 +40,34 @@ describe("formatWatchedDate", () => {
   it("devuelve null con fechas ausentes o inválidas", () => {
     expect(formatWatchedDate(null)).toBeNull()
     expect(formatWatchedDate("12/05/2024")).toBeNull()
+  })
+})
+
+describe("formatFeedScope", () => {
+  const range = (total, firstWatched, lastWatched) =>
+    formatFeedScope({ total, firstWatched, lastWatched })
+  const date = (iso) => formatWatchedDate(iso)
+
+  it("indica la cantidad de entradas y su periodo", () => {
+    expect(range(50, "2026-03-03", "2026-05-12")).toBe(
+      `Últimas 50 entradas · ${date("2026-03-03")} – ${date("2026-05-12")}`,
+    )
+  })
+
+  it("usa la cantidad real en feeds cortos", () => {
+    expect(range(12, null, null)).toBe("Últimas 12 entradas")
+  })
+
+  it("no repite la fecha si todo cae el mismo día", () => {
+    expect(range(3, "2026-03-03", "2026-03-03")).toBe(
+      `Últimas 3 entradas · ${date("2026-03-03")}`,
+    )
+  })
+
+  it("usa el singular con una sola entrada", () => {
+    expect(range(1, "2026-03-03", "2026-03-03")).toBe(
+      `Última entrada · ${date("2026-03-03")}`,
+    )
   })
 })
 

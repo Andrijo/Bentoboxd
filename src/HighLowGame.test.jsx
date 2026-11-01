@@ -57,6 +57,23 @@ describe("HighLowGame", () => {
     expect(screen.getByText("Racha final: 0")).toBeInTheDocument()
   })
 
+  it("indica de qué perfil son las películas", () => {
+    render(<HighLowGame movies={movies} username="ana" loading={false} />)
+
+    expect(screen.getByText("Películas de @ana")).toBeInTheDocument()
+  })
+
+  it("permite volver al perfil al terminar la partida", () => {
+    const onBack = vi.fn()
+    render(<HighLowGame movies={movies} loading={false} onBack={onBack} />)
+    fireEvent.click(lower())
+    fireEvent.click(button("Ver resultado"))
+
+    fireEvent.click(button("Volver al perfil"))
+
+    expect(onBack).toHaveBeenCalledOnce()
+  })
+
   it("avisa que cambiar de categoría reinicia la racha", () => {
     render(<HighLowGame movies={movies} loading={false} />)
     const note = screen.getByText(/reinicia la racha/)

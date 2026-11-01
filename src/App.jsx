@@ -312,8 +312,10 @@ export default function App() {
         <KeepAlive key={`higher-lower:${username}`} active={page === "higher-lower"}>
           <HighLowGame
             movies={movies}
+            username={username}
             loading={metaLoading}
             active={page === "higher-lower"}
+            onBack={() => navigate("profile")}
           />
         </KeepAlive>
       )}
@@ -322,6 +324,7 @@ export default function App() {
         <KeepAlive key={`quiz:${username}`} active={page === "quiz"}>
           <Quiz
             movies={movies}
+            username={username}
             loading={metaLoading}
             onBack={() => navigate("profile")}
           />

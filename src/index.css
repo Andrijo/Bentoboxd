@@ -408,6 +408,7 @@ input:focus-visible {
 .rd-terminal-overlay { position: absolute; top: 0; left: 0; right: 0; bottom: 0; background: linear-gradient(rgba(17, 17, 17, 0) 50%, rgba(17,17,17,0.25) 50%); background-size: 100% 4px; pointer-events: none; }
 .rd-quiz { max-width: 460px; margin: 0 auto; }
 .rd-quiz-head { display: flex; align-items: flex-end; justify-content: space-between; gap: 12px; margin-bottom: 16px; }
+.rd-quiz-heading { display: flex; flex-direction: column; gap: 4px; min-width: 0; }
 .rd-quiz-progress { font-size: var(--fs-xs); letter-spacing: 1px; color: var(--c-text-muted); }
 .rd-quiz-card { background: var(--c-surface); border: 1px solid rgb(var(--fg-rgb) / 0.07); border-radius: var(--radius-lg); width: 100%; overflow: hidden; }
 .rd-quiz-body { padding: clamp(16px, 5vw, 24px); }
@@ -448,6 +449,8 @@ input:focus-visible {
 @media (hover: none) { .rd-hlg-shortcuts { display: none; } }
 .rd-hlg-note { font-size: var(--fs-xs); color: var(--c-text-muted); text-align: center; }
 .rd-hlg-final { font-size: var(--fs-sm); color: var(--c-text); margin-bottom: 20px; }
+.rd-hlg-actions { display: flex; flex-wrap: wrap; justify-content: center; gap: 12px; }
+.rd-game-profile { font-size: var(--fs-xs); color: var(--c-text); overflow-wrap: anywhere; }
 .rd-hlg-btn { padding: 10px 28px; border-radius: var(--radius-md); font-weight: bold; font-size: var(--fs-xs); font-family: var(--font-mono); }
 .rd-crash { min-height: 100vh; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 16px; padding: var(--gutter); text-align: center; color: var(--c-text); font-family: var(--font-mono); font-size: var(--fs-sm); }
 .rd-crash-title { font-family: var(--font-display); font-weight: normal; font-size: var(--fs-2xl); color: var(--c-text-bright); }
@@ -503,6 +506,7 @@ input:focus-visible {
 .rd-overview-head { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 12px; }
 .rd-overview-intro { flex: 1 1 260px; min-width: 0; }
 .rd-overview-title { font-family: var(--font-display); font-size: var(--fs-lg); font-weight: normal; letter-spacing: 1px; color: var(--c-text-bright); overflow-wrap: anywhere; }
+.rd-overview-scope { margin-top: 2px; font-size: var(--fs-xs); color: var(--c-text-muted); }
 .rd-overview-headline { margin-top: 4px; font-size: var(--fs-sm); line-height: 1.4; color: var(--c-text); }
 .rd-overview-tiles { display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; }
 .rd-how { font-size: var(--fs-xs); color: var(--c-text-muted); }

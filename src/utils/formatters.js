@@ -47,6 +47,15 @@ export function formatWatchedDate(isoDate) {
   return watchedDateFormat.format(new Date(y, m - 1, d))
 }
 
+/** "Últimas 50 entradas · 3 mar 2026 – 12 may 2026". Sin fechas, solo la cantidad. */
+export function formatFeedScope({ total, firstWatched, lastWatched }) {
+  const entries = total === 1 ? "Última entrada" : `Últimas ${total} entradas`
+  const first = formatWatchedDate(firstWatched)
+  const last = formatWatchedDate(lastWatched)
+  if (!first || !last) return entries
+  return `${entries} · ${first === last ? first : `${first} – ${last}`}`
+}
+
 const monthDate = (key) => {
   const [y, m] = key.split("-").map(Number)
   return new Date(y, m - 1, 1)

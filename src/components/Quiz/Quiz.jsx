@@ -43,7 +43,7 @@ function QuizReview({ questions, answers }) {
   )
 }
 
-function QuizRound({ movies, onBack }) {
+function QuizRound({ movies, username, onBack }) {
   const [currentQ, setCurrentQ] = useState(0)
   const [answers, setAnswers] = useState([])
   const [showResult, setShowResult] = useState(false)
@@ -112,7 +112,10 @@ function QuizRound({ movies, onBack }) {
     <section className="rd-page" aria-label="Quiz">
       <div className="rd-quiz">
         <div className="rd-quiz-head">
-          <h2 className="rd-panel-title">QUIZ</h2>
+          <div className="rd-quiz-heading">
+            <h2 className="rd-panel-title">QUIZ</h2>
+            <p className="rd-game-profile">Películas de @{username}</p>
+          </div>
           {!showResult && (
             <span className="rd-quiz-progress">
               Pregunta {currentQ + 1} / {questions.length}
@@ -236,7 +239,7 @@ function QuizRound({ movies, onBack }) {
   )
 }
 
-export default function Quiz({ movies, loading = false, onBack }) {
+export default function Quiz({ movies, username, loading = false, onBack }) {
   if (loading) {
     return (
       <section className="rd-page" aria-label="Quiz">
@@ -246,5 +249,5 @@ export default function Quiz({ movies, loading = false, onBack }) {
       </section>
     )
   }
-  return <QuizRound movies={movies} onBack={onBack} />
+  return <QuizRound movies={movies} username={username} onBack={onBack} />
 }
