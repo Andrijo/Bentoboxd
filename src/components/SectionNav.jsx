@@ -13,13 +13,17 @@ const TMDB_SECTIONS = [
   { id: "rd-panel-paises", label: "Países" },
 ]
 
+function scrollBehavior() {
+  return window.matchMedia?.("(prefers-reduced-motion: reduce)").matches ? "auto" : "smooth"
+}
+
 // Botones y no enlaces: el hash de la URL es la página activa (ver useHashRoute).
 function goToSection(id) {
   const target = document.getElementById(id)
   if (!target) return
 
   target.tabIndex = -1
-  target.scrollIntoView()
+  target.scrollIntoView({ behavior: scrollBehavior() })
   target.focus({ preventScroll: true })
 }
 
