@@ -18,7 +18,7 @@ export default function RatingHistogram({ distribution }) {
         fontSize: "var(--fs-xs)", color: "var(--c-text-muted)",
         letterSpacing: "1px", marginBottom: "12px",
       }}>
-        Tus calificaciones · la más frecuente es {mode.rating}★
+        Calificaciones · la más frecuente es {mode.rating}★
       </figcaption>
 
       <div aria-hidden="true" style={{ position: "relative" }}>

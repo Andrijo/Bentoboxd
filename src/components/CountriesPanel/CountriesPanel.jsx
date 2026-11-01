@@ -10,7 +10,7 @@ const VIEW_OPTIONS = [
   { key: "nodes", label: "Sectores" },
 ]
 
-export default function CountriesPanel({ countries, loading }) {
+export default function CountriesPanel({ countries, movies, loading }) {
   const [viewMode, setViewMode] = useState("list")
 
   const topCountryCodes = Object.entries(countries || {})
@@ -32,7 +32,7 @@ export default function CountriesPanel({ countries, loading }) {
 
       {!loading && hasData && (
         <>
-          {viewMode === "list" && <CountryDatalog countries={countries} />}
+          {viewMode === "list" && <CountryDatalog countries={countries} movies={movies} />}
           {viewMode === "nodes" && <CountrySectors countries={countries} />}
         </>
       )}

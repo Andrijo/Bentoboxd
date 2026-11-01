@@ -5,6 +5,8 @@ import AppHeader from "./components/AppHeader.jsx"
 import AppFooter from "./components/AppFooter.jsx"
 import SearchSection from "./components/SearchSection.jsx"
 import MovieViews from "./components/MovieViews.jsx"
+import ProfileOverview from "./components/ProfileOverview.jsx"
+import SectionNav from "./components/SectionNav.jsx"
 import DataPanels from "./components/DataPanels.jsx"
 import EmptyLanding from "./components/EmptyLanding.jsx"
 import ErrorNotice from "./components/ErrorNotice.jsx"
@@ -79,7 +81,7 @@ export default function App() {
       const requestId = ++requestIdRef.current
 
       const metadata = await fetchMetadata(
-        feedMovies.map((m) => ({ title: m.title, year: m.year })),
+        feedMovies.map((m) => ({ title: m.title, year: m.year, tmdbId: m.tmdbId })),
       )
       if (requestId !== requestIdRef.current) return
       if (!metadata) return
@@ -89,10 +91,12 @@ export default function App() {
           const found = metadata.rawResults.find(
             (r) =>
               r &&
-              r.title === m.title.trim() &&
-              (r.queryYear == null ||
-                !m.year ||
-                String(r.queryYear) === String(m.year).trim()),
+              (m.tmdbId
+                ? r.tmdbId === m.tmdbId
+                : r.title === m.title.trim() &&
+                  (r.queryYear == null ||
+                    !m.year ||
+                    String(r.queryYear) === String(m.year).trim())),
           )
           const releaseYear = found?.releaseDate
             ? parseInt(found.releaseDate.split("-")[0], 10)
@@ -104,6 +108,8 @@ export default function App() {
             platforms: found?.platforms || [],
             genres: found?.genres || [],
             directors: found?.directors || [],
+            actors: found?.actors || [],
+            countries: found?.countries || [],
             metrics: {
               rating: found?.globalRating ? parseFloat(found.globalRating) : 0,
               popularity: found?.popularity || 0,
@@ -140,6 +146,18 @@ export default function App() {
     },
     [url, fetchFeed, loadMetadata, resetMetadata],
   )
+
+  const selectProfile = useCallback(
+    (user) => {
+      setUrl(user)
+      handleFetch(user)
+    },
+    [handleFetch],
+  )
+
+  const removeRecentProfile = useCallback((user) => {
+    setRecentProfiles((prev) => prev.filter((p) => p !== user))
+  }, [])
 
   const clearProfile = useCallback(() => {
     requestIdRef.current += 1
@@ -231,9 +249,13 @@ export default function App() {
         <SearchSection
           url={url}
           loading={feedLoading}
+          compact={hasMovies}
+          recentProfiles={recentProfiles.filter((p) => p !== username)}
           onUrlChange={setUrl}
           onFetch={handleFetch}
           onCancel={cancelFeed}
+          onProfileSelect={selectProfile}
+          onProfileRemove={removeRecentProfile}
         />
 
         {error && (
@@ -246,12 +268,17 @@ export default function App() {
         {feedLoading && !hasMovies && <BentoSkeleton />}
 
         {hasMovies && (
-          <MovieViews
-            movies={movies}
-            movieViewMode={movieViewMode}
-            username={username}
-            onViewModeChange={setMovieViewMode}
-          />
+          <>
+            <ProfileOverview movies={movies} username={username} loading={metaLoading} />
+            <SectionNav showTmdbSections={!genreError} />
+            <MovieViews
+              key={username}
+              movies={movies}
+              movieViewMode={movieViewMode}
+              username={username}
+              onViewModeChange={setMovieViewMode}
+            />
+          </>
         )}
 
         <DataPanels
@@ -273,13 +300,8 @@ export default function App() {
           movies={movies}
           error={error}
           recentProfiles={recentProfiles}
-          onProfileSelect={(user) => {
-            setUrl(user)
-            handleFetch(user)
-          }}
-          onProfileRemove={(user) => {
-            setRecentProfiles((prev) => prev.filter((p) => p !== user))
-          }}
+          onProfileSelect={selectProfile}
+          onProfileRemove={removeRecentProfile}
         />
       </div>
 

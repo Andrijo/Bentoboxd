@@ -3,7 +3,7 @@ import { renderHook, act } from "@testing-library/react"
 import { useLetterboxdFeed, FEED_LIMIT } from "./useLetterboxdFeed.js"
 
 const RSS = `<?xml version="1.0" encoding="UTF-8"?>
-<rss xmlns:letterboxd="https://letterboxd.com" version="2.0">
+<rss xmlns:letterboxd="https://letterboxd.com" xmlns:tmdb="https://themoviedb.org" version="2.0">
   <channel>
     <item>
       <title>Inception, 2010 - ★★★★½</title>
@@ -15,6 +15,7 @@ const RSS = `<?xml version="1.0" encoding="UTF-8"?>
       <letterboxd:watchedDate>2024-05-12</letterboxd:watchedDate>
       <letterboxd:rewatch>Yes</letterboxd:rewatch>
       <letterboxd:memberLike>Yes</letterboxd:memberLike>
+      <tmdb:movieId>27205</tmdb:movieId>
     </item>
     <item>
       <title>Dune, 2021</title>
@@ -82,9 +83,11 @@ describe("useLetterboxdFeed", () => {
       watchedDate: "2024-05-12",
       liked: true,
       rewatch: true,
+      tmdbId: 27205,
     })
     expect(result.current.movies[1]).toMatchObject({
       title: "Dune",
+      tmdbId: null,
       rating: null,
       year: "2021",
       watchedDate: null,

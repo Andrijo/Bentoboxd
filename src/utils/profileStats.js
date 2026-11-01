@@ -18,7 +18,7 @@ const mean = (values) =>
 
 /**
  * Resumen del feed: calificaciones, comparación con TMDB, me gusta,
- * revisiones, década favorita, rango de fechas, horas vistas, ritmo semanal y día favorito.
+ * revisiones, década más vista, rango de fechas, horas vistas, ritmo semanal y día más activo.
  * `metrics.rating` (promedio de TMDB, 0–5) y `metrics.runtime` (minutos) solo
  * existen tras cargar metadatos.
  */
@@ -66,7 +66,7 @@ export function computeProfileStats(movies) {
     ? watchDays.length / (Math.max(spanDays, WEEK_DAYS) / WEEK_DAYS)
     : null
 
-  // Día favorito (0 = domingo). Empate: el primero de la semana, lunes primero.
+  // Día más activo (0 = domingo). Empate: el primero de la semana, lunes primero.
   const weekdayCounts = Array(WEEK_DAYS).fill(0)
   for (const day of watchDays) weekdayCounts[day.getDay()] += 1
   const topWeekdayCount = Math.max(0, ...weekdayCounts)

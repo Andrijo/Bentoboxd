@@ -4,21 +4,21 @@ import { seededRandom, randomSeed } from "./utils/shuffle.js"
 import { buildDeck, isCorrectGuess } from "./utils/highLowDeck.js"
 
 const CATEGORY_OPTIONS = [
-  { key: "rating", label: "Estrellas" },
+  { key: "rating", label: "Nota" },
   { key: "popularity", label: "Popularidad" },
   { key: "year", label: "Estreno" },
 ]
 
 const CAT_CONFIG = {
   rating: {
-    unit: "Estrellas",
-    desc: "Adivina si la siguiente película tiene una calificación mayor o menor.",
-    sub: "Según la calificación media del público.",
+    unit: "Nota del público",
+    desc: "Adivina si la siguiente película tiene una nota mayor o menor.",
+    sub: "Según el público (TMDB), de 0 a 5.",
   },
   popularity: {
     unit: "Popularidad",
     desc: "Adivina qué película es más popular hoy.",
-    sub: "Según la actividad reciente del público; cambia día a día.",
+    sub: "Según la actividad reciente en TMDB; cambia día a día.",
   },
   year: {
     unit: "Estreno",

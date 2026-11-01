@@ -5,7 +5,7 @@ import { generateQuestions } from "./quizQuestions.js"
 const UNRATED = "Sin calificar"
 
 function resultMessage(score, total) {
-  if (score === total) return "Conoces tu diario de memoria."
+  if (score === total) return "Conoces este diario de memoria."
   if (score >= total / 2) return "Buena memoria cinéfila."
   return "Toca repasar el diario."
 }

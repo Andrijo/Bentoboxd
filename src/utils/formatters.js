@@ -38,6 +38,23 @@ export function formatWatchedDate(isoDate) {
   return watchedDateFormat.format(new Date(y, m - 1, d))
 }
 
+const monthDate = (key) => {
+  const [y, m] = key.split("-").map(Number)
+  return new Date(y, m - 1, 1)
+}
+const monthFormat = new Intl.DateTimeFormat("es-MX", { month: "short" })
+const monthYearFormat = new Intl.DateTimeFormat("es-MX", { month: "short", year: "numeric" })
+
+/** "2026-03" → "mar". */
+export function formatMonth(key) {
+  return monthFormat.format(monthDate(key)).replace(".", "")
+}
+
+/** "2026-03" → "mar 2026". */
+export function formatMonthYear(key) {
+  return monthYearFormat.format(monthDate(key)).replace(".", "")
+}
+
 /** 125 → "2 h 5 min"; 120 → "2 h"; 45 → "45 min". */
 export function formatDuration(minutes) {
   const total = Math.round(minutes)
@@ -45,6 +62,11 @@ export function formatDuration(minutes) {
   const rest = total % 60
   if (hours === 0) return `${rest} min`
   return rest === 0 ? `${hours} h` : `${hours} h ${rest} min`
+}
+
+/** 5146 → "86 h"; 45 → "45 min". Cabe en una tarjeta, a costa de redondear. */
+export function formatHours(minutes) {
+  return minutes < 60 ? formatDuration(minutes) : `${Math.round(minutes / 60)} h`
 }
 
 const weekdayFormat = new Intl.DateTimeFormat("es-MX", { weekday: "long" })

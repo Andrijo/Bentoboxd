@@ -1,5 +1,5 @@
 import { describe, it, expect, beforeEach } from "vitest"
-import { readProfileParam, writeProfileParam } from "./profileUrl.js"
+import { profileLink, readProfileParam, writeProfileParam } from "./profileUrl.js"
 
 describe("profileUrl", () => {
   beforeEach(() => {
@@ -15,6 +15,12 @@ describe("profileUrl", () => {
     expect(readProfileParam()).toBeNull()
     window.history.replaceState(null, "", "/?user=no%20valido")
     expect(readProfileParam()).toBeNull()
+  })
+
+  it("comparte el perfil sin el query ni la página actuales", () => {
+    window.history.replaceState(null, "", "/?user=otro&x=1#quiz")
+
+    expect(profileLink("andie")).toBe(`${window.location.origin}/?user=andie`)
   })
 
   it("escribe el usuario conservando el hash y crea entrada de historial", () => {

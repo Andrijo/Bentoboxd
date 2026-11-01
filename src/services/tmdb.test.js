@@ -285,6 +285,36 @@ describe("fetchMetadataFromTMDB", () => {
     expect(result.rawResults[0].queryYear).toBe(2021)
   })
 
+  it("usa el ID del feed sin buscar por título", async () => {
+    const fetchMock = vi.fn(() => jsonResponse(detailsResponse()))
+    vi.stubGlobal("fetch", fetchMock)
+
+    const result = await fetchMetadataFromTMDB([
+      { title: "Lady Vengeance", year: "2005", tmdbId: 4550 },
+    ])
+
+    expect(fetchMock).toHaveBeenCalledTimes(1)
+    expect(fetchMock.mock.calls[0][0]).toContain("/movie/4550?")
+    expect(result.rawResults[0]).toMatchObject({
+      title: "Lady Vengeance",
+      tmdbId: 4550,
+    })
+  })
+
+  it("no mezcla películas homónimas del mismo año con distinto ID", async () => {
+    vi.stubGlobal(
+      "fetch",
+      vi.fn(() => jsonResponse(detailsResponse())),
+    )
+
+    const result = await fetchMetadataFromTMDB([
+      { title: "Obsession", year: "2025", tmdbId: 1 },
+      { title: "Obsession", year: "2025", tmdbId: 2 },
+    ])
+
+    expect(result.coverage).toEqual({ total: 2, matched: 2, failed: 0 })
+  })
+
   it("cuenta todos los directores y países de producción", async () => {
     vi.stubGlobal(
       "fetch",

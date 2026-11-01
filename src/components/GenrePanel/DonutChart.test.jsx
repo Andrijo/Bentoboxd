@@ -24,6 +24,6 @@ describe("DonutChart", () => {
   it("revela el detalle al hacer clic en una porción", () => {
     render(<DonutChart genres={genres} movieCount={6} />)
     fireEvent.click(screen.getByRole("img", { name: "Drama: 4 películas" }))
-    expect(screen.getByText("67% de tus películas")).toBeInTheDocument()
+    expect(screen.getByText("67% de las películas")).toBeInTheDocument()
   })
 })

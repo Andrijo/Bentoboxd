@@ -1,4 +1,5 @@
 import StatsSummary from "./StatsSummary/StatsSummary.jsx"
+import MonthlyPanel from "./MonthlyPanel/MonthlyPanel.jsx"
 import PlatformsPanel from "./PlatformsPanel/PlatformsPanel.jsx"
 import OpinionsPanel from "./OpinionsPanel/OpinionsPanel.jsx"
 import TopRatedPanel from "./TopRatedPanel/TopRatedPanel.jsx"
@@ -44,21 +45,23 @@ export default function DataPanels({
         <p className="rd-coverage-note">{coverageMessage(coverage)}</p>
       )}
       <div className="rd-bento-panels" data-partial={genreError ? "" : undefined}>
-        <StatsSummary movies={movies} loading={loadingGenres} />
+        <StatsSummary movies={movies} />
+        <MonthlyPanel movies={movies} />
         {!genreError && (
           <>
             {/* En el orden visual de la cuadrícula: el foco sigue la lectura. */}
             <GenrePanel
               genres={genres}
               movieCount={coverage?.matched || movies.length}
+              movies={movies}
               loadingGenres={loadingGenres}
             />
             <PlatformsPanel platformsData={platforms} movies={movies} loading={loadingGenres} />
             <OpinionsPanel movies={movies} loading={loadingGenres} />
-            <DirectorsPanel directors={directors} loading={loadingGenres} />
-            <ActorsPanel actors={actors} loading={loadingGenres} />
+            <DirectorsPanel directors={directors} movies={movies} loading={loadingGenres} />
+            <ActorsPanel actors={actors} movies={movies} loading={loadingGenres} />
             <TopRatedPanel movies={movies} loading={loadingGenres} />
-            <CountriesPanel countries={countries} loading={loadingGenres} />
+            <CountriesPanel countries={countries} movies={movies} loading={loadingGenres} />
           </>
         )}
       </div>

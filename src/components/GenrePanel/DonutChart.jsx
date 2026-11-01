@@ -107,7 +107,7 @@ export default function DonutChart({ genres, movieCount }) {
             </text>
             <text x={cx} y={cy + 32} textAnchor="middle" fontSize="16" fill="var(--c-text-muted)"
               style={{ fontFamily: "var(--font-mono)" }}>
-              {formatPercent(hoveredSlice.count, films)} de tus películas
+              {formatPercent(hoveredSlice.count, films)} de las películas
             </text>
           </>
         ) : (

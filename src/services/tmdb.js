@@ -152,19 +152,21 @@ function normalizeYear(year) {
   return Number.isFinite(value) && value > 0 ? value : null
 }
 
-/** Acepta strings (compatibilidad) u objetos { title, year }. */
+/** Acepta strings (compatibilidad) u objetos { title, year, tmdbId }. */
 function normalizeMovie(movie) {
   if (typeof movie === "string") {
-    return { title: movie.trim(), year: null }
+    return { title: movie.trim(), year: null, tmdbId: null }
   }
 
   return {
     title: String(movie?.title || "").trim(),
     year: normalizeYear(movie?.year),
+    tmdbId: movie?.tmdbId || null,
   }
 }
 
-function movieCacheKey({ title, year }) {
+function movieCacheKey({ title, year, tmdbId }) {
+  if (tmdbId) return `tmdb:${tmdbId}`
   return year ? `${title}::${year}` : title
 }
 
@@ -172,7 +174,7 @@ function movieCacheKey({ title, year }) {
 function pickGenres(movieInfo, detailsData) {
   const ids = detailsData.genres?.length
     ? detailsData.genres.map((g) => g.id)
-    : movieInfo.genre_ids || []
+    : movieInfo?.genre_ids || []
 
   const known = [...new Set(ids.map((id) => TMDB_GENRES[id]).filter(Boolean))]
   return known.length > 0 ? known : ["Otro"]
@@ -221,27 +223,34 @@ async function searchMovies(title, year, signal) {
   return data?.results || []
 }
 
-async function fetchOne({ title, year }, signal) {
-  const key = movieCacheKey({ title, year })
+async function fetchOne({ title, year, tmdbId }, signal) {
+  const key = movieCacheKey({ title, year, tmdbId })
   if (metadataCache.has(key)) return metadataCache.get(key)
 
-  let results = await searchMovies(title, year, signal)
-  if (results === null) return null
-
-  // Si el año del RSS no coincide con el de TMDB, reintenta sin filtro.
-  if (year && results.length === 0) {
-    results = await searchMovies(title, null, signal)
+  // Con el ID del feed no hace falta buscar: el título puede coincidir con
+  // cortos u otras películas homónimas del mismo año.
+  let movieInfo = null
+  if (!tmdbId) {
+    let results = await searchMovies(title, year, signal)
     if (results === null) return null
+
+    // Si el año del RSS no coincide con el de TMDB, reintenta sin filtro.
+    if (year && results.length === 0) {
+      results = await searchMovies(title, null, signal)
+      if (results === null) return null
+    }
+
+    if (results.length === 0) {
+      cacheSet(key, null)
+      return null
+    }
+
+    movieInfo = pickBestResult(results, year)
   }
 
-  if (results.length === 0) {
-    cacheSet(key, null)
-    return null
-  }
-
-  const movieInfo = pickBestResult(results, year)
+  const movieId = tmdbId || movieInfo.id
   const detailsRes = await fetchWithRetry(
-    `${DETAILS_URL}/${movieInfo.id}?append_to_response=credits,watch/providers&language=es-MX`,
+    `${DETAILS_URL}/${movieId}?append_to_response=credits,watch/providers&language=es-MX`,
     signal,
   )
 
@@ -286,6 +295,7 @@ async function fetchOne({ title, year }, signal) {
   const item = {
     title,
     queryYear: year,
+    tmdbId: movieId,
     genres,
     genre: genres[0],
     directors,
