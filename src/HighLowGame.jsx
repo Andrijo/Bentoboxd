@@ -196,7 +196,7 @@ function GuessControls({ disabled, onGuess }) {
   )
 }
 
-function GameHeader({ category, streak, onCategoryChange }) {
+function GameHeader({ category, streak, username, onCategoryChange }) {
   return (
     <div
       style={{
@@ -226,6 +226,9 @@ function GameHeader({ category, streak, onCategoryChange }) {
             }}>
             HIGHER OR LOWER
           </h2>
+          <p className="rd-game-profile" style={{ marginBottom: "8px" }}>
+            Películas de @{username}
+          </p>
           <div
             style={{
               fontSize: "var(--fs-xs)",
@@ -277,7 +280,7 @@ function GameHeader({ category, streak, onCategoryChange }) {
   )
 }
 
-function GameOver({ streak, won, onRestart }) {
+function GameOver({ streak, won, onRestart, onBack }) {
   const restartRef = useRef(null)
 
   // El botón "Ver resultado" desaparece: el foco no debe perderse con él.
@@ -297,13 +300,21 @@ function GameOver({ streak, won, onRestart }) {
         {won ? "¡HAS ACERTADO TODO!" : "JUEGO TERMINADO"}
       </h2>
       <p className="rd-hlg-final">Racha final: {streak}</p>
-      <button
-        ref={restartRef}
-        onClick={onRestart}
-        type="button"
-        className="rd-btn-solid rd-hlg-btn">
-        Jugar de nuevo
-      </button>
+      <div className="rd-hlg-actions">
+        <button
+          ref={restartRef}
+          onClick={onRestart}
+          type="button"
+          className="rd-btn-solid rd-hlg-btn">
+          Jugar de nuevo
+        </button>
+        <button
+          onClick={onBack}
+          type="button"
+          className="rd-btn-solid rd-hlg-btn">
+          Volver al perfil
+        </button>
+      </div>
     </div>
   )
 }
@@ -320,6 +331,7 @@ function GamePlayArea({
   onGuess,
   onNext,
   onRestart,
+  onBack,
 }) {
   const nextRef = useRef(null)
 
@@ -342,7 +354,7 @@ function GamePlayArea({
         padding: "20px 0",
       }}>
       {gameOver ? (
-        <GameOver streak={streak} won={won} onRestart={onRestart} />
+        <GameOver streak={streak} won={won} onRestart={onRestart} onBack={onBack} />
       ) : (
         <>
           <div style={{ textAlign: "center" }}>
@@ -454,7 +466,7 @@ function GamePlayArea({
   )
 }
 
-export default function HighLowGame({ movies, loading, active = true }) {
+export default function HighLowGame({ movies, username, loading, active = true, onBack }) {
   const [category, setCategory] = useState("rating")
   // La semilla se sortea por partida: mismo orden en cada render, otro al reiniciar.
   const [state, dispatch] = useReducer(gameReducer, undefined, () => ({
@@ -530,6 +542,7 @@ export default function HighLowGame({ movies, loading, active = true }) {
       <GameHeader
         category={category}
         streak={state.streak}
+        username={username}
         onCategoryChange={(id) => {
           setCategory(id)
           dispatch({ type: "RESTART", seed: randomSeed() })
@@ -549,6 +562,7 @@ export default function HighLowGame({ movies, loading, active = true }) {
           onGuess={handleGuess}
           onNext={handleNext}
           onRestart={restart}
+          onBack={onBack}
         />
       ) : (
         <div className="rd-page-notice" role="status">

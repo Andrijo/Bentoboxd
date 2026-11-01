@@ -39,6 +39,11 @@ describe("Quiz", () => {
     expect(screen.getByText(/Puntuación/)).toHaveTextContent("1 / 2")
   })
 
+  it("indica de qué perfil son las preguntas", () => {
+    render(<Quiz movies={[]} username="ana" onBack={() => {}} />)
+    expect(screen.getByText("Películas de @ana")).toBeInTheDocument()
+  })
+
   it("muestra un aviso mientras cargan los datos", () => {
     render(<Quiz movies={[]} loading onBack={() => {}} />)
     expect(screen.getByRole("status")).toHaveTextContent("Cargando")
