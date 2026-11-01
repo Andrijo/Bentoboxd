@@ -1,4 +1,7 @@
+import { useMessages } from "../i18n/index.js"
+
 export default function RecentProfiles({ profiles, onSelect, onRemove }) {
+  const t = useMessages()
   if (profiles.length === 0) return null
 
   return (
@@ -13,7 +16,7 @@ export default function RecentProfiles({ profiles, onSelect, onRemove }) {
           textTransform: "uppercase",
           marginBottom: "16px",
         }}>
-        Perfiles recientes
+        {t.recents.title}
       </h2>
       <div
         role="group"
@@ -30,8 +33,8 @@ export default function RecentProfiles({ profiles, onSelect, onRemove }) {
             <button
               onClick={() => onRemove(profile)}
               type="button"
-              aria-label={`Quitar @${profile} de recientes`}
-              title="Quitar de recientes"
+              aria-label={t.recents.remove(profile)}
+              title={t.recents.removeTitle}
               className="rd-profile-remove">
               <span aria-hidden="true">✕</span>
             </button>

@@ -1,7 +1,9 @@
 import { useState, useCallback, useEffect, useRef } from "react"
 import { fetchMetadataFromTMDB } from "../services/tmdb.js"
+import { useMessages } from "../i18n/index.js"
 
 export function useTMDBMetadata() {
+  const t = useMessages()
   const [genres, setGenres] = useState({})
   const [directors, setDirectors] = useState({})
   const [actors, setActors] = useState({})
@@ -10,7 +12,7 @@ export function useTMDBMetadata() {
   const [photos, setPhotos] = useState({})
   const [coverage, setCoverage] = useState(null)
   const [loading, setLoading] = useState(false)
-  const [error, setError] = useState(null)
+  const [failed, setFailed] = useState(false)
   const controllerRef = useRef(null)
 
   // Cancela la petición en curso al desmontar.
@@ -31,7 +33,7 @@ export function useTMDBMetadata() {
     controllerRef.current = controller
 
     setLoading(true)
-    setError(null)
+    setFailed(false)
     setCoverage(null)
 
     try {
@@ -49,7 +51,7 @@ export function useTMDBMetadata() {
     } catch (e) {
       if (e.name === "AbortError") return null
       console.error(e)
-      setError("No pudimos cargar los datos de TMDB. Inténtalo de nuevo en unos minutos.")
+      setFailed(true)
       return null
     } finally {
       // Solo la petición vigente controla el estado de carga.
@@ -70,13 +72,13 @@ export function useTMDBMetadata() {
     setPlatforms({})
     setPhotos({})
     setCoverage(null)
-    setError(null)
+    setFailed(false)
     setLoading(false)
   }, [])
 
   return {
     genres, directors, actors, countries, platforms, photos, coverage,
-    loading, error, fetchMetadata, resetMetadata,
+    loading, error: failed ? t.tmdbError : null, fetchMetadata, resetMetadata,
     setGenres, setDirectors, setActors, setCountries, setPlatforms,
   }
 }

@@ -19,7 +19,7 @@ const RSS = `<?xml version="1.0" encoding="UTF-8"?>
 </channel></rss>`
 
 const METADATA = {
-  genres: { Drama: 1 },
+  genres: { drama: 1 },
   directors: {},
   actors: {},
   countries: {},
@@ -56,6 +56,23 @@ beforeEach(() => {
 
 afterEach(() => {
   vi.unstubAllGlobals()
+})
+
+describe("selector de idioma", () => {
+  it("cambia los textos y el título sin recargar", () => {
+    render(<App />)
+    expect(screen.getByRole("heading", { name: "Tu Letterboxd, en un dashboard" })).toBeInTheDocument()
+
+    fireEvent.click(screen.getByRole("button", { name: "Switch to English" }))
+
+    expect(screen.getByRole("heading", { name: "Your Letterboxd, as a dashboard" })).toBeInTheDocument()
+    expect(document.title).toBe("Bentoboxd — Your Letterboxd as a dashboard")
+    expect(document.documentElement.lang).toBe("en")
+
+    fireEvent.click(screen.getByRole("button", { name: "Cambiar a español" }))
+
+    expect(document.documentElement.lang).toBe("es")
+  })
 })
 
 describe("App", () => {

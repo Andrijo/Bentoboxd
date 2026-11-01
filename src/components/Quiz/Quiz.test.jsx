@@ -1,12 +1,15 @@
 import { describe, it, expect, vi } from "vitest"
-import { render, screen, fireEvent } from "@testing-library/react"
+import { render, screen, fireEvent, act } from "@testing-library/react"
 import Quiz from "./Quiz.jsx"
+import { generateQuestions } from "./quizQuestions.js"
+import { setLanguage } from "../../i18n/index.js"
 
 vi.mock("./quizQuestions.js", () => ({
-  generateQuestions: () => [
-    { qText: "¿Uno?", options: ["a", "b"], correct: "a" },
-    { qText: "¿Dos?", options: ["a", "b"], correct: "b" },
-  ],
+  UNRATED: "unrated",
+  generateQuestions: vi.fn(() => [
+    { text: () => "¿Uno?", options: ["a", "b"], correct: "a" },
+    { text: () => "¿Dos?", options: ["a", "b"], correct: "b" },
+  ]),
 }))
 
 describe("Quiz", () => {
@@ -42,6 +45,29 @@ describe("Quiz", () => {
   it("indica de qué perfil son las preguntas", () => {
     render(<Quiz movies={[]} username="ana" onBack={() => {}} />)
     expect(screen.getByText("Películas de @ana")).toBeInTheDocument()
+  })
+
+  it("muestra la opción sin nota en el idioma activo", () => {
+    vi.mocked(generateQuestions).mockReturnValueOnce([
+      { text: () => "¿Nota?", options: ["3", "unrated"], correct: "unrated" },
+    ])
+    render(<Quiz movies={[]} onBack={() => {}} />)
+
+    expect(screen.getByRole("button", { name: "Sin calificar" })).toBeInTheDocument()
+  })
+
+  it("conserva la partida al cambiar de idioma", () => {
+    vi.mocked(generateQuestions).mockReturnValueOnce([
+      { text: (t) => t.quiz.questions.poster(), options: ["a", "unrated"], correct: "a" },
+    ])
+    render(<Quiz movies={[]} username="ana" onBack={() => {}} />)
+    fireEvent.click(screen.getByRole("button", { name: /^a/ }))
+
+    act(() => setLanguage("en"))
+
+    expect(screen.getByText("Which film is this poster from?")).toBeInTheDocument()
+    expect(screen.getByRole("button", { name: "Unrated" })).toBeDisabled()
+    expect(screen.getByRole("button", { name: "See result" })).toBeInTheDocument()
   })
 
   it("muestra un aviso mientras cargan los datos", () => {

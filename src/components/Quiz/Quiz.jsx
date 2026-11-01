@@ -1,18 +1,21 @@
 import { useState, useRef, useEffect } from "react"
 import PosterImage from "../PosterImage.jsx"
-import { generateQuestions } from "./quizQuestions.js"
+import { generateQuestions, UNRATED } from "./quizQuestions.js"
+import { useMessages } from "../../i18n/index.js"
 
-const UNRATED = "Sin calificar"
-
-function resultMessage(score, total) {
-  if (score === total) return "Conoces este diario de memoria."
-  if (score >= total / 2) return "Buena memoria cinéfila."
-  return "Toca repasar el diario."
+function resultMessage({ quiz }, score, total) {
+  if (score === total) return quiz.resultPerfect
+  if (score >= total / 2) return quiz.resultGood
+  return quiz.resultLow
 }
 
+const optionLabel = ({ common }, option) => (option === UNRATED ? common.unrated : option)
+
 function QuizReview({ questions, answers }) {
+  const t = useMessages()
+
   return (
-    <ol className="rd-quiz-review" aria-label="Repaso de respuestas">
+    <ol className="rd-quiz-review" aria-label={t.quiz.review}>
       {questions.map((q, i) => {
         const right = answers[i] === q.correct
         return (
@@ -26,16 +29,16 @@ function QuizReview({ questions, answers }) {
               />
             )}
             <div className="rd-quiz-review-text">
-              <div>{q.qText}</div>
+              <div>{q.text(t)}</div>
               <div className="rd-quiz-review-answer">
-                Tu respuesta: {answers[i]}
+                {t.quiz.yourAnswer(optionLabel(t, answers[i]))}
               </div>
-              {!right && <div>Correcta: {q.correct}</div>}
+              {!right && <div>{t.quiz.rightAnswer(optionLabel(t, q.correct))}</div>}
             </div>
             <span className="rd-quiz-review-mark" aria-hidden="true">
               {right ? "✓" : "✕"}
             </span>
-            <span className="rd-sr-only">{right ? "Acertada" : "Fallada"}</span>
+            <span className="rd-sr-only">{right ? t.quiz.answeredRight : t.quiz.answeredWrong}</span>
           </li>
         )
       })}
@@ -44,6 +47,7 @@ function QuizReview({ questions, answers }) {
 }
 
 function QuizRound({ movies, username, onBack }) {
+  const t = useMessages()
   const [currentQ, setCurrentQ] = useState(0)
   const [answers, setAnswers] = useState([])
   const [showResult, setShowResult] = useState(false)
@@ -92,9 +96,9 @@ function QuizRound({ movies, username, onBack }) {
 
   if (questions.length === 0) {
     return (
-      <section className="rd-page" aria-label="Quiz">
+      <section className="rd-page" aria-label={t.header.tabs.quiz}>
         <div className="rd-page-notice">
-          No hay suficientes películas para armar un quiz.
+          {t.quiz.notEnough}
         </div>
       </section>
     )
@@ -105,20 +109,20 @@ function QuizRound({ movies, username, onBack }) {
     selected === null
       ? ""
       : selected === current.correct
-        ? "Correcto."
-        : `Incorrecto. La respuesta era ${current.correct}.`
+        ? t.quiz.correct
+        : t.quiz.incorrect(optionLabel(t, current.correct))
 
   return (
-    <section className="rd-page" aria-label="Quiz">
+    <section className="rd-page" aria-label={t.header.tabs.quiz}>
       <div className="rd-quiz">
         <div className="rd-quiz-head">
           <div className="rd-quiz-heading">
-            <h2 className="rd-panel-title">QUIZ</h2>
-            <p className="rd-game-profile">Películas de @{username}</p>
+            <h2 className="rd-panel-title">{t.quiz.title}</h2>
+            <p className="rd-game-profile">{t.common.gameProfile(username)}</p>
           </div>
           {!showResult && (
             <span className="rd-quiz-progress">
-              Pregunta {currentQ + 1} / {questions.length}
+              {t.quiz.progress(currentQ + 1, questions.length)}
             </span>
           )}
         </div>
@@ -126,7 +130,7 @@ function QuizRound({ movies, username, onBack }) {
         <div className="rd-quiz-card">
           <p className="rd-sr-only" role="status" aria-live="polite">
             {showResult
-              ? `Quiz completado: ${score} de ${questions.length}`
+              ? t.quiz.completed(score, questions.length)
               : feedback}
           </p>
           {showResult ? (
@@ -135,12 +139,12 @@ function QuizRound({ movies, username, onBack }) {
                 ref={resultRef}
                 tabIndex={-1}
                 className="rd-quiz-result-title">
-                Resultados
+                {t.quiz.results}
               </h2>
               <div className="rd-quiz-score">
-                Puntuación: <strong>{score}</strong> / {questions.length}
+                {t.quiz.score} <strong>{score}</strong> / {questions.length}
                 <div className="rd-quiz-message">
-                  {resultMessage(score, questions.length)}
+                  {resultMessage(t, score, questions.length)}
                 </div>
               </div>
               <QuizReview questions={questions} answers={answers} />
@@ -149,13 +153,13 @@ function QuizRound({ movies, username, onBack }) {
                   onClick={restart}
                   type="button"
                   className="rd-btn-solid rd-quiz-btn">
-                  Jugar de nuevo
+                  {t.common.playAgain}
                 </button>
                 <button
                   onClick={onBack}
                   type="button"
                   className="rd-btn-solid rd-quiz-btn">
-                  Volver al perfil
+                  {t.common.backToProfile}
                 </button>
               </div>
             </div>
@@ -167,7 +171,7 @@ function QuizRound({ movies, username, onBack }) {
                   data-blurred={selected === null}>
                   <PosterImage
                     src={current.movie.poster}
-                    alt="Póster de la película a adivinar"
+                    alt={t.quiz.posterAlt}
                     style={{
                       transition: "filter 0.4s ease, transform 0.4s ease",
                     }}
@@ -179,7 +183,7 @@ function QuizRound({ movies, username, onBack }) {
                 ref={questionRef}
                 tabIndex={-1}
                 className="rd-quiz-question">
-                {current.qText}
+                {current.text(t)}
               </h2>
 
               <div
@@ -207,9 +211,9 @@ function QuizRound({ movies, username, onBack }) {
                       data-state={state}
                       className="rd-quiz-option">
                       {mark}
-                      {opt}{" "}
+                      {optionLabel(t, opt)}{" "}
                       {current.type === "rating" && opt !== UNRATED && (
-                        <span role="img" aria-label="estrellas">
+                        <span role="img" aria-label={t.quiz.starsIcon}>
                           ★
                         </span>
                       )}
@@ -226,8 +230,8 @@ function QuizRound({ movies, username, onBack }) {
                     type="button"
                     className="rd-btn-solid rd-quiz-btn">
                     {currentQ < questions.length - 1
-                      ? "Siguiente"
-                      : "Ver resultado"}
+                      ? t.common.next
+                      : t.common.seeResult}
                   </button>
                 </div>
               )}
@@ -240,11 +244,13 @@ function QuizRound({ movies, username, onBack }) {
 }
 
 export default function Quiz({ movies, username, loading = false, onBack }) {
+  const t = useMessages()
+
   if (loading) {
     return (
-      <section className="rd-page" aria-label="Quiz">
+      <section className="rd-page" aria-label={t.header.tabs.quiz}>
         <div className="rd-page-notice" role="status">
-          Cargando datos de las películas…
+          {t.common.loadingMovieData}
         </div>
       </section>
     )

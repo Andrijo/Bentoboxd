@@ -1,6 +1,7 @@
 import { useMemo } from "react"
 import { generateBentoLayout, TILE_SPANS, VISIBLE_MOVIES } from "./BentoGrid/bentoPatterns.js"
 import { useGridColumns, rowHeight } from "../hooks/useGridColumns.js"
+import { useMessages } from "../i18n/index.js"
 
 export function Skeleton({ width = "100%", height = "12px", radius = "4px", style }) {
   return (
@@ -14,6 +15,7 @@ export function Skeleton({ width = "100%", height = "12px", radius = "4px", styl
 
 /** Misma forma que el bento real, para que no salte el layout al cargar. */
 export function BentoSkeleton() {
+  const t = useMessages()
   const [gridRef, columns, compact] = useGridColumns()
   const layout = useMemo(
     () => generateBentoLayout(columns, VISIBLE_MOVIES, { compact }),
@@ -22,7 +24,7 @@ export function BentoSkeleton() {
 
   return (
     <div style={{ padding: "32px var(--gutter)" }} role="status" aria-busy="true">
-      <span className="rd-sr-only">Cargando películas…</span>
+      <span className="rd-sr-only">{t.movieViews.loading}</span>
       <div
         style={{
           display: "flex",
@@ -61,10 +63,12 @@ export function BentoSkeleton() {
  * - tiles: tarjetas en cuadrícula (plataformas)
  * - chart: gráfica circular con leyenda (géneros)
  */
-export function PanelSkeleton({ variant = "rows", label = "Cargando…" }) {
+export function PanelSkeleton({ variant = "rows", label }) {
+  const t = useMessages()
+
   return (
     <div role="status" aria-busy="true" style={{ width: "100%" }}>
-      <span className="rd-sr-only">{label}</span>
+      <span className="rd-sr-only">{label || t.common.loading}</span>
 
       {variant === "rows" && (
         <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>

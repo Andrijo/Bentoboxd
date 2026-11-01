@@ -36,7 +36,7 @@ describe("ProfileOverview", () => {
   })
 
   it("resume el perfil en una frase con sus géneros", () => {
-    render(<ProfileOverview movies={MOVIES} genres={{ Drama: 2 }} username="ana" loading={false} />)
+    render(<ProfileOverview movies={MOVIES} genres={{ drama: 2 }} username="ana" loading={false} />)
 
     expect(
       screen.getByText("Casi 1 película por semana, sobre todo de drama, y notas parecidas a las del público"),

@@ -1,3 +1,5 @@
+import { getMessages } from "../i18n/index.js"
+
 const UNRATED = "unrated"
 
 export const NO_FILTERS = { liked: false, rating: "", year: "" }
@@ -18,7 +20,7 @@ export function filterMovies(movies, { liked, rating, year }) {
 export function filterOptions(movies) {
   const rated = [...new Set(movies.map((m) => m.rating).filter(Boolean))].sort((a, b) => b - a)
   const ratings = rated.map((rating) => ({ value: String(rating), label: `${rating}★` }))
-  if (movies.some((m) => !m.rating)) ratings.push({ value: UNRATED, label: "Sin calificar" })
+  if (movies.some((m) => !m.rating)) ratings.push({ value: UNRATED, label: getMessages().common.unrated })
 
   const years = [...new Set(movies.map((m) => m.year).filter(Boolean))].sort((a, b) => b - a)
 

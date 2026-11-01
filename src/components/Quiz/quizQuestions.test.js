@@ -1,5 +1,5 @@
 import { describe, it, expect } from "vitest"
-import { generateQuestions } from "./quizQuestions.js"
+import { generateQuestions, UNRATED } from "./quizQuestions.js"
 
 const movies = [
   { title: "A", year: "2025", rating: 4.5 },
@@ -59,7 +59,7 @@ describe("generateQuestions", () => {
     const [q] = generateQuestions([{ title: "B", year: null, rating: null }])
 
     expect(q.isYear).toBe(false)
-    expect(q.correct).toBe("Sin calificar")
+    expect(q.correct).toBe(UNRATED)
   })
 
   it("no ofrece 'Sin calificar' si todo el perfil está calificado", () => {
@@ -67,7 +67,7 @@ describe("generateQuestions", () => {
 
     runMany(() => {
       generateQuestions(rated, { currentYear: 2026 }).forEach((q) => {
-        expect(q.options).not.toContain("Sin calificar")
+        expect(q.options).not.toContain(UNRATED)
       })
     })
   })
@@ -79,7 +79,7 @@ describe("generateQuestions", () => {
       generateQuestions(movies, { currentYear: 2026 })
         .filter((q) => q.type === "rating" && q.movie.rating)
         .forEach((q) => {
-          offered ||= q.options.includes("Sin calificar")
+          offered ||= q.options.includes(UNRATED)
         })
     })
 

@@ -3,8 +3,10 @@ import MonthlyChart from "./MonthlyChart.jsx"
 import Panel from "../Panel/Panel.jsx"
 import { FEED_LIMIT } from "../../hooks/useLetterboxdFeed.js"
 import { computeMonthlyStats } from "../../utils/monthlyStats.js"
+import { useMessages } from "../../i18n/index.js"
 
 export default function MonthlyPanel({ movies }) {
+  const t = useMessages()
   const months = useMemo(() => computeMonthlyStats(movies), [movies])
   const hasTrend = months.length > 1
 
@@ -12,15 +14,15 @@ export default function MonthlyPanel({ movies }) {
     <Panel
       id="rd-panel-evolucion"
       area="monthly"
-      title="EVOLUCIÓN MENSUAL"
-      subtitle={hasTrend && "Según la fecha en que se vio cada película"}>
+      title={t.monthly.title}
+      subtitle={hasTrend && t.monthly.subtitle}>
       {hasTrend ? (
         <>
           <MonthlyChart months={months} />
           {/* El feed corta en FEED_LIMIT entradas: el mes más antiguo puede llegar a medias. */}
           {movies.length >= FEED_LIMIT && (
             <p className="rd-monthly-note">
-              El primer mes puede estar incompleto: Letterboxd solo comparte las últimas {FEED_LIMIT} entradas.
+              {t.monthly.firstMonthNote(FEED_LIMIT)}
             </p>
           )}
         </>
@@ -29,7 +31,7 @@ export default function MonthlyPanel({ movies }) {
           textAlign: "center", fontSize: "var(--fs-xs)", color: "var(--c-text-muted)",
           fontFamily: "var(--font-mono)",
         }}>
-          Hacen falta entradas fechadas en al menos 2 meses para ver la evolución
+          {t.monthly.notEnough}
         </div>
       )}
     </Panel>

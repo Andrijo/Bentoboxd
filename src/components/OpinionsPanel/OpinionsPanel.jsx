@@ -4,15 +4,18 @@ import PosterImage from "../PosterImage.jsx"
 import Panel from "../Panel/Panel.jsx"
 import HowCalculated from "../HowCalculated.jsx"
 import { computeDivergences } from "../../utils/divergences.js"
+import { useMessages } from "../../i18n/index.js"
 
 const GROUPS = [
-  { key: "above", title: "Por encima del público", sign: "+" },
-  { key: "below", title: "Por debajo del público", sign: "−" },
+  { key: "above", sign: "+" },
+  { key: "below", sign: "−" },
 ]
 
 const formatRating = (value) => value.toFixed(1)
 
 function OpinionRow({ movie, diff, sign }) {
+  const t = useMessages()
+
   return (
     <li>
       <a
@@ -45,7 +48,7 @@ function OpinionRow({ movie, diff, sign }) {
             display: "block", marginTop: "4px", fontSize: "var(--fs-xs)",
             color: "var(--c-text-muted)",
           }}>
-            Perfil {formatRating(movie.rating)} · Público {formatRating(movie.metrics.rating)}
+            {t.opinionsPanel.compare(formatRating(movie.rating), formatRating(movie.metrics.rating))}
           </span>
         </span>
 
@@ -54,13 +57,14 @@ function OpinionRow({ movie, diff, sign }) {
         }}>
           {sign}{formatRating(Math.abs(diff))}
         </span>
-        <span className="rd-sr-only">(se abre en Letterboxd en una pestaña nueva)</span>
+        <span className="rd-sr-only">{t.common.opensInLetterboxd}</span>
       </a>
     </li>
   )
 }
 
 export default function OpinionsPanel({ movies, loading }) {
+  const t = useMessages()
   const { above, below, compared } = useMemo(() => computeDivergences(movies), [movies])
   const groups = { above, below }
   const hasData = above.length + below.length > 0
@@ -69,21 +73,21 @@ export default function OpinionsPanel({ movies, loading }) {
     <Panel
       id="rd-panel-opiniones"
       area="opinions"
-      title="OPINIONES IMPOPULARES"
-      subtitle={!loading && compared > 0 && "Mayores diferencias con el público (TMDB)"}>
-      {loading && <PanelSkeleton variant="rows" label="Comparando con el público…" />}
+      title={t.opinionsPanel.title}
+      subtitle={!loading && compared > 0 && t.opinionsPanel.subtitle}>
+      {loading && <PanelSkeleton variant="rows" label={t.opinionsPanel.loading} />}
 
       {!loading && hasData && (
         <div style={{
           display: "grid", gridTemplateColumns: "repeat(auto-fit, minmax(260px, 1fr))", gap: "24px",
         }}>
-          {GROUPS.map(({ key, title, sign }) => groups[key].length > 0 && (
-            <section key={key} aria-label={title}>
+          {GROUPS.map(({ key, sign }) => groups[key].length > 0 && (
+            <section key={key} aria-label={t.opinionsPanel[key]}>
               <h3 style={{
                 fontWeight: "inherit", fontSize: "var(--fs-xs)", letterSpacing: "2px",
                 color: "var(--c-text-muted)", marginBottom: "12px",
               }}>
-                {title}
+                {t.opinionsPanel[key]}
               </h3>
               <ul style={{ listStyle: "none", display: "flex", flexDirection: "column", gap: "8px" }}>
                 {groups[key].map(({ movie, diff }) => (
@@ -101,15 +105,14 @@ export default function OpinionsPanel({ movies, loading }) {
           marginTop: "20px", fontFamily: "var(--font-mono)",
         }}>
           {compared > 0
-            ? "Las calificaciones van en línea con las del público (TMDB): ninguna se aleja media estrella o más."
-            : "Este perfil aún no tiene calificaciones para comparar con las del público (TMDB)."}
+            ? t.opinionsPanel.aligned
+            : t.opinionsPanel.noRatings}
         </div>
       )}
 
       {!loading && compared > 0 && (
         <HowCalculated style={{ marginTop: "16px" }}>
-          Nota del perfil menos la del público en cada película. TMDB puntúa de 0 a 10: aquí se divide
-          entre 2. Se muestran hasta 3 películas por lado con al menos media estrella de diferencia.
+          {t.opinionsPanel.how}
         </HowCalculated>
       )}
     </Panel>

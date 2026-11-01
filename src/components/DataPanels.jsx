@@ -8,13 +8,11 @@ import DirectorsPanel from "./DirectorsPanel/DirectorsPanel.jsx"
 import ActorsPanel from "./ActorsPanel/ActorsPanel.jsx"
 import CountriesPanel from "./CountriesPanel/CountriesPanel.jsx"
 import ErrorNotice from "./ErrorNotice.jsx"
-import { formatMovieCount } from "../utils/formatters.js"
+import { useMessages } from "../i18n/index.js"
 
-function coverageMessage({ total, matched, failed }) {
-  const base = `Estadísticas basadas en ${matched} de ${formatMovieCount(total)}`
-  return failed > 0
-    ? `${base}: TMDB no respondió para ${failed}.`
-    : `${base}: el resto no aparece en TMDB.`
+function coverageMessage({ coverage: messages }, { total, matched, failed }) {
+  const base = messages.base(matched, total)
+  return failed > 0 ? messages.failed(base, failed) : messages.missing(base)
 }
 
 export default function DataPanels({
@@ -31,6 +29,7 @@ export default function DataPanels({
   genreError,
   onRetryMetadata,
 }) {
+  const t = useMessages()
   if (!showGenrePanel) return null
 
   const partial = coverage && coverage.matched < coverage.total
@@ -40,10 +39,10 @@ export default function DataPanels({
     <>
       {genreError && <ErrorNotice message={genreError} onRetry={onRetryMetadata} />}
       {partial && coverage.failed > 0 && (
-        <ErrorNotice message={coverageMessage(coverage)} onRetry={onRetryMetadata} />
+        <ErrorNotice message={coverageMessage(t, coverage)} onRetry={onRetryMetadata} />
       )}
       {partial && coverage.failed === 0 && (
-        <p className="rd-coverage-note">{coverageMessage(coverage)}</p>
+        <p className="rd-coverage-note">{coverageMessage(t, coverage)}</p>
       )}
       <div className="rd-bento-panels" data-partial={genreError ? "" : undefined}>
         <StatsSummary movies={movies} />

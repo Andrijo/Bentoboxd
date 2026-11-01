@@ -1,10 +1,12 @@
 import { useState } from "react"
 import { GENRE_KEYS, GENRE_CONFIG } from "../../constants/genres.js"
 import { formatPercent } from "../../utils/formatters.js"
+import { useMessages } from "../../i18n/index.js"
 
 const mixAlpha = (color, pct) => `color-mix(in srgb, ${color} ${pct}%, transparent)`
 
 export default function MatrixChart({ genres, movieCount }) {
+  const t = useMessages()
   const [hoveredGenre, setHoveredGenre] = useState(null)
 
   const sortedGenres = GENRE_KEYS.filter((k) => (genres[k] || 0) > 0).sort(
@@ -27,7 +29,7 @@ export default function MatrixChart({ genres, movieCount }) {
       <ul className="rd-sr-only">
         {sortedGenres.map((genre) => (
           <li key={genre}>
-            {genre}: {genres[genre]} ({formatPercent(genres[genre], movieCount)})
+            {t.genres[genre]}: {genres[genre]} ({formatPercent(genres[genre], movieCount)})
           </li>
         ))}
       </ul>
@@ -76,14 +78,13 @@ export default function MatrixChart({ genres, movieCount }) {
               fontSize: "var(--fs-md)", fontFamily: "var(--font-display)",
               color: "var(--c-text-bright)", letterSpacing: "2px",
             }}>
-              {hoveredGenre}
+              {t.genres[hoveredGenre]}
             </div>
             <div style={{
               fontSize: "var(--fs-xs)", fontFamily: "var(--font-mono)",
               color: "var(--c-text-muted)",
             }}>
-              {genres[hoveredGenre]} nodos detectados (
-              {formatPercent(genres[hoveredGenre], movieCount)})
+              {t.genrePanel.matrixDetail(genres[hoveredGenre], formatPercent(genres[hoveredGenre], movieCount))}
             </div>
           </>
         ) : (
@@ -91,7 +92,7 @@ export default function MatrixChart({ genres, movieCount }) {
               fontSize: "var(--fs-xs)", fontFamily: "var(--font-mono)",
               color: "var(--c-text-muted)", letterSpacing: "2px",
           }}>
-            [ Toca o pasa el cursor sobre un nodo ]
+            {t.genrePanel.matrixHint}
           </div>
         )}
       </div>

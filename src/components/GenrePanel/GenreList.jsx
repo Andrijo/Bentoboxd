@@ -3,15 +3,17 @@ import MovieDrilldown from "../MovieDrilldown.jsx"
 import { GENRE_KEYS, GENRE_CONFIG } from "../../constants/genres.js"
 import { formatPercent } from "../../utils/formatters.js"
 import { moviesWith } from "../../utils/movieFilters.js"
+import { useMessages } from "../../i18n/index.js"
 
 export default function GenreList({ genres, movieCount, movies = [] }) {
+  const t = useMessages()
   const [openGenre, setOpenGenre] = useState(null)
   const ranked = GENRE_KEYS.filter((k) => (genres[k] || 0) > 0).sort(
     (a, b) => genres[b] - genres[a],
   )
 
   return (
-    <ol aria-label="Géneros por frecuencia" style={{
+    <ol aria-label={t.genrePanel.byFrequency} style={{
       width: "100%", margin: 0, padding: 0, listStyle: "none",
       display: "flex", flexDirection: "column", gap: "8px",
     }}>
@@ -40,7 +42,7 @@ export default function GenreList({ genres, movieCount, movies = [] }) {
                 flex: 1, fontSize: "var(--fs-xs)", fontWeight: "bold", color: "var(--c-text)",
                 whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis",
               }}>
-                {k}
+                {t.genres[k]}
               </span>
               <span style={{
                 fontSize: "var(--fs-xs)", fontFamily: "var(--font-mono)",
@@ -56,7 +58,7 @@ export default function GenreList({ genres, movieCount, movies = [] }) {
               </span>
             </button>
             {openGenre === k && (
-              <MovieDrilldown label={`Películas de ${k}`} movies={moviesWith(movies, "genres", k)} />
+              <MovieDrilldown label={t.common.moviesBy(t.genres[k])} movies={moviesWith(movies, "genres", k)} />
             )}
           </li>
         )

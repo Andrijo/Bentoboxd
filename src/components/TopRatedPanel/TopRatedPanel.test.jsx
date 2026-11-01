@@ -3,8 +3,8 @@ import { render, screen, within } from "@testing-library/react"
 import TopRatedPanel from "./TopRatedPanel.jsx"
 
 const MOVIES = [
-  { rating: 4, genres: ["Drama"], directors: ["Ana Ruiz"] },
-  { rating: 5, genres: ["Drama"], directors: ["Ana Ruiz"] },
+  { rating: 4, genres: ["drama"], directors: ["Ana Ruiz"] },
+  { rating: 5, genres: ["drama"], directors: ["Ana Ruiz"] },
 ]
 
 describe("TopRatedPanel", () => {

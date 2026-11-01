@@ -19,8 +19,10 @@ import { useOverscrollColor } from "./hooks/useOverscrollColor.js"
 import { useTheme } from "./hooks/useTheme.js"
 import { parseUsername } from "./services/letterboxd.js"
 import { readProfileParam, writeProfileParam } from "./utils/profileUrl.js"
+import { useMessages } from "./i18n/index.js"
 
 export default function App() {
+  const t = useMessages()
   // Con un enlace compartido (?user=) el buscador arranca con ese usuario.
   const [url, setUrl] = useState(() => readProfileParam() || "")
   const [movieViewMode, setMovieViewMode] = useState("bento")
@@ -207,9 +209,9 @@ export default function App() {
 
   useEffect(() => {
     document.title = username && movies.length > 0
-      ? `@${username} — Bentoboxd`
-      : "Bentoboxd — Tu Letterboxd en un dashboard"
-  }, [username, movies.length])
+      ? t.app.profileTitle(username)
+      : t.document.title
+  }, [t, username, movies.length])
 
   const showGenrePanel = movies.length > 0 || metaLoading
   // Sin feed cargado (p. ej. al recargar en #quiz) solo existe el perfil.
@@ -232,7 +234,7 @@ export default function App() {
           e.preventDefault()
           mainRef.current?.focus()
         }}>
-        Saltar al contenido
+        {t.app.skipToContent}
       </a>
 
       <AppHeader

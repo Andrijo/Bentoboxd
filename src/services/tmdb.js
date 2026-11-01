@@ -1,4 +1,5 @@
-import { GENRE_KEYS, TMDB_GENRES } from "../constants/genres.js"
+import { GENRE_KEYS, OTHER_GENRE, TMDB_GENRES } from "../constants/genres.js"
+import { getLocale } from "../i18n/index.js"
 
 const AUTH_ERROR =
   "TMDB rechazó la API key (401). Revisa que TMDB_API_KEY esté definida en el servidor (o en .env en local)."
@@ -171,14 +172,14 @@ function movieCacheKey({ title, year, tmdbId }) {
   return year ? `${title}::${year}` : title
 }
 
-/** Devuelve todos los géneros conocidos de una película (o ["Otro"]). */
+/** Devuelve todos los géneros conocidos de una película (o [OTHER_GENRE]). */
 function pickGenres(movieInfo, detailsData) {
   const ids = detailsData.genres?.length
     ? detailsData.genres.map((g) => g.id)
     : movieInfo?.genre_ids || []
 
   const known = [...new Set(ids.map((id) => TMDB_GENRES[id]).filter(Boolean))]
-  return known.length > 0 ? known : ["Otro"]
+  return known.length > 0 ? known : [OTHER_GENRE]
 }
 
 /**
@@ -213,7 +214,7 @@ function pickBestResult(results, year) {
 async function searchMovies(title, year, signal) {
   const params = new URLSearchParams({
     query: title,
-    language: "es-MX",
+    language: getLocale(),
   })
   if (year) params.set("year", String(year))
 
@@ -251,7 +252,7 @@ async function fetchOne({ title, year, tmdbId }, signal) {
 
   const movieId = tmdbId || movieInfo.id
   const detailsRes = await fetchWithRetry(
-    `${DETAILS_URL}/${movieId}?append_to_response=credits,watch/providers&language=es-MX`,
+    `${DETAILS_URL}/${movieId}?append_to_response=credits,watch/providers&language=${getLocale()}`,
     signal,
   )
 

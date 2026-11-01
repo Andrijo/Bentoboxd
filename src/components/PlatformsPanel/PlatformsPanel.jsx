@@ -4,8 +4,10 @@ import Panel from "../Panel/Panel.jsx"
 import MovieDrilldown from "../MovieDrilldown.jsx"
 import { formatMovieCount } from "../../utils/formatters.js"
 import { moviesWith } from "../../utils/movieFilters.js"
+import { useMessages } from "../../i18n/index.js"
 
 export default function PlatformsPanel({ platformsData, movies, loading }) {
+  const t = useMessages()
   const [selectedPlatform, setSelectedPlatform] = useState(null)
   const { counts, logos } = platformsData || { counts: {}, logos: {} }
 
@@ -17,24 +19,24 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
     <Panel
       id="rd-panel-streaming"
       area="platforms"
-      title="STREAMING"
-      subtitle="Disponible por suscripción en México · Datos de JustWatch"
+      title={t.platformsPanel.title}
+      subtitle={t.platformsPanel.subtitle}
       actions={selectedPlatform && (
         <button onClick={() => setSelectedPlatform(null)} type="button" className="rd-btn-solid" style={{
           fontSize: "var(--fs-xs)", padding: "4px 10px", borderRadius: "var(--radius-sm)",
         }}>
-          <span aria-hidden="true">✕</span> Quitar filtro
+          <span aria-hidden="true">✕</span> {t.platformsPanel.clearFilter}
         </button>
       )}
       style={{ fontFamily: "var(--font-mono)" }}>
       {loading ? (
-        <PanelSkeleton variant="tiles" label="Buscando plataformas…" />
+        <PanelSkeleton variant="tiles" label={t.platformsPanel.loading} />
       ) : topPlatforms.length === 0 ? (
         <div style={{
           textAlign: "center", fontSize: "var(--fs-xs)",
           color: "var(--c-text-muted)", fontFamily: "var(--font-mono)",
         }}>
-          Ninguna de estas películas está en streaming por suscripción en México
+          {t.platformsPanel.empty}
         </div>
       ) : (
         <>
@@ -70,7 +72,7 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
 
           {selectedPlatform && (
             <MovieDrilldown
-              label={`Películas en ${selectedPlatform}`}
+              label={t.common.moviesOn(selectedPlatform)}
               movies={moviesWith(movies, "platforms", selectedPlatform)}
             />
           )}

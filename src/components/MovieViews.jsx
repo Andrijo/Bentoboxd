@@ -8,17 +8,15 @@ import { generateBentoLayout, VISIBLE_MOVIES } from "./BentoGrid/bentoPatterns.j
 import { useGridColumns, rowHeight } from "../hooks/useGridColumns.js"
 import { formatWatchedDate } from "../utils/formatters.js"
 import { NO_FILTERS, filterMovies } from "../utils/movieFilters.js"
+import { useMessages } from "../i18n/index.js"
 
-const VIEW_OPTIONS = [
-  { key: "bento", label: "Bento" },
-  { key: "timeline", label: "Línea de tiempo" },
-  { key: "terminal", label: "Terminal" },
-]
+const VIEW_KEYS = ["bento", "timeline", "terminal"]
 
 // Con la lista completa, el retraso de las últimas filas no debe sentirse.
 const staggerIndex = (index) => Math.min(index, VISIBLE_MOVIES)
 
 export default function MovieViews({ movies: allMovies, movieViewMode, username, onViewModeChange }) {
+  const t = useMessages()
   const [showAll, setShowAll] = useState(false)
   const [filters, setFilters] = useState(NO_FILTERS)
   const listTopRef = useRef(null)
@@ -58,15 +56,13 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
             color: "var(--c-text-bright)",
           }}>
           {showAll
-            ? `${movies.length} de ${allMovies.length} películas`
-            : `${movies.length < allMovies.length
-              ? `${movies.length} de ${allMovies.length}`
-              : movies.length} películas recientes`}
+            ? t.movieViews.filteredCount(movies.length, allMovies.length)
+            : t.movieViews.recentCount(movies.length, allMovies.length)}
         </div>
 
         <SegmentedControl
-          label="Vista de películas"
-          options={VIEW_OPTIONS}
+          label={t.movieViews.label}
+          options={VIEW_KEYS.map((key) => ({ key, label: t.movieViews.options[key] }))}
           value={movieViewMode}
           onChange={onViewModeChange}
         />
@@ -75,7 +71,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
       {showAll && <MovieFilters movies={allMovies} filters={filters} onChange={setFilters} />}
 
       {movies.length === 0 && (
-        <p className="rd-movies-empty">Ninguna película coincide con estos filtros.</p>
+        <p className="rd-movies-empty">{t.movieViews.noMatches}</p>
       )}
 
       {movieViewMode === "bento" && movies.length > 0 && (
@@ -188,7 +184,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                   )}
                   <StarRating rating={movie.rating} />
                   {movie.liked && (
-                    <span role="img" aria-label="Me gusta" style={{ color: "var(--c-text-bright)", fontSize: "var(--fs-xs)" }}>
+                    <span role="img" aria-label={t.common.liked} style={{ color: "var(--c-text-bright)", fontSize: "var(--fs-xs)" }}>
                       ♥
                     </span>
                   )}
@@ -198,7 +194,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                       color: "var(--c-text-muted)", border: "1px solid rgb(var(--fg-rgb) / 0.2)",
                       borderRadius: "var(--radius-sm)", padding: "1px 6px",
                     }}>
-                      Vista otra vez
+                      {t.movieViews.rewatched}
                     </span>
                   )}
                 </div>
@@ -207,7 +203,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                     marginTop: "4px", fontSize: "var(--fs-xs)",
                     color: "var(--c-text-muted)", fontFamily: "var(--font-mono)",
                   }}>
-                    Vista el {formatWatchedDate(movie.watchedDate)}
+                    {t.movieViews.watchedOn(formatWatchedDate(movie.watchedDate))}
                   </div>
                 )}
               </div>
@@ -222,7 +218,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                 }}>
                 ↗
               </div>
-              <span className="rd-sr-only">(se abre en Letterboxd en una pestaña nueva)</span>
+              <span className="rd-sr-only">{t.common.opensInLetterboxd}</span>
             </a>
           ))}
         </div>
@@ -279,16 +275,16 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                   </span>
                   <span style={{ color: "var(--c-text-bright)", width: "40px", textAlign: "right" }}>
                     {movie.rating ? (
-                      <span role="img" aria-label={`${movie.rating} de 5 estrellas`}>{movie.rating}★</span>
+                      <span role="img" aria-label={t.common.stars(movie.rating)}>{movie.rating}★</span>
                     ) : (
                       <>
                         <span aria-hidden="true">—</span>
-                        <span className="rd-sr-only">Sin calificar</span>
+                        <span className="rd-sr-only">{t.common.unrated}</span>
                       </>
                     )}
                   </span>
                 </span>
-                <span className="rd-sr-only">(se abre en Letterboxd en una pestaña nueva)</span>
+                <span className="rd-sr-only">{t.common.opensInLetterboxd}</span>
               </a>
             ))}
           </div>
@@ -304,7 +300,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
             type="button"
             className="rd-btn-outline"
             onClick={showAll ? showRecent : () => setShowAll(true)}>
-            {showAll ? "Ver solo las recientes" : `Ver todas (${allMovies.length})`}
+            {showAll ? t.movieViews.showRecent : t.movieViews.showAll(allMovies.length)}
           </button>
         </div>
       )}

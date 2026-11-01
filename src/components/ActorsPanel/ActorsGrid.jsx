@@ -3,8 +3,10 @@ import MovieDrilldown from "../MovieDrilldown.jsx"
 import PersonAvatar from "../PersonAvatar.jsx"
 import { formatMovieCount } from "../../utils/formatters.js"
 import { moviesWith } from "../../utils/movieFilters.js"
+import { useMessages } from "../../i18n/index.js"
 
 export default function ActorsGrid({ actors, movies = [], photos = {} }) {
+  const t = useMessages()
   const [openActor, setOpenActor] = useState(null)
   const topActors = Object.entries(actors || {})
     .sort((a, b) => b[1] - a[1])
@@ -44,7 +46,7 @@ export default function ActorsGrid({ actors, movies = [], photos = {} }) {
               </span>
             </button>
             {openActor === name && (
-              <MovieDrilldown label={`Películas con ${name}`} movies={moviesWith(movies, "actors", name)} />
+              <MovieDrilldown label={t.common.moviesWith(name)} movies={moviesWith(movies, "actors", name)} />
             )}
           </Fragment>
         )

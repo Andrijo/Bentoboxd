@@ -2,8 +2,10 @@ import { useState } from "react"
 import MovieDrilldown from "../MovieDrilldown.jsx"
 import { getFlagUrl, countryName, formatMovieCount } from "../../utils/formatters.js"
 import { moviesWith } from "../../utils/movieFilters.js"
+import { useMessages } from "../../i18n/index.js"
 
 export default function CountryDatalog({ countries, movies = [] }) {
+  const t = useMessages()
   const [openCountry, setOpenCountry] = useState(null)
   const topCountryCodes = Object.entries(countries || {})
     .sort((a, b) => b[1] - a[1])
@@ -60,7 +62,7 @@ export default function CountryDatalog({ countries, movies = [] }) {
               </span>
             </button>
             {openCountry === code && (
-              <MovieDrilldown label={`Películas de ${fullName}`} movies={moviesWith(movies, "countries", code)} />
+              <MovieDrilldown label={t.common.moviesFrom(fullName)} movies={moviesWith(movies, "countries", code)} />
             )}
           </div>
         )

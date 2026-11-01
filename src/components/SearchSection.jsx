@@ -1,5 +1,6 @@
 import { useRef, useState } from "react"
 import RecentProfiles from "./RecentProfiles.jsx"
+import { useMessages } from "../i18n/index.js"
 
 export default function SearchSection({
   url,
@@ -12,6 +13,7 @@ export default function SearchSection({
   onProfileSelect,
   onProfileRemove,
 }) {
+  const t = useMessages()
   const [showHint, setShowHint] = useState(false)
   const [showRecents, setShowRecents] = useState(false)
   const inputRef = useRef(null)
@@ -44,7 +46,7 @@ export default function SearchSection({
         borderBottom: "1px solid rgb(var(--fg-rgb) / 0.04)",
       }}>
       <label htmlFor="rd-profile-input" className="rd-sr-only">
-        Usuario o URL de perfil de Letterboxd
+        {t.search.label}
       </label>
       <div className="rd-search-field">
         <input
@@ -55,7 +57,7 @@ export default function SearchSection({
           onChange={(e) => onUrlChange(e.target.value)}
           autoComplete="off"
           spellCheck={false}
-          placeholder="letterboxd.com/tu-usuario o solo tu usuario"
+          placeholder={t.search.placeholder}
           aria-invalid={showHint}
           aria-describedby={showHint ? "rd-profile-hint" : undefined}
           className="rd-search-input"
@@ -63,8 +65,8 @@ export default function SearchSection({
         {url && !loading && (
           <button
             type="button"
-            aria-label="Limpiar campo"
-            title="Limpiar campo"
+            aria-label={t.search.clear}
+            title={t.search.clear}
             className="rd-search-clear"
             onClick={() => {
               onUrlChange("")
@@ -83,16 +85,16 @@ export default function SearchSection({
         {loading ? (
           <>
             <span className="rd-spinner" aria-hidden="true" />
-            <span className="rd-sr-only">Cargando</span>
+            <span className="rd-sr-only">{t.search.loading}</span>
           </>
         ) : (
-          "Generar"
+          t.search.submit
         )}
       </button>
 
       {loading && (
         <button type="button" onClick={onCancel} className="rd-search-cancel">
-          Cancelar
+          {t.search.cancel}
         </button>
       )}
 
@@ -102,13 +104,13 @@ export default function SearchSection({
           aria-expanded={showRecents}
           className="rd-btn-outline"
           onClick={() => setShowRecents((open) => !open)}>
-          Recientes
+          {t.search.recents}
         </button>
       )}
 
       {showHint && (
         <p id="rd-profile-hint" role="alert" className="rd-search-hint">
-          Escribe un usuario de Letterboxd o la URL de su perfil.
+          {t.search.hint}
         </p>
       )}
 

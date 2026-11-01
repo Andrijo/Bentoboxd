@@ -61,9 +61,9 @@ describe("fetchMetadataFromTMDB", () => {
 
     const result = await fetchMetadataFromTMDB(["Inception"])
 
-    expect(result.genres["Ciencia Ficción"]).toBe(1)
-    expect(result.genres["Drama"]).toBe(1)
-    expect(result.genres["Terror"]).toBe(0)
+    expect(result.genres.scienceFiction).toBe(1)
+    expect(result.genres.drama).toBe(1)
+    expect(result.genres.horror).toBe(0)
     expect(result.directors["Christopher Nolan"]).toBe(1)
     expect(result.actors["Leonardo DiCaprio"]).toBe(1)
     expect(result.actors["Elliot Page"]).toBe(1)
@@ -75,8 +75,8 @@ describe("fetchMetadataFromTMDB", () => {
     expect(result.rawResults).toHaveLength(1)
     expect(result.rawResults[0]).toMatchObject({
       title: "Inception",
-      genre: "Ciencia Ficción",
-      genres: ["Ciencia Ficción", "Drama"],
+      genre: "scienceFiction",
+      genres: ["scienceFiction", "drama"],
       directors: ["Christopher Nolan"],
       countries: ["US"],
       globalRating: "4.2",
@@ -149,8 +149,8 @@ describe("fetchMetadataFromTMDB", () => {
 
     const result = await fetchMetadataFromTMDB(["Adventure Movie"])
 
-    expect(result.genres["Otro"]).toBe(1)
-    expect(result.genres["Drama"]).toBe(0)
+    expect(result.genres.other).toBe(1)
+    expect(result.genres.drama).toBe(0)
   })
 
   it("prefiere los géneros de los detalles cuando están disponibles", async () => {
@@ -168,9 +168,9 @@ describe("fetchMetadataFromTMDB", () => {
 
     const result = await fetchMetadataFromTMDB(["X"])
 
-    expect(result.genres["Terror"]).toBe(1)
-    expect(result.genres["Thriller"]).toBe(1)
-    expect(result.genres["Drama"]).toBe(0)
+    expect(result.genres.horror).toBe(1)
+    expect(result.genres.thriller).toBe(1)
+    expect(result.genres.drama).toBe(0)
   })
 
   it("ignora títulos sin resultados en TMDB", async () => {
@@ -182,7 +182,7 @@ describe("fetchMetadataFromTMDB", () => {
     const result = await fetchMetadataFromTMDB(["Pelicula Inexistente"])
 
     expect(result.rawResults).toEqual([null])
-    expect(result.genres["Otro"]).toBe(0)
+    expect(result.genres.other).toBe(0)
     expect(Object.keys(result.directors)).toHaveLength(0)
     expect(result.coverage).toEqual({ total: 1, matched: 0, failed: 0 })
   })

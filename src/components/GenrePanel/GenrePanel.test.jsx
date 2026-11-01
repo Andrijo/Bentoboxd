@@ -3,7 +3,7 @@ import { render, screen, fireEvent, within } from "@testing-library/react"
 import GenrePanel from "./GenrePanel.jsx"
 
 // Una película puede tener varios géneros: las etiquetas suman más que las películas.
-const genres = { Drama: 27, Comedia: 20, Aventura: 66 }
+const genres = { drama: 27, comedy: 20, adventure: 66 }
 
 function renderPanel() {
   render(<GenrePanel genres={genres} movieCount={50} loadingGenres={false} />)

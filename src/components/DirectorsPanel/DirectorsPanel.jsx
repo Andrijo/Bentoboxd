@@ -5,13 +5,12 @@ import { PanelSkeleton } from "../Skeleton.jsx"
 import Panel from "../Panel/Panel.jsx"
 import SegmentedControl from "../Panel/SegmentedControl.jsx"
 import { topDirectors } from "../../utils/topDirectors.js"
+import { useMessages } from "../../i18n/index.js"
 
-const VIEW_OPTIONS = [
-  { key: "cards", label: "Lista" },
-  { key: "hologram", label: "Holograma" },
-]
+const VIEW_KEYS = ["cards", "hologram"]
 
 export default function DirectorsPanel({ directors, movies, photos, loading }) {
+  const t = useMessages()
   const [viewMode, setViewMode] = useState("cards")
 
   const ranking = topDirectors(directors)
@@ -22,13 +21,18 @@ export default function DirectorsPanel({ directors, movies, photos, loading }) {
     <Panel
       id="rd-panel-directores"
       area="directors"
-      title="TOP DIRECTORES"
-      subtitle={hasData && !loading && "Con al menos 2 películas"}
+      title={t.directorsPanel.title}
+      subtitle={hasData && !loading && t.directorsPanel.subtitle}
       actions={hasData && !loading && (
-        <SegmentedControl label="Vista de directores" options={VIEW_OPTIONS} value={viewMode} onChange={setViewMode} />
+        <SegmentedControl
+          label={t.directorsPanel.viewLabel}
+          options={VIEW_KEYS.map((key) => ({ key, label: t.directorsPanel.views[key] }))}
+          value={viewMode}
+          onChange={setViewMode}
+        />
       )}
       bodyStyle={{ minHeight: "220px" }}>
-      {loading && <PanelSkeleton variant="rows" label="Analizando directores…" />}
+      {loading && <PanelSkeleton variant="rows" label={t.directorsPanel.loading} />}
 
       {!loading && hasData && (
         <>
@@ -44,8 +48,8 @@ export default function DirectorsPanel({ directors, movies, photos, loading }) {
           fontFamily: "var(--font-mono)",
         }}>
           {hasDirectors
-            ? "Ningún director tiene al menos 2 películas en este perfil."
-            : "Sin datos de directores disponibles"}
+            ? t.directorsPanel.noneRepeated
+            : t.directorsPanel.empty}
         </div>
       )}
     </Panel>

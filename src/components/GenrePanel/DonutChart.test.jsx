@@ -2,7 +2,7 @@ import { describe, it, expect } from "vitest"
 import { render, screen, fireEvent } from "@testing-library/react"
 import DonutChart from "./DonutChart.jsx"
 
-const genres = { Drama: 4, Comedia: 3, Terror: 2, Acción: 1, Otro: 0 }
+const genres = { drama: 4, comedy: 3, horror: 2, action: 1, other: 0 }
 
 describe("DonutChart", () => {
   it("muestra el total de películas y no el de etiquetas", () => {
@@ -13,8 +13,8 @@ describe("DonutChart", () => {
 
   it("agrupa los géneros menores en Otro", () => {
     const many = {
-      Drama: 9, Comedia: 8, Terror: 7, Acción: 6, Thriller: 5,
-      Romance: 4, Animación: 3, Documental: 2, Aventura: 1,
+      drama: 9, comedy: 8, horror: 7, action: 6, thriller: 5,
+      romance: 4, animation: 3, documentary: 2, adventure: 1,
     }
     render(<DonutChart genres={many} movieCount={20} />)
     expect(screen.getAllByRole("img")).toHaveLength(7)

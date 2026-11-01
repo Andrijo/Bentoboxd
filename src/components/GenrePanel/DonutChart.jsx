@@ -1,6 +1,7 @@
 import { useState } from "react"
 import { formatMovieCount, formatPercent } from "../../utils/formatters.js"
-import { GENRE_KEYS, GENRE_CONFIG } from "../../constants/genres.js"
+import { GENRE_KEYS, GENRE_CONFIG, OTHER_GENRE } from "../../constants/genres.js"
+import { useMessages } from "../../i18n/index.js"
 
 const polarToCartesian = (cx, cy, r, angleDeg) => {
   const rad = ((angleDeg - 90) * Math.PI) / 180
@@ -9,17 +10,18 @@ const polarToCartesian = (cx, cy, r, angleDeg) => {
 
 const MAX_SLICES = 6
 
-/** Las rebanadas más grandes y el resto agrupado en "Otro", ordenadas por tamaño. */
+/** Las rebanadas más grandes y el resto agrupado en OTHER_GENRE, ordenadas por tamaño. */
 function groupGenres(genres) {
-  const ranked = GENRE_KEYS.filter((k) => k !== "Otro" && (genres[k] || 0) > 0)
+  const ranked = GENRE_KEYS.filter((k) => k !== OTHER_GENRE && (genres[k] || 0) > 0)
     .sort((a, b) => genres[b] - genres[a])
   const kept = ranked.slice(0, MAX_SLICES)
   const rest = ranked.slice(MAX_SLICES).reduce((sum, k) => sum + genres[k], 0)
-  const other = rest + (genres.Otro || 0)
-  return [...kept.map((k) => [k, genres[k]]), ...(other > 0 ? [["Otro", other]] : [])]
+  const other = rest + (genres[OTHER_GENRE] || 0)
+  return [...kept.map((k) => [k, genres[k]]), ...(other > 0 ? [[OTHER_GENRE, other]] : [])]
 }
 
 export default function DonutChart({ genres, movieCount }) {
+  const t = useMessages()
   const cx = 180, cy = 180, outerR = 168, innerR = 98
   const total = Object.values(genres).reduce((a, b) => a + b, 0) || 1
   const grouped = groupGenres(genres)
@@ -54,7 +56,7 @@ export default function DonutChart({ genres, movieCount }) {
       }}>
       <svg
         role="group"
-        aria-label="Gráfico de pastel de géneros"
+        aria-label={t.genrePanel.donutLabel}
         viewBox="0 0 360 360"
         style={{ width: "100%", maxWidth: "380px", overflow: "visible" }}>
         {slices.map((s, i) => {
@@ -83,7 +85,7 @@ export default function DonutChart({ genres, movieCount }) {
               fill={s.cfg.color}
               opacity={hovered === null ? 0.85 : isHovered ? 1 : 0.35}
               role="img"
-              aria-label={`${s.k}: ${formatMovieCount(s.count)}`}
+              aria-label={`${t.genres[s.k]}: ${formatMovieCount(s.count)}`}
               tabIndex={0}
               style={{ cursor: "pointer", transition: "opacity 0.2s", outline: "none" }}
               onMouseEnter={() => setHovered(i)}
@@ -99,7 +101,7 @@ export default function DonutChart({ genres, movieCount }) {
           <>
             <text x={cx} y={cy - 18} textAnchor="middle" fontSize="18" fill="var(--c-text)"
               style={{ fontFamily: "var(--font-mono)" }} letterSpacing="0.5">
-              {hoveredSlice.k}
+              {t.genres[hoveredSlice.k]}
             </text>
             <text x={cx} y={cy + 10} textAnchor="middle" fontSize="22" fill="var(--c-text-bright)"
               style={{ fontFamily: "var(--font-mono)" }} fontWeight="bold">
@@ -107,7 +109,7 @@ export default function DonutChart({ genres, movieCount }) {
             </text>
             <text x={cx} y={cy + 32} textAnchor="middle" fontSize="16" fill="var(--c-text-muted)"
               style={{ fontFamily: "var(--font-mono)" }}>
-              {formatPercent(hoveredSlice.count, films)} de las películas
+              {t.genrePanel.ofMovies(formatPercent(hoveredSlice.count, films))}
             </text>
           </>
         ) : (
@@ -118,7 +120,7 @@ export default function DonutChart({ genres, movieCount }) {
             </text>
             <text x={cx} y={cy + 32} textAnchor="middle" fontSize="15" fill="var(--c-text-muted)"
               style={{ fontFamily: "var(--font-mono)" }} letterSpacing="1">
-              {films === 1 ? "película" : "películas"}
+              {t.common.movieWord(films)}
             </text>
           </>
         )}
