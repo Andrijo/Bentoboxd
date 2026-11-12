@@ -660,3 +660,42 @@ input:focus-visible {
 .rd-opinion-row:focus-visible {
   background: rgb(var(--accent-rgb) / 0.05);
 }
+
+/* Ley de Fitts: en pantallas táctiles todo objetivo mide al menos 44px.
+   Las pestañas fijan su alto en línea, de ahí el !important. */
+@media (pointer: coarse) {
+  .rd-tab,
+  .rd-theme-toggle {
+    height: 44px !important;
+  }
+  .rd-theme-toggle {
+    width: 44px;
+  }
+  .rd-segmented > button,
+  .rd-section-nav button,
+  .rd-btn-solid,
+  .rd-btn-outline,
+  .rd-profile-btn,
+  .rd-landing-example,
+  .rd-error-retry,
+  .rd-search-cancel,
+  .rd-search-input,
+  .rd-quiz-option,
+  .rd-drill-row,
+  .rd-filter select {
+    min-height: 44px;
+  }
+  .rd-profile-remove {
+    min-width: 44px;
+  }
+  .rd-how summary {
+    padding-block: 13px;
+  }
+}
+
+/* Los toggles de 44px ocupan 16px más junto al título. */
+@media (pointer: coarse) and (max-width: 640px) {
+  .rd-header-title {
+    font-size: min(2.5rem, calc((100vw - 158px) / 6.4)) !important;
+  }
+}
