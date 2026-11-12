@@ -1,8 +1,9 @@
 import { useState } from "react"
 import StarRating from "../StarRating.jsx"
 import PosterImage from "../PosterImage.jsx"
-import { TILE_SPANS, VISIBLE_MOVIES } from "./bentoPatterns.js"
+import { TILE_SPANS } from "./bentoPatterns.js"
 import { useMessages } from "../../i18n/index.js"
+import { staggerDelay } from "../../utils/stagger.js"
 
 export default function MovieCard({ movie, size, index }) {
   const t = useMessages()
@@ -23,7 +24,7 @@ export default function MovieCard({ movie, size, index }) {
         transition: "border 0.3s ease, transform 0.3s ease",
         transform: hovered ? "scale(1.015)" : "scale(1)",
         animation: `fadeSlideIn 0.5s ease both`,
-        animationDelay: `${Math.min(index, VISIBLE_MOVIES) * 60}ms`,
+        animationDelay: staggerDelay(index, 60),
       }}>
       {movie.poster ? (
         <PosterImage

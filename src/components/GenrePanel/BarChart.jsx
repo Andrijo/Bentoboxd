@@ -1,4 +1,5 @@
 import { GENRE_KEYS, GENRE_CONFIG } from "../../constants/genres.js"
+import { staggerDelay } from "../../utils/stagger.js"
 
 export default function BarChart({ genres }) {
   const sortedGenres = GENRE_KEYS.filter((k) => (genres[k] || 0) > 0).sort(
@@ -28,7 +29,7 @@ export default function BarChart({ genres }) {
                 background: `linear-gradient(90deg, transparent, ${cfg.color})`,
                 borderRight: `2px solid ${cfg.color}`,
                 animation: "fadeSlideIn 0.8s ease both",
-                animationDelay: `${i * 100}ms`,
+                animationDelay: staggerDelay(i, 100),
                 position: "relative",
               }}>
                 <div style={{

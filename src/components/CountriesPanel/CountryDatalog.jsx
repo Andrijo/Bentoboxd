@@ -3,6 +3,7 @@ import MovieDrilldown from "../MovieDrilldown.jsx"
 import { getFlagUrl, countryName, formatMovieCount } from "../../utils/formatters.js"
 import { moviesWith } from "../../utils/movieFilters.js"
 import { useMessages } from "../../i18n/index.js"
+import { staggerDelay } from "../../utils/stagger.js"
 
 export default function CountryDatalog({ countries, movies = [] }) {
   const t = useMessages()
@@ -19,7 +20,7 @@ export default function CountryDatalog({ countries, movies = [] }) {
 
         return (
           <div key={code} style={{
-            animation: "fadeSlideIn 0.3s ease both", animationDelay: `${i * 60}ms`,
+            animation: "fadeSlideIn 0.3s ease both", animationDelay: staggerDelay(i, 60),
           }}>
             <button
               type="button"
