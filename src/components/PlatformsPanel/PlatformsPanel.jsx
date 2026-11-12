@@ -22,7 +22,7 @@ export default function PlatformsPanel({ platformsData, movies, loading }) {
       title={t.platformsPanel.title}
       subtitle={t.platformsPanel.subtitle}
       actions={selectedPlatform && (
-        <button onClick={() => setSelectedPlatform(null)} type="button" className="rd-btn-solid" style={{
+        <button onClick={() => setSelectedPlatform(null)} type="button" className="rd-btn-ghost" style={{
           fontSize: "var(--fs-xs)", padding: "4px 10px", borderRadius: "var(--radius-sm)",
         }}>
           <span aria-hidden="true">✕</span> {t.platformsPanel.clearFilter}

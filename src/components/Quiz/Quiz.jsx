@@ -158,7 +158,7 @@ function QuizRound({ movies, username, onBack }) {
                 <button
                   onClick={onBack}
                   type="button"
-                  className="rd-btn-solid rd-quiz-btn">
+                  className="rd-btn-ghost rd-quiz-btn">
                   {t.common.backToProfile}
                 </button>
               </div>
