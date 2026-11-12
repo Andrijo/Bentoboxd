@@ -297,7 +297,7 @@ function GameOver({ streak, won, onRestart, onBack }) {
         <button
           onClick={onBack}
           type="button"
-          className="rd-btn-solid rd-hlg-btn">
+          className="rd-btn-ghost rd-hlg-btn">
           {t.common.backToProfile}
         </button>
       </div>
