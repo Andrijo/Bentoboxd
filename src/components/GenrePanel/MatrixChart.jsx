@@ -2,6 +2,7 @@ import { useState } from "react"
 import { GENRE_KEYS, GENRE_CONFIG } from "../../constants/genres.js"
 import { formatPercent } from "../../utils/formatters.js"
 import { useMessages } from "../../i18n/index.js"
+import { staggerDelay } from "../../utils/stagger.js"
 
 const mixAlpha = (color, pct) => `color-mix(in srgb, ${color} ${pct}%, transparent)`
 
@@ -61,7 +62,7 @@ export default function MatrixChart({ genres, movieCount }) {
                 transition: "background 0.2s ease, border 0.2s ease",
                 cursor: "crosshair",
                 animation: "fadeSlideIn 0.3s ease both",
-                animationDelay: `${i * 15}ms`,
+                animationDelay: staggerDelay(i, 15),
               }}
             />
           )

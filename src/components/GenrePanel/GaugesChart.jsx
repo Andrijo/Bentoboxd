@@ -1,5 +1,6 @@
 import { GENRE_KEYS, GENRE_CONFIG } from "../../constants/genres.js"
 import { useMessages } from "../../i18n/index.js"
+import { staggerDelay } from "../../utils/stagger.js"
 
 export default function GaugesChart({ genres }) {
   const t = useMessages()
@@ -24,7 +25,7 @@ export default function GaugesChart({ genres }) {
         return (
           <div key={k} style={{
             display: "flex", flexDirection: "column", alignItems: "center", gap: "10px",
-            animation: "fadeSlideIn 0.5s ease both", animationDelay: `${i * 60}ms`,
+            animation: "fadeSlideIn 0.5s ease both", animationDelay: staggerDelay(i, 60),
           }}>
             <svg viewBox="0 0 100 100" style={{ width: "80px", height: "80px", overflow: "visible" }}>
               <circle cx="50" cy="50" r={r} fill="none" stroke="rgb(var(--fg-rgb) / 0.05)" strokeWidth="6" />

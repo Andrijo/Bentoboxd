@@ -9,11 +9,9 @@ import { useGridColumns, rowHeight } from "../hooks/useGridColumns.js"
 import { formatWatchedDate } from "../utils/formatters.js"
 import { NO_FILTERS, filterMovies } from "../utils/movieFilters.js"
 import { useMessages } from "../i18n/index.js"
+import { staggerDelay } from "../utils/stagger.js"
 
 const VIEW_KEYS = ["bento", "timeline", "terminal"]
-
-// Con la lista completa, el retraso de las últimas filas no debe sentirse.
-const staggerIndex = (index) => Math.min(index, VISIBLE_MOVIES)
 
 export default function MovieViews({ movies: allMovies, movieViewMode, username, onViewModeChange }) {
   const t = useMessages()
@@ -107,7 +105,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                 textDecoration: "none",
                 color: "inherit",
                 animation: "fadeSlideIn 0.4s ease both",
-                animationDelay: `${staggerIndex(i) * 40}ms`,
+                animationDelay: staggerDelay(i, 40),
               }}
 >
               <div
@@ -259,7 +257,7 @@ export default function MovieViews({ movies: allMovies, movieViewMode, username,
                   fontSize: "var(--fs-xs)",
                   color: "var(--c-accent)",
                   animation: "fadeSlideIn 0.1s ease both",
-                  animationDelay: `${staggerIndex(i) * 20}ms`,
+                  animationDelay: staggerDelay(i, 20),
                 }}>
                 <span style={{ display: "flex", gap: "12px", overflow: "hidden", whiteSpace: "nowrap" }}>
                   <span style={{ color: "var(--c-text-muted)" }}>

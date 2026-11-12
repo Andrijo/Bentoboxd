@@ -1,4 +1,5 @@
 import { getFlagUrl, countryName } from "../../utils/formatters.js"
+import { staggerDelay } from "../../utils/stagger.js"
 
 const themeColor = "var(--c-text-bright)"
 
@@ -22,7 +23,7 @@ export default function CountrySectors({ countries }) {
           <div key={code} style={{
             background: "rgb(var(--fg-rgb) / 0.02)", border: "1px solid rgb(var(--fg-rgb) / 0.05)",
             padding: "16px", borderRadius: "var(--radius-md)", position: "relative", overflow: "hidden",
-            animation: "fadeSlideIn 0.4s ease both", animationDelay: `${i * 50}ms`,
+            animation: "fadeSlideIn 0.4s ease both", animationDelay: staggerDelay(i, 50),
           }}>
             <div style={{
               position: "absolute", bottom: 0, left: 0, height: "3px",

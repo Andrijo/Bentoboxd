@@ -4,6 +4,7 @@ import PersonAvatar from "../PersonAvatar.jsx"
 import { formatMovieCount } from "../../utils/formatters.js"
 import { moviesWith } from "../../utils/movieFilters.js"
 import { useMessages } from "../../i18n/index.js"
+import { staggerDelay } from "../../utils/stagger.js"
 
 export default function ActorsGrid({ actors, movies = [], photos = {} }) {
   const t = useMessages()
@@ -29,7 +30,7 @@ export default function ActorsGrid({ actors, movies = [], photos = {} }) {
                 background: "var(--c-inset-strong)",
                 padding: "12px 16px",
                 borderRadius: "var(--radius-md)", animation: "fadeSlideIn 0.3s ease both",
-                animationDelay: `${i * 50}ms`,
+                animationDelay: staggerDelay(i, 50),
               }}>
               <PersonAvatar name={name} photo={photos[name]} rank={i + 1} />
               <span style={{ flex: 1, overflow: "hidden", marginLeft: "12px" }}>

@@ -1,3 +1,5 @@
+import { staggerDelay } from "../../utils/stagger.js"
+
 const rankColors = ["var(--ramp-1)", "var(--ramp-3)", "var(--ramp-5)", "var(--ramp-7)", "var(--ramp-9)"]
 
 export default function DirectorHologram({ ranking }) {
@@ -16,7 +18,7 @@ export default function DirectorHologram({ ranking }) {
           <div key={name} style={{
             display: "flex", flexDirection: "column", alignItems: "center",
             gap: "12px", width: "60px",
-            animation: "fadeSlideIn 0.6s ease both", animationDelay: `${i * 80}ms`,
+            animation: "fadeSlideIn 0.6s ease both", animationDelay: staggerDelay(i, 80),
           }}>
             <div style={{
               fontSize: "var(--fs-md)", fontFamily: "var(--font-display)",

@@ -4,6 +4,7 @@ import PersonAvatar from "../PersonAvatar.jsx"
 import { formatMovieCount } from "../../utils/formatters.js"
 import { moviesWith } from "../../utils/movieFilters.js"
 import { useMessages } from "../../i18n/index.js"
+import { staggerDelay } from "../../utils/stagger.js"
 
 export default function DirectorCards({ ranking, movies = [], photos = {} }) {
   const t = useMessages()
@@ -13,7 +14,7 @@ export default function DirectorCards({ ranking, movies = [], photos = {} }) {
     <div style={{ display: "flex", flexDirection: "column", gap: "12px" }}>
       {ranking.map(([name, count], i) => (
         <div key={name} style={{
-          animation: "fadeSlideIn 0.4s ease both", animationDelay: `${i * 100}ms`,
+          animation: "fadeSlideIn 0.4s ease both", animationDelay: staggerDelay(i, 100),
         }}>
           <button
             type="button"

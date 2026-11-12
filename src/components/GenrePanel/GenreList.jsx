@@ -4,6 +4,7 @@ import { GENRE_KEYS, GENRE_CONFIG } from "../../constants/genres.js"
 import { formatPercent } from "../../utils/formatters.js"
 import { moviesWith } from "../../utils/movieFilters.js"
 import { useMessages } from "../../i18n/index.js"
+import { staggerDelay } from "../../utils/stagger.js"
 
 export default function GenreList({ genres, movieCount, movies = [] }) {
   const t = useMessages()
@@ -22,7 +23,7 @@ export default function GenreList({ genres, movieCount, movies = [] }) {
         const color = GENRE_CONFIG[k].color
         return (
           <li key={k} style={{
-            animation: "fadeSlideIn 0.3s ease both", animationDelay: `${i * 40}ms`,
+            animation: "fadeSlideIn 0.3s ease both", animationDelay: staggerDelay(i, 40),
           }}>
             <button
               type="button"
